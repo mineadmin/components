@@ -11,6 +11,8 @@ declare(strict_types=1);
 namespace HyperfExt\Translatable;
 
 use HyperfExt\Translatable\Contracts\LocalesInterface;
+use HyperfExt\Translatable\Listeners\ModelDeletingListener;
+use HyperfExt\Translatable\Listeners\ModelSavedListener;
 
 class ConfigProvider
 {
@@ -19,6 +21,10 @@ class ConfigProvider
         return [
             'dependencies' => [
                 LocalesInterface::class => Locales::class,
+            ],
+            'listeners' => [
+                ModelSavedListener::class,
+                ModelDeletingListener::class,
             ],
             'publish' => [
                 [

@@ -11,8 +11,6 @@ declare(strict_types=1);
 namespace HyperfExt\Translatable;
 
 use Hyperf\Database\Model\Collection;
-use Hyperf\Database\Model\Events\Deleting;
-use Hyperf\Database\Model\Events\Saved;
 use Hyperf\Database\Model\Model;
 use Hyperf\Database\Model\ModelNotFoundException;
 use Hyperf\Utils\ApplicationContext;
@@ -46,18 +44,6 @@ trait Translatable
         return $this->isTranslationAttribute($key) || parent::__isset($key);
     }
 
-    public function saved(Saved $event)
-    {
-        $this->saveTranslations();
-    }
-
-    public function deleting(Deleting $event)
-    {
-        if (self::$deleteTranslationsCascade === true) {
-            $this->deleteTranslations();
-        }
-    }
-
     public static function defaultAutoloadTranslations(): void
     {
         self::$autoloadTranslations = null;
@@ -81,6 +67,11 @@ trait Translatable
     public static function enableDeleteTranslationsCascade(): void
     {
         self::$deleteTranslationsCascade = true;
+    }
+
+    public function isDeleteTranslationsCascade(): bool
+    {
+        return self::$deleteTranslationsCascade;
     }
 
     public function attributesToArray()
@@ -346,6 +337,28 @@ trait Translatable
         return $this->getTranslationOrFail($locale);
     }
 
+    public function saveTranslations(): bool
+    {
+        $saved = true;
+
+        if (! $this->relationLoaded('translations')) {
+            return $saved;
+        }
+
+        foreach ($this->translations as $translation) {
+            if ($saved && $this->isTranslationDirty($translation)) {
+                if (! empty($connectionName = $this->getConnectionName())) {
+                    $translation->setConnection($connectionName);
+                }
+
+                $translation->setAttribute($this->getTranslationRelationKey(), $this->getKey());
+                $saved = $translation->save();
+            }
+        }
+
+        return $saved;
+    }
+
     protected function getLocalesHelper(): Locales
     {
         return ApplicationContext::getContainer()->get(Locales::class);
@@ -371,28 +384,6 @@ trait Translatable
         }
 
         return $this->getLocalesHelper()->current();
-    }
-
-    protected function saveTranslations(): bool
-    {
-        $saved = true;
-
-        if (! $this->relationLoaded('translations')) {
-            return $saved;
-        }
-
-        foreach ($this->translations as $translation) {
-            if ($saved && $this->isTranslationDirty($translation)) {
-                if (! empty($connectionName = $this->getConnectionName())) {
-                    $translation->setConnection($connectionName);
-                }
-
-                $translation->setAttribute($this->getTranslationRelationKey(), $this->getKey());
-                $saved = $translation->save();
-            }
-        }
-
-        return $saved;
     }
 
     private function getAttributeAndLocale(string $key): array
