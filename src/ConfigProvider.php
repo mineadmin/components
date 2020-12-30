@@ -29,7 +29,7 @@ class ConfigProvider
             'publish' => [
                 [
                     'id' => 'config',
-                    'description' => 'The config for HyperfExt\Translatable.',
+                    'description' => 'The config for hyperf-ext/translatable.',
                     'source' => __DIR__ . '/../publish/translatable.php',
                     'destination' => BASE_PATH . '/config/autoload/translatable.php',
                 ],
