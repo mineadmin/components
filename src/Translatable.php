@@ -13,6 +13,7 @@ namespace HyperfExt\Translatable;
 use Hyperf\Database\Model\Collection;
 use Hyperf\Database\Model\Model;
 use Hyperf\Database\Model\ModelNotFoundException;
+use Hyperf\ModelListener\Collector\ListenerCollector;
 use Hyperf\Utils\ApplicationContext;
 use Hyperf\Utils\Str;
 use HyperfExt\Translatable\Traits\Relationship;
@@ -359,6 +360,22 @@ trait Translatable
         return $saved;
     }
 
+    public function getFallbackLocale(?string $locale = null): ?string
+    {
+        if ($locale && $this->getLocalesHelper()->isLocaleCountryBased($locale)) {
+            if ($fallback = $this->getLocalesHelper()->getLanguageFromCountryBasedLocale($locale)) {
+                return $fallback;
+            }
+        }
+
+        return config('translatable.fallback_locale');
+    }
+
+    public static function bootTranslatable()
+    {
+        ListenerCollector::register(static::class, ModelObserver::class);
+    }
+
     protected function getLocalesHelper(): Locales
     {
         return ApplicationContext::getContainer()->get(Locales::class);
@@ -414,17 +431,6 @@ trait Translatable
         }
 
         return null;
-    }
-
-    private function getFallbackLocale(?string $locale = null): ?string
-    {
-        if ($locale && $this->getLocalesHelper()->isLocaleCountryBased($locale)) {
-            if ($fallback = $this->getLocalesHelper()->getLanguageFromCountryBasedLocale($locale)) {
-                return $fallback;
-            }
-        }
-
-        return config('translatable.fallback_locale');
     }
 
     private function getTranslationByLocaleKey(string $key): ?Model

@@ -46,6 +46,7 @@
         "hyperf/db-connection": "~2.1.0",
         "hyperf/di": "~2.1.0",
         "hyperf/framework": "~2.1.0",
+        "hyperf/model-listener": "~2.1.0",
         "hyperf/translation": "~2.1.0"
     },
     "require-dev": {
