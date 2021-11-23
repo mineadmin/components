@@ -1,10 +1,11 @@
 {
-    "name": "phper666/jwt-auth",
+    "name": "xmo/jwt-auth",
     "type": "library",
     "license": "MIT",
     "keywords": [
         "php",
-        "hyperf"
+        "hyperf",
+        "phper666"
     ],
     "authors": [
         {
@@ -17,7 +18,7 @@
     "description": "jwt-auth Component",
     "autoload": {
         "psr-4": {
-            "Phper666\\JwtAuth\\": "src/"
+            "Xmo\\JwtAuth\\": "src/"
         }
     },
     "autoload-dev": {
@@ -26,18 +27,18 @@
         }
     },
     "require": {
-        "php": ">=7.2",
+        "php": ">=7.4",
         "ext-swoole": ">=4.4",
-        "lcobucci/jwt": "~3.3.0",
+        "lcobucci/jwt": "~4.2.x",
         "nesbot/carbon": "^1.0 || ^2.0"
     },
     "require-dev": {},
     "suggest": {
-        "hyperf/utils": "required hyperf/utils ~2.0.0 OR required hyperf/utils ~1.1.0",
-        "hyperf/cache": "required hyperf/cache ~2.0.0 OR required hyperf/cache ~1.1.0",
-        "hyperf/command": "required hyperf/command ~2.0.0 OR required hyperf/command ~1.1.0",
-        "hyperf/config": "required hyperf/config ~2.0.0 OR required hyperf/config ~1.1.0",
-        "hyperf/di": "required hyperf/di ~2.0.0 OR required hyperf/di ~1.1.0"
+        "hyperf/utils": "required hyperf/utils ~2.2.0",
+        "hyperf/cache": "required hyperf/cache ~2.2.0",
+        "hyperf/command": "required hyperf/command ~2.2.0",
+        "hyperf/config": "required hyperf/config ~2.2.0",
+        "hyperf/di": "required hyperf/di ~2.2.0"
     },
     "config": {
         "sort-packages": true
@@ -45,7 +46,7 @@
     "scripts": {},
     "extra": {
         "hyperf": {
-            "config": "Phper666\\JwtAuth\\ConfigProvider"
+            "config": "Xmo\\JwtAuth\\ConfigProvider"
         }
     }
 }
