@@ -27,7 +27,7 @@
     "require": {
         "php": ">=7.4",
         "ext-swoole": ">=4.4",
-        "lcobucci/jwt": "^4.2.x",
+        "lcobucci/jwt": "~4.1.0",
         "nesbot/carbon": "^1.0 || ^2.0"
     },
     "require-dev": {},
