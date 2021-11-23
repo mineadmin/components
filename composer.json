@@ -4,14 +4,12 @@
     "license": "MIT",
     "keywords": [
         "php",
-        "hyperf",
-        "phper666"
+        "hyperf"
     ],
     "authors": [
         {
-            "name": "Li Yuzhao",
-            "email": "562405704@qq.com",
-            "homepage": "https://github.com/phper666/jwt-auth",
+            "name": "xmo",
+            "email": "root@imoi.cn",
             "role": "Developer"
         }
     ],
