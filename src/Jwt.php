@@ -6,17 +6,17 @@
  * Time: 11:43
  */
 
-namespace Phper666\JwtAuth;
+namespace Xmo\JwtAuth;
 
 use Hyperf\Contract\ConfigInterface;
 use Hyperf\Contract\ContainerInterface;
 use Hyperf\HttpServer\Contract\RequestInterface;
 use Lcobucci\JWT\Signer\Key;
 use Lcobucci\JWT\Token;
-use Phper666\JwtAuth\Exception\TokenValidException;
-use Phper666\JwtAuth\Exception\JWTException;
-use Phper666\JwtAuth\Helper\Utils;
-use Phper666\JwtAuth\Traits\CommonTrait;
+use Xmo\JwtAuth\Exception\TokenValidException;
+use Xmo\JwtAuth\Exception\JWTException;
+use Xmo\JwtAuth\Helper\Utils;
+use Xmo\JwtAuth\Traits\CommonTrait;
 use Psr\SimpleCache\CacheInterface;
 
 /**

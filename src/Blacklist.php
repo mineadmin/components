@@ -6,10 +6,10 @@
  * Time: 16:02
  */
 
-namespace Phper666\JwtAuth;
+namespace Xmo\JwtAuth;
 use Hyperf\Di\Annotation\Inject;
 use Lcobucci\JWT\Token;
-use Phper666\JwtAuth\Helper\Utils;
+use Xmo\JwtAuth\Helper\Utils;
 use Psr\SimpleCache\CacheInterface;
 
 /**

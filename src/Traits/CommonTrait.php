@@ -5,7 +5,7 @@
  * Date: 2019-08-07
  * Time: 14:14
  */
-namespace Phper666\JwtAuth\Traits;
+namespace Xmo\JwtAuth\Traits;
 
 use Lcobucci\JWT\Builder;
 use Lcobucci\JWT\Claim\Factory as ClaimFactory;
@@ -15,7 +15,7 @@ use Lcobucci\JWT\Parsing\Encoder;
 use Lcobucci\JWT\Signer;
 use Lcobucci\JWT\ValidationData;
 use Lcobucci\JWT\Token;
-use Phper666\JwtAuth\Exception\TokenValidException;
+use Xmo\JwtAuth\Exception\TokenValidException;
 
 trait CommonTrait
 {

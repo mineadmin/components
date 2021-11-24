@@ -5,15 +5,15 @@
  * Date: 2019-08-01
  * Time: 22:32
  */
-namespace Phper666\JwtAuth\Middleware;
+namespace Xmo\JwtAuth\Middleware;
 
 use Hyperf\HttpServer\Contract\ResponseInterface as HttpResponse;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\MiddlewareInterface;
 use Psr\Http\Server\RequestHandlerInterface;
-use Phper666\JwtAuth\Jwt;
-use Phper666\JwtAuth\Exception\TokenValidException;
+use Xmo\JwtAuth\Jwt;
+use Xmo\JwtAuth\Exception\TokenValidException;
 
 class JwtAuthMiddleware implements MiddlewareInterface
 {

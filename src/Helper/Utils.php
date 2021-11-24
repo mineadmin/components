@@ -10,7 +10,7 @@ declare(strict_types=1);
  * @license  https://github.com/hyperf-cloud/hyperf/blob/master/LICENSE
  */
 
-namespace Phper666\JwtAuth\Helper;
+namespace Xmo\JwtAuth\Helper;
 
 use Carbon\Carbon;
 class Utils

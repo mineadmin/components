@@ -10,7 +10,7 @@ return [
     'sso_key' => 'uid',
 
     # 非对称加密使用字符串,请使用自己加密的字符串
-    'secret' => env('JWT_SECRET', 'phper666'),
+    'secret' => env('JWT_SECRET', 'xmo'),
 
     /*
      * JWT 权限keys

@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Phper666\JwtAuth\Command;
+namespace Xmo\JwtAuth\Command;
 
 use Hyperf\Command\Annotation\Command;
 use Hyperf\Command\Command as HyperfCommand;
