@@ -16,7 +16,7 @@
     "description": "jwt-auth Component",
     "autoload": {
         "psr-4": {
-            "Xmo\\JwtAuth\\": "src/"
+            "Xmo\\JWTAuth\\": "src/"
         }
     },
     "autoload-dev": {
@@ -44,7 +44,7 @@
     "scripts": {},
     "extra": {
         "hyperf": {
-            "config": "Xmo\\JwtAuth\\ConfigProvider"
+            "config": "Xmo\\JWTAuth\\ConfigProvider"
         }
     }
 }
