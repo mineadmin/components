@@ -1,17 +1,16 @@
 <?php
-
 declare(strict_types=1);
-
-namespace Xmo\JwtAuth\Command;
+namespace Xmo\JWTAuth\Command;
 
 use Hyperf\Command\Annotation\Command;
 use Hyperf\Command\Command as HyperfCommand;
+use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputOption;
 
 /**
  * @Command
  */
-class JwtCommand extends HyperfCommand
+class JWTCommand extends HyperfCommand
 {
     /**
      * 执行的命令行

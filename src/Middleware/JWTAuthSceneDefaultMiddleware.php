@@ -17,16 +17,17 @@ use Xmo\JWTAuth\JWT;
 use Xmo\JWTAuth\Exception\TokenValidException;
 
 /**
- * 通用的中间件，只会验证每个应用是否正确
- * Class JWTAuthMiddleware
+ * Class JWTAuthSceneDefaultMiddleware
  * @package Xmo\JWTAuth\Middleware
  */
-class JWTAuthMiddleware implements MiddlewareInterface
+class JWTAuthSceneDefaultMiddleware implements MiddlewareInterface
 {
     /**
      * @var HttpResponse
      */
     protected $response;
+
+    protected $prefix = 'Bearer';
 
     protected $jwt;
 
@@ -50,7 +51,8 @@ class JWTAuthMiddleware implements MiddlewareInterface
         $token = $request->getHeaderLine('Authorization') ?? '';
         if (strlen($token) > 0) {
             $token = JWTUtil::handleToken($token);
-            if ($token !== false && $this->jwt->checkToken($token)) {
+            // 验证该token是否为default场景配置生成的
+            if ($token !== false && $this->jwt->setScene('default')->checkToken($token, true, true, true)) {
                 $isValidToken = true;
             }
         }

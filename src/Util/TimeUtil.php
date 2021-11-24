@@ -1,19 +1,16 @@
 <?php
-
 declare(strict_types=1);
 /**
- * This file is part of Hyperf.
- *
- * @link     https://www.hyperf.io
- * @document https://doc.hyperf.io
- * @contact  group@hyperf.io
- * @license  https://github.com/hyperf-cloud/hyperf/blob/master/LICENSE
+ * Created by PhpStorm.
+ * User: liyuzhao
+ * Date: 2020/4/21
+ * Time: 1:59 下午
  */
 
-namespace Xmo\JwtAuth\Helper;
-
+namespace Xmo\JWTAuth\Util;
 use Carbon\Carbon;
-class Utils
+
+class TimeUtil
 {
     /**
      * Get the Carbon instance for the current time.
@@ -61,34 +58,5 @@ class Utils
     public static function isFuture($timestamp, $leeway = 0)
     {
         return static::timestamp($timestamp)->subSeconds($leeway)->isFuture();
-    }
-
-    /**
-     * @param $claims
-     * @return mixed
-     */
-    public static function claimsToArray($claims)
-    {
-        foreach($claims as $k => $v) {
-            $claims[$k] = $v->getValue();
-        }
-
-        return $claims;
-    }
-
-    /**
-     * 处理头部token
-     * @param string $token
-     * @return bool|string
-     */
-    public static function handleHeaderToken(string $prefix, string $token)
-    {
-        if (strlen($token) > 0) {
-            $token = ucfirst($token);
-            $arr = explode($prefix . ' ', $token);
-            $token = $arr[1] ?? '';
-            if (strlen($token) > 0) return $token;
-        }
-        return false;
     }
 }

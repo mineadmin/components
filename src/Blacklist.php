@@ -1,64 +1,65 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: liyuzhao
- * Date: 2019-08-06
- * Time: 16:02
- */
+declare(strict_types=1);
+namespace Xmo\JWTAuth;
 
-namespace Xmo\JwtAuth;
-use Hyperf\Di\Annotation\Inject;
 use Lcobucci\JWT\Token;
-use Xmo\JwtAuth\Helper\Utils;
+use Xmo\JWTAuth\Util\JWTUtil;
+use Xmo\JWTAuth\Util\TimeUtil;
+use Psr\Container\ContainerInterface;
 use Psr\SimpleCache\CacheInterface;
 
 /**
  * https://github.com/phper666/jwt-auth
  * author LI Yuzhao <562405704@qq.com>
  */
-class Blacklist
+class BlackList extends AbstractJWT
 {
     /**
-     * @Inject()
      * @var CacheInterface
      */
-    public $storage;
+    public $cache;
+
+    public function __construct(ContainerInterface $container)
+    {
+        parent::__construct($container);
+        $this->cache = $this->getContainer()->get(CacheInterface::class);
+    }
 
     /**
+     * 把token加入到黑名单中
      * @param Token $token
-     * @param array $config
      * @return mixed
      * @throws \Psr\SimpleCache\InvalidArgumentException
      */
-    public function add(Token $token, array $config)
+    public function addTokenBlack(Token $token, array $config = [], $ssoSelfExp = false)
     {
-        $claims = Utils::claimsToArray($token->getClaims());
-        $jti = $claims['jti'];
+        $claims = JWTUtil::claimsToArray($token->getClaims());
+        if ($ssoSelfExp) $claims['iat'] += 1; // 如果是当点登录，并且调用了logout方法
         if ($config['blacklist_enabled']) {
-            $this->storage->set(
-                $jti,
-                ['valid_until' => $this->getGraceTimestamp($config)],
+            $cacheKey = $this->getCacheKey($claims['jti']);
+            $this->cache->set(
+                $cacheKey,
+                ['valid_until' => $this->getGraceTimestamp($claims, $config)],
                 $this->getSecondsUntilExpired($claims, $config)
             );
         }
-
         return $claims;
     }
 
     /**
-     * @param       $claims
-     * @param array $config
+     * Get the number of seconds until the token expiry.
+     *
      * @return int
      */
     protected function getSecondsUntilExpired($claims, array $config)
     {
-        $exp = Utils::timestamp($claims['exp']);
-        $iat = Utils::timestamp($claims['iat']);
+        $exp = TimeUtil::timestamp($claims['exp']);
+        $iat = TimeUtil::timestamp($claims['iat']);
 
         // get the latter of the two expiration dates and find
         // the number of minutes until the expiration date,
         // plus 1 minute to avoid overlap
-        return $exp->max($iat->addSeconds($config['blacklist_cache_ttl']))->addSecond()->diffInSeconds();
+        return $exp->max($iat->addSeconds($config['blacklist_cache_ttl']))->diffInSeconds();
     }
 
     /**
@@ -67,10 +68,12 @@ class Blacklist
      *
      * @return int
      */
-    protected function getGraceTimestamp(array $config)
+    protected function getGraceTimestamp($claims, array $config)
     {
-        if ($config['login_type'] == 'sso') $config['blacklist_grace_period'] = 0;
-        return Utils::now()->addSeconds($config['blacklist_grace_period'])->getTimestamp();
+        $loginType = $config['login_type'];
+        $gracePeriod = $config['blacklist_grace_period'];
+        if ($loginType == 'sso') $gracePeriod = 0;
+        return TimeUtil::timestamp($claims['iat'])->addSeconds($gracePeriod)->getTimestamp();
     }
 
     /**
@@ -79,16 +82,17 @@ class Blacklist
      * @return bool
      * @throws \Psr\SimpleCache\InvalidArgumentException
      */
-    public function has($claims, array $config)
+    public function hasTokenBlack($claims, array $config = [])
     {
+        $cacheKey = $this->getCacheKey($claims['jti']);
         if ($config['blacklist_enabled'] && $config['login_type'] == 'mpop') {
-            $val = $this->storage->get($claims['jti']);
+            $val = $this->cache->get($cacheKey);
             // check whether the expiry + grace has past
-            return !empty($val) && !Utils::isFuture($val['valid_until']);
+            return !empty($val) && !TimeUtil::isFuture($val['valid_until']);
         }
 
         if ($config['blacklist_enabled'] && $config['login_type'] == 'sso') {
-            $val = $this->storage->get($claims['jti']);
+            $val = $this->cache->get($cacheKey);
             // 这里为什么要大于等于0，因为在刷新token时，缓存时间跟签发时间可能一致，详细请看刷新token方法
             $isFuture = ($claims['iat'] - $val['valid_until']) >= 0;
             // check whether the expiry + grace has past
@@ -100,23 +104,43 @@ class Blacklist
 
     /**
      * 黑名单移除token
-     * @param $jwtJti
+     * @param $key  token 中的jit
      * @return bool
      * @throws \Psr\SimpleCache\InvalidArgumentException
      */
-    public function remove($jwtJti)
+    public function remove($key)
     {
-        return $this->storage->delete($jwtJti);
+        return $this->cache->delete($key);
     }
 
     /**
-     * 移除所有的缓存，注意：这样会把系统所有的缓存都清掉 todo
+     * 移除所有的token缓存
      * @return bool
+     * @throws \Psr\SimpleCache\InvalidArgumentException
      */
     public function clear()
     {
-        $this->storage->clear();
+        $cachePrefix = $this->getSceneConfig($this->getScene())['blacklist_prefix'];
+        return $this->cache->delete("{$cachePrefix}.*");
+    }
 
-        return true;
+    /**
+     * @param string $jti
+     * @return string
+     */
+    private function getCacheKey(string $jti)
+    {
+        $config = $this->getSceneConfig($this->getScene());
+        return "{$config['blacklist_prefix']}_" . $jti;
+    }
+
+    /**
+     * Get the cache time limit.
+     *
+     * @return int
+     */
+    public function getCacheTTL()
+    {
+        return $this->getSceneConfig($this->getScene())['ttl'];
     }
 }

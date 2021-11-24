@@ -6,7 +6,7 @@
  * Time: 13:43
  */
 
-namespace Xmo\JwtAuth\Exception;
+namespace Xmo\JWTAuth\Exception;
 
 class JWTException extends \RuntimeException
 {
