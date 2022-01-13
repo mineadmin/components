@@ -2,9 +2,11 @@
 declare(strict_types=1);
 
 namespace Xmo\JWTAuth;
+
 use Hyperf\HttpServer\Contract\RequestInterface;
 use Lcobucci\JWT\Signer;
 use Lcobucci\JWT\Signer\Key;
+use Lcobucci\JWT\Signer\Key\InMemory;
 use Lcobucci\JWT\Token;
 use Xmo\JWTAuth\Exception\JWTException;
 use Xmo\JWTAuth\Exception\TokenValidException;
@@ -12,10 +14,9 @@ use Xmo\JWTAuth\Util\JWTUtil;
 use Psr\Container\ContainerInterface;
 
 /**
- * Created by PhpStorm.
- * User: liyuzhao
- * Date: 2020/4/21
- * Time: 1:36 下午
+ * https://gitee.com/xmo/jwt-auth
+ * 原作者 liyuzhao
+ * 现维护者：xmo
  */
 class JWT extends AbstractJWT
 {
@@ -59,12 +60,12 @@ class JWT extends AbstractJWT
         }
 
         $signer = new $config['supported_algs'][$config['alg']];
-        $time = time();
-        $builder = JWTUtil::getBuilder()
+        $time = new \DateTimeImmutable();
+        $builder = JWTUtil::getBuilder($signer, $this->getKey($config))
             ->identifiedBy($uniqid) // 设置jwt的jti
             ->issuedAt($time)// (iat claim) 发布时间
             ->canOnlyBeUsedAfter($time)// (nbf claim) 在此之前不可用
-            ->expiresAt($time + $config['ttl']);// (exp claim) 到期时间
+            ->expiresAt($time->modify(sprintf('+%s second', $config['ttl'])));// (exp claim) 到期时间
 
         $claims[$this->tokenScenePrefix] = $this->getScene(); // 加入场景值
         foreach ($claims as $k => $v) {
@@ -76,7 +77,7 @@ class JWT extends AbstractJWT
         // 单点登录要把所有的以前生成的token都失效
         if ($loginType == 'sso' && $isInsertSsoBlack) $this->blackList->addTokenBlack($token, $config);
 
-        return $isConversionString ? (string)$token : $token;
+        return $isConversionString ? $token->toString() : $token;
     }
 
     /**
@@ -93,22 +94,31 @@ class JWT extends AbstractJWT
     {
         try {
             if (empty($token)) $token = $this->getHeaderToken();
-            $config = $this->getSceneConfigByToken($token);
-            $token = $this->getTokenObj($token);
+            $tokenObj = $this->getSceneConfigByToken($token);
+            $config = $this->getSceneConfig($tokenObj->claims()->all()['jwt_scene']);
+            $claims = $tokenObj->claims()->all();
+
+            $sceneConfig = $this->getSceneConfig($this->getScene());
+            $signer = new $sceneConfig['supported_algs'][$config['alg']];
+
+            // 验证token是否存在黑名单
+            if ($config['blacklist_enabled'] && $this->blackList->hasTokenBlack($claims, $config)) {
+                throw new TokenValidException('Token authentication does not pass', 401);
+            }
+
+            if ($validate && !$this->validateToken($signer, $this->getKey($sceneConfig), $token)){
+                throw new TokenValidException('Token authentication does not pass', 401);
+            }
+
+            // 获取当前环境的场景配置并且验证该token是否是该配置生成的
+            if ($independentTokenVerify) {
+                $config = $this->getSceneConfig($this->getScene());
+            }
+
+            return true;
         } catch (\RuntimeException $e) {
             throw new \RuntimeException($e->getMessage(), $e->getCode(), $e->getPrevious());
         }
-        $claims = JWTUtil::claimsToArray($token->getClaims());
-        // 验证token是否存在黑名单
-        if ($config['blacklist_enabled'] && $this->blackList->hasTokenBlack($claims, $config)) throw new TokenValidException('Token authentication does not pass', 401);
-
-        if ($validate && !$this->validateToken($token)) throw new TokenValidException('Token authentication does not pass', 401);
-
-        // 获取当前环境的场景配置并且验证该token是否是该配置生成的
-        if ($independentTokenVerify) $config = $this->getSceneConfig($this->getScene());
-        if ($verify && !$this->verifyToken($token, $config)) throw new TokenValidException('Token authentication does not pass', 401);
-
-        return true;
     }
 
     /**
@@ -164,15 +174,9 @@ class JWT extends AbstractJWT
      * @param string|null $token
      * @return array
      */
-    public function getParserData(string $token = null)
+    public function getParserData(string $token = null): array
     {
-        $arr = [];
-        if (empty($token)) $token = $this->getHeaderToken();
-        $claims = $this->getTokenObj($token)->getClaims();
-        foreach ($claims as $k => $v) {
-            $arr[$k] = $v->getValue();
-        }
-        return $arr;
+        return $this->getTokenObj($token ?? $this->getHeaderToken())->claims()->all();
     }
 
     /**
@@ -187,6 +191,16 @@ class JWT extends AbstractJWT
     }
 
     /**
+     * @return mixed
+     */
+    public function getSceneConfigByToken(string $token)
+    {
+        $config = $this->getSceneConfig($this->getScene());
+        $signer = new $config['supported_algs'][$config['alg']];
+        return JWTUtil::getParser($signer, $this->getKey($config))->parse($token);
+    }
+
+    /**
      * 获取对应算法需要的key
      * @param string $type 配置keys里面的键，获取私钥或者公钥。private-私钥，public-公钥
      * @return Key|null
@@ -196,13 +210,12 @@ class JWT extends AbstractJWT
         $key = NULL;
         // 对称算法
         if (in_array($config['alg'], $config['symmetry_algs'])) {
-            $key = new Key($config['secret']);
+            $key = InMemory::base64Encoded($config['secret']);
         }
 
         // 非对称
         if (in_array($config['alg'], $config['asymmetric_algs'])) {
-            $key = $config['keys'][$type];
-            $key = new Key($key);
+            $key =InMemory::base64Encoded($config['keys'][$type]);
         }
         return $key;
     }
@@ -214,9 +227,9 @@ class JWT extends AbstractJWT
      */
     private function getTokenObj(string $token = null)
     {
-        return JWTUtil::getParser()->parse($token);
-//        if (!empty(str_replace(' ', '', $token))) return JWTUtil::getParser()->parse($token);
-//        return JWTUtil::getParser()->parse($this->getHeaderToken());
+        $config = $this->getSceneConfig($this->getScene());
+        $signer = new $config['supported_algs'][$config['alg']];
+        return JWTUtil::getParser($signer, $this->getKey($config))->parse($token ?? $this->getHeaderToken());
     }
 
     /**
@@ -236,26 +249,8 @@ class JWT extends AbstractJWT
      * @param Token $token token object
      * @return bool
      */
-    private function validateToken(Token $token, $currentTime = null)
+    private function validateToken(Signer $signer, Key $key, string $token)
     {
-        $data = JWTUtil::getValidationData($currentTime);
-        return $token->validate($data);
-    }
-
-    /**
-     * 验证 jwt token
-     * @param Token $token token object
-     * @return bool
-     * @throws \Throwable
-     */
-    private function verifyToken(Token $token, array $config)
-    {
-        $alg = $token->getHeader('alg');
-        if (empty($config['supported_algs'][$alg])) {
-            throw new TokenValidException('Algorithm not supported', 401);
-        }
-        /** @var Signer $signer */
-        $signer = new $config['supported_algs'][$alg];
-        return $token->verify($signer, $this->getKey($config, 'public'));
+        return JWTUtil::getValidationData($signer, $key, $token);
     }
 }

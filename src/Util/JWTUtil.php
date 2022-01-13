@@ -1,18 +1,23 @@
 <?php
 declare(strict_types=1);
 namespace Xmo\JWTAuth\Util;
-use Lcobucci\JWT\Builder;
-use Lcobucci\JWT\Claim\Factory as ClaimFactory;
-use Lcobucci\JWT\Parser;
+
+use Hyperf\Utils\ApplicationContext;
+use Lcobucci\JWT\Configuration;
+
+use Lcobucci\JWT\Signer;
+use Lcobucci\JWT\Signer\Hmac\Sha256;
+use Lcobucci\JWT\Signer\Key;
+use Lcobucci\JWT\Signer\Key\InMemory;
+
+use Lcobucci\JWT\Token\Parser;
 use Lcobucci\JWT\Parsing\Decoder;
 use Lcobucci\JWT\Parsing\Encoder;
+use Lcobucci\JWT\Token\Plain;
 use Lcobucci\JWT\ValidationData;
 
 /**
- * Created by PhpStorm.
- * User: liyuzhao
- * Date: 2020/4/21
- * Time: 1:51 下午
+ * JWT工具类
  */
 class JWTUtil
 {
@@ -21,7 +26,7 @@ class JWTUtil
      * @param $claims
      * @return mixed
      */
-    public static function claimsToArray( $claims)
+    public static function claimsToArray(array $claims)
     {
         /**
          *  @var $claim \Lcobucci\JWT\Claim
@@ -30,21 +35,6 @@ class JWTUtil
             $claims[$k] = $claim->getValue();
         }
         return $claims;
-    }
-
-    /**
-     * 解析token
-     * @param string $token
-     * @return array
-     */
-    public static function getParserData(string $token)
-    {
-        $arr = [];
-        $claims = self::getParser()->parse($token)->getClaims();
-        foreach ($claims as $k => $v) {
-            $arr[$k] = $v->getValue();
-        }
-        return $arr;
     }
 
     /**
@@ -64,30 +54,48 @@ class JWTUtil
         return false;
     }
 
+    public static function getConfiguration(Signer $signer, Key $key)
+    {
+        return Configuration::forSymmetricSigner($signer, $key);
+    }
+
     /**
      * @see [[Lcobucci\JWT\Builder::__construct()]]
      * @return Builder
      */
-    public static function getBuilder(Encoder $encoder = null, ClaimFactory $claimFactory = null)
+    public static function getBuilder(Signer $signer, Key $key)
     {
-        return new Builder($encoder, $claimFactory);
+        return self::getConfiguration($signer, $key)->builder();
     }
 
     /**
-     * @see [[Lcobucci\JWT\Parser::__construct()]]
      * @return Parser
      */
-    public static function getParser(Decoder $decoder = null, ClaimFactory $claimFactory = null)
+    public static function getParser(Signer $signer, Key $key)
     {
-        return new Parser($decoder, $claimFactory);
+        return self::getConfiguration($signer, $key)->parser();
     }
 
     /**
-     * @see [[Lcobucci\JWT\ValidationData::__construct()]]
      * @return ValidationData
      */
-    public static function getValidationData($currentTime = null)
+    public static function getValidationData(Signer $signer, Key $key, string $token)
     {
-        return new ValidationData($currentTime);
+        $config = self::getConfiguration($signer, $key);
+        $parser = $config->parser()->parse($token);
+        $claims = $parser->claims()->all();
+        $now = new \DateTimeImmutable();
+
+        if($claims['nbf'] > $now || $claims['exp'] < $now){
+            return false;
+        }
+
+        $config->setValidationConstraints(new \Lcobucci\JWT\Validation\Constraint\IdentifiedBy($claims['jti']));
+
+        if (! $config->validator()->validate($parser, ...$config->validationConstraints())) {
+            return false;
+        }
+
+        return true;
     }
 }

@@ -2,15 +2,16 @@
 declare(strict_types=1);
 namespace Xmo\JWTAuth;
 
-use Lcobucci\JWT\Token;
+use Lcobucci\JWT\Token\Plain;
 use Xmo\JWTAuth\Util\JWTUtil;
 use Xmo\JWTAuth\Util\TimeUtil;
 use Psr\Container\ContainerInterface;
 use Psr\SimpleCache\CacheInterface;
 
 /**
- * https://github.com/phper666/jwt-auth
- * author LI Yuzhao <562405704@qq.com>
+ * https://gitee.com/xmo/jwt-auth
+ * 原作者 liyuzhao
+ * 现维护者：xmo
  */
 class BlackList extends AbstractJWT
 {
@@ -27,14 +28,14 @@ class BlackList extends AbstractJWT
 
     /**
      * 把token加入到黑名单中
-     * @param Token $token
+     * @param Plain $token
      * @return mixed
      * @throws \Psr\SimpleCache\InvalidArgumentException
      */
-    public function addTokenBlack(Token $token, array $config = [], $ssoSelfExp = false)
+    public function addTokenBlack(Plain $token, array $config = [], $ssoSelfExp = false)
     {
-        $claims = JWTUtil::claimsToArray($token->getClaims());
-        if ($ssoSelfExp) $claims['iat'] += 1; // 如果是当点登录，并且调用了logout方法
+        $claims = $token->claims()->all();
+        if ($ssoSelfExp) $claims['iat'] += 1; // 如果是单点登录，并且调用了logout方法
         if ($config['blacklist_enabled']) {
             $cacheKey = $this->getCacheKey($claims['jti']);
             $this->cache->set(
@@ -53,8 +54,8 @@ class BlackList extends AbstractJWT
      */
     protected function getSecondsUntilExpired($claims, array $config)
     {
-        $exp = TimeUtil::timestamp($claims['exp']);
-        $iat = TimeUtil::timestamp($claims['iat']);
+        $exp = TimeUtil::timestamp($claims['exp']->getTimestamp());
+        $iat = TimeUtil::timestamp($claims['iat']->getTimestamp());
 
         // get the latter of the two expiration dates and find
         // the number of minutes until the expiration date,
@@ -73,7 +74,7 @@ class BlackList extends AbstractJWT
         $loginType = $config['login_type'];
         $gracePeriod = $config['blacklist_grace_period'];
         if ($loginType == 'sso') $gracePeriod = 0;
-        return TimeUtil::timestamp($claims['iat'])->addSeconds($gracePeriod)->getTimestamp();
+        return TimeUtil::timestamp($claims['iat']->getTimestamp())->addSeconds($gracePeriod)->getTimestamp();
     }
 
     /**
@@ -87,18 +88,16 @@ class BlackList extends AbstractJWT
         $cacheKey = $this->getCacheKey($claims['jti']);
         if ($config['blacklist_enabled'] && $config['login_type'] == 'mpop') {
             $val = $this->cache->get($cacheKey);
-            // check whether the expiry + grace has past
             return !empty($val) && !TimeUtil::isFuture($val['valid_until']);
         }
 
         if ($config['blacklist_enabled'] && $config['login_type'] == 'sso') {
             $val = $this->cache->get($cacheKey);
             // 这里为什么要大于等于0，因为在刷新token时，缓存时间跟签发时间可能一致，详细请看刷新token方法
-            $isFuture = ($claims['iat'] - $val['valid_until']) >= 0;
+            $isFuture = ($claims['iat']->getTimestamp() - $val['valid_until']) >= 0;
             // check whether the expiry + grace has past
             return !empty($val) && !$isFuture;
         }
-
         return false;
     }
 

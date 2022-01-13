@@ -1,19 +1,18 @@
 <?php
 declare(strict_types=1);
-/**
- * Created by PhpStorm.
- * User: liyuzhao
- * Date: 2020/4/21
- * Time: 9:17 下午
- */
 
 namespace Xmo\JWTAuth;
 
 use Hyperf\Contract\ConfigInterface;
+use Xmo\JWTAuth\Exception\JWTException;
 use Xmo\JWTAuth\Util\JWTUtil;
 use Psr\Container\ContainerInterface;
 
-
+/**
+ * https://gitee.com/xmo/jwt-auth
+ * 原作者 liyuzhao
+ * 现维护者：xmo
+ */
 abstract class AbstractJWT implements JWTInterface
 {
     /**
@@ -92,7 +91,7 @@ abstract class AbstractJWT implements JWTInterface
         if (empty($config['supported_algs'])) $config['supported_algs'] = $this->supportedAlgs;
         if (empty($config['symmetry_algs'])) $config['symmetry_algs'] = $this->symmetryAlgs;
         if (empty($config['asymmetric_algs'])) $config['asymmetric_algs'] = $this->asymmetricAlgs;
-        if (empty($config['blacklist_prefix'])) $config['blacklist_prefix'] = 'phper666_jwt';
+        if (empty($config['blacklist_prefix'])) $config['blacklist_prefix'] = 'mineadmin_jwt';
         $scenes = $config['scene'];
         unset($config['scene']);
         foreach ($scenes as $key => $scene) {
@@ -156,15 +155,5 @@ abstract class AbstractJWT implements JWTInterface
     public function getSceneConfig(string $scene = 'default')
     {
         return $this->config->get("{$this->configPrefix}.{$this->scenePrefix}.{$scene}");
-    }
-
-    /**
-     * @param string $token
-     * @return mixed
-     */
-    public function getSceneConfigByToken(string $token)
-    {
-        $scene = JWTUtil::getParserData($token)[$this->tokenScenePrefix];
-        return $this->getSceneConfig($scene);
     }
 }
