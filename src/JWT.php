@@ -83,6 +83,7 @@ class JWT extends AbstractJWT
     /**
      * 验证token
      * @param string|null $token
+     * @param string|null $scene
      * @param bool        $validate
      * @param bool        $verify
      * @param bool        $independentTokenVerify true时会验证当前场景配置是否是生成当前的token的配置，需要配合自定义中间件实现，false会根据当前token拿到原来的场景配置，并且验证当前token
@@ -90,23 +91,22 @@ class JWT extends AbstractJWT
      * @throws \Psr\SimpleCache\InvalidArgumentException
      * @throws \Throwable
      */
-    public function checkToken(string $token = null, $validate = true, $verify = true, $independentTokenVerify = false)
+    public function checkToken(string $token = null, string $scene = null, $validate = true, $verify = true, $independentTokenVerify = false)
     {
         try {
-            if (empty($token)) $token = $this->getHeaderToken();
-            $tokenObj = $this->getSceneConfigByToken($token);
-            $config = $this->getSceneConfig($tokenObj->claims()->all()['jwt_scene']);
+            $token = $token ?? $this->getHeaderToken();
+            $tokenObj = $this->getTokenObj($token);
+            $config = $this->getSceneConfig($scene ?? $this->getScene());
             $claims = $tokenObj->claims()->all();
 
-            $sceneConfig = $this->getSceneConfig($this->getScene());
-            $signer = new $sceneConfig['supported_algs'][$config['alg']];
+            $signer = new $config['supported_algs'][$config['alg']];
 
             // 验证token是否存在黑名单
             if ($config['blacklist_enabled'] && $this->blackList->hasTokenBlack($claims, $config)) {
                 throw new TokenValidException('Token authentication does not pass', 401);
             }
 
-            if ($validate && !$this->validateToken($signer, $this->getKey($sceneConfig), $token)){
+            if ($validate && !$this->validateToken($signer, $this->getKey($config), $token)){
                 throw new TokenValidException('Token authentication does not pass', 401);
             }
 
@@ -141,17 +141,17 @@ class JWT extends AbstractJWT
     /**
      * 让token失效
      * @param string|null $token
+     * @param string|null $scene
      * @return bool
      * @throws \Psr\SimpleCache\InvalidArgumentException
      */
-    public function logout(string $token = null)
+    public function logout(string $token = null, string $scene = null)
     {
-        if (empty($token)) $token = $this->getHeaderToken();
-        $config = $this->getSceneConfigByToken($token);
-        // 如果是sso，并且使当前token失效
-        $ssoSelfExp = false;
-        if ($config['login_type'] == 'sso') $ssoSelfExp = true;
-        $this->blackList->addTokenBlack($this->getTokenObj($token), $config, $ssoSelfExp);
+        $this->blackList->addTokenBlack(
+            $this->getTokenObj($token),
+            $this->getSceneConfig($scene ?? $this->getScene()),
+            $config['login_type'] == 'sso' ? true : false
+        );
         return true;
     }
 
@@ -183,21 +183,9 @@ class JWT extends AbstractJWT
      * 获取缓存时间
      * @return mixed
      */
-    public function getTTL(string $token = null)
+    public function getTTL(string $scene = null)
     {
-        if (!empty($token)) $config = $this->getSceneConfigByToken($token);
-        if (empty($token)) $config = $this->getSceneConfig($this->getScene());
-        return (int)$config['ttl'];
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getSceneConfigByToken(string $token)
-    {
-        $config = $this->getSceneConfig($this->getScene());
-        $signer = new $config['supported_algs'][$config['alg']];
-        return JWTUtil::getParser($signer, $this->getKey($config))->parse($token);
+        return $this->getSceneConfig($scene ?? $this->getScene())['ttl'];
     }
 
     /**

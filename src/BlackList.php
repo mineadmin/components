@@ -35,7 +35,7 @@ class BlackList extends AbstractJWT
     public function addTokenBlack(Plain $token, array $config = [], $ssoSelfExp = false)
     {
         $claims = $token->claims()->all();
-        if ($ssoSelfExp) $claims['iat'] += 1; // 如果是单点登录，并且调用了logout方法
+        $ssoSelfExp && $claims['iat']++;
         if ($config['blacklist_enabled']) {
             $cacheKey = $this->getCacheKey($claims['jti']);
             $this->cache->set(
