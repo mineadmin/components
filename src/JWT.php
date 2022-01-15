@@ -147,9 +147,10 @@ class JWT extends AbstractJWT
      */
     public function logout(string $token = null, string $scene = null)
     {
+        $config = $this->getSceneConfig($scene ?? $this->getScene());
         $this->blackList->addTokenBlack(
             $this->getTokenObj($token),
-            $this->getSceneConfig($scene ?? $this->getScene()),
+            $config,
             $config['login_type'] == 'sso' ? true : false
         );
         return true;

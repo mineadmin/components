@@ -35,7 +35,7 @@ class BlackList extends AbstractJWT
     public function addTokenBlack(Plain $token, array $config = [], $ssoSelfExp = false)
     {
         $claims = $token->claims()->all();
-        $ssoSelfExp && $claims['iat']++;
+        $ssoSelfExp && $claims['iat']->modify('+1 second');
         if ($config['blacklist_enabled']) {
             $cacheKey = $this->getCacheKey($claims['jti']);
             $this->cache->set(
@@ -94,9 +94,13 @@ class BlackList extends AbstractJWT
         if ($config['blacklist_enabled'] && $config['login_type'] == 'sso') {
             $val = $this->cache->get($cacheKey);
             // 这里为什么要大于等于0，因为在刷新token时，缓存时间跟签发时间可能一致，详细请看刷新token方法
-            $isFuture = ($claims['iat']->getTimestamp() - $val['valid_until']) >= 0;
+            if (! is_null($claims['iat']) && !empty($val['valid_until'])) {
+                $isFuture = ($claims['iat']->getTimestamp() - $val['valid_until']) >= 0;
+            } else {
+                $isFuture = false;
+            }
             // check whether the expiry + grace has past
-            return !empty($val) && !$isFuture;
+            return !$isFuture;
         }
         return false;
     }
