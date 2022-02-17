@@ -5,6 +5,7 @@ namespace Xmo\JWTAuth;
 use Lcobucci\JWT\Token\Plain;
 use Xmo\JWTAuth\Util\JWTUtil;
 use Xmo\JWTAuth\Util\TimeUtil;
+use Lcobucci\JWT\Token\RegisteredClaims;
 use Psr\Container\ContainerInterface;
 use Psr\SimpleCache\CacheInterface;
 
@@ -32,49 +33,23 @@ class BlackList extends AbstractJWT
      * @return mixed
      * @throws \Psr\SimpleCache\InvalidArgumentException
      */
-    public function addTokenBlack(Plain $token, array $config = [], $ssoSelfExp = false)
+    public function addTokenBlack(Plain $token, array $config = []): bool
     {
-        $claims = $token->claims()->all();
-        $ssoSelfExp && $claims['iat']->modify('+1 second');
+        $claims = $token->claims();
         if ($config['blacklist_enabled']) {
-            $cacheKey = $this->getCacheKey($claims['jti']);
-            $this->cache->set(
-                $cacheKey,
-                ['valid_until' => $this->getGraceTimestamp($claims, $config)],
-                $this->getSecondsUntilExpired($claims, $config)
-            );
+            $cacheKey = $this->getCacheKey($claims->get('jti'));
+            $blacklistGracePeriod = 0;
+            $expTime = $claims->get(RegisteredClaims::EXPIRATION_TIME);
+            if (! is_numeric($expTime)) {
+                $expTime = $expTime->getTimestamp();
+            }
+            $validUntil = TimeUtil::now()->addSeconds($blacklistGracePeriod)->getTimestamp();
+            $expTime = TimeUtil::timestamp($expTime);
+            $nowTime = TimeUtil::now();
+            $tokenCacheTime = $expTime->max($nowTime)->diffInSeconds();
+            return $this->cache->set($cacheKey, ['valid_until' => $validUntil], $tokenCacheTime);
         }
-        return $claims;
-    }
-
-    /**
-     * Get the number of seconds until the token expiry.
-     *
-     * @return int
-     */
-    protected function getSecondsUntilExpired($claims, array $config)
-    {
-        $exp = TimeUtil::timestamp($claims['exp']->getTimestamp());
-        $iat = TimeUtil::timestamp($claims['iat']->getTimestamp());
-
-        // get the latter of the two expiration dates and find
-        // the number of minutes until the expiration date,
-        // plus 1 minute to avoid overlap
-        return $exp->max($iat->addSeconds($config['blacklist_cache_ttl']))->diffInSeconds();
-    }
-
-    /**
-     * Get the timestamp when the blacklist comes into effect
-     * This defaults to immediate (0 seconds).
-     *
-     * @return int
-     */
-    protected function getGraceTimestamp($claims, array $config)
-    {
-        $loginType = $config['login_type'];
-        $gracePeriod = $config['blacklist_grace_period'];
-        if ($loginType == 'sso') $gracePeriod = 0;
-        return TimeUtil::timestamp($claims['iat']->getTimestamp())->addSeconds($gracePeriod)->getTimestamp();
+        return false;
     }
 
     /**
@@ -88,7 +63,7 @@ class BlackList extends AbstractJWT
         $cacheKey = $this->getCacheKey($claims['jti']);
         if ($config['blacklist_enabled'] && $config['login_type'] == 'mpop') {
             $val = $this->cache->get($cacheKey);
-            return !empty($val) && !TimeUtil::isFuture($val['valid_until']);
+            return !empty($val['valid_until']) && !TimeUtil::isFuture($val['valid_until']);
         }
 
         if ($config['blacklist_enabled'] && $config['login_type'] == 'sso') {
