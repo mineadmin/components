@@ -123,19 +123,18 @@ class JWT extends AbstractJWT
 
     /**
      * 刷新token
+     * @param string|null $token
      * @return Token
-     * @throws \Psr\SimpleCache\InvalidArgumentException
      */
     public function refreshToken(string $token = null)
     {
-        if (empty($token)) $token = $this->getHeaderToken();
-        $config = $this->getSceneConfigByToken($token);
-        $claims = $this->blackList->addTokenBlack($this->getTokenObj($token), $config);
-        unset($claims['iat']);
-        unset($claims['nbf']);
-        unset($claims['exp']);
-        unset($claims['jti']);
-        return $this->getToken($claims);
+        try {
+            $claims = $this->getTokenObj($$token ?? $this->getHeaderToken())->claims()->all();
+            unset($claims['iat'], $claims['nbf'], $claims['exp'], $claims['jti']);
+            return $this->getToken($claims);
+        } catch (\RuntimeException $e) {
+            throw new \RuntimeException($e->getMessage(), $e->getCode(), $e->getPrevious());
+        }
     }
 
     /**
