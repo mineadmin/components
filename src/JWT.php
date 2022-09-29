@@ -131,7 +131,7 @@ class JWT extends AbstractJWT
     public function refreshToken(string $token = null)
     {
         try {
-            $claims = $this->getTokenObj($$token ?? $this->getHeaderToken())->claims()->all();
+            $claims = $this->getTokenObj($token ?? $this->getHeaderToken())->claims()->all();
             unset($claims['iat'], $claims['nbf'], $claims['exp'], $claims['jti']);
             return $this->getToken($claims);
         } catch (\RuntimeException $e) {
