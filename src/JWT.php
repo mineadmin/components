@@ -8,10 +8,12 @@ use Lcobucci\JWT\Signer;
 use Lcobucci\JWT\Signer\Key;
 use Lcobucci\JWT\Signer\Key\InMemory;
 use Lcobucci\JWT\Token;
+use Lcobucci\JWT\Token\RegisteredClaims;
 use Xmo\JWTAuth\Exception\JWTException;
 use Xmo\JWTAuth\Exception\TokenValidException;
 use Xmo\JWTAuth\Util\JWTUtil;
 use Psr\Container\ContainerInterface;
+use Xmo\JWTAuth\Util\TimeUtil;
 
 /**
  * https://gitee.com/xmo/jwt-auth
@@ -129,7 +131,7 @@ class JWT extends AbstractJWT
     public function refreshToken(string $token = null)
     {
         try {
-            $claims = $this->getTokenObj($token ?? $this->getHeaderToken())->claims()->all();
+            $claims = $this->getTokenObj($$token ?? $this->getHeaderToken())->claims()->all();
             unset($claims['iat'], $claims['nbf'], $claims['exp'], $claims['jti']);
             return $this->getToken($claims);
         } catch (\RuntimeException $e) {
@@ -158,11 +160,13 @@ class JWT extends AbstractJWT
      */
     public function getTokenDynamicCacheTime(string $token = null)
     {
-        $nowTime = time();
         if (empty($token)) $token = $this->getHeaderToken();
-        $exp = $this->getTokenObj($token)->getClaim('exp', $nowTime);
-        $expTime = $exp - $nowTime;
-        return $expTime;
+        $claims = $this->getTokenObj($token)->claims();
+        if (! $claims->has(RegisteredClaims::EXPIRATION_TIME)) {
+            $timeUtil = TimeUtil::timestamp($claims->get(RegisteredClaims::EXPIRATION_TIME));
+            return $timeUtil->max(TimeUtil::now())->diffInSeconds();
+        }
+        return -1;
     }
 
     /**
