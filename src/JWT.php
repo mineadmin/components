@@ -50,6 +50,9 @@ class JWT extends AbstractJWT
     public function getToken(array $claims, $isInsertSsoBlack = true, $isConversionString = true)
     {
         $config = $this->getSceneConfig($this->getScene());
+        if (empty($config)) {
+            throw new JWTException("The jwt scene [{$this->getScene()}] not found", 400);
+        }
         $loginType = $config['login_type'];
         $ssoKey = $config['sso_key'];
         if ($loginType == 'mpop') { // 多点登录,场景值加上一个唯一id
