@@ -91,6 +91,7 @@ class JWTUtil
         }
 
         $config->setValidationConstraints(new \Lcobucci\JWT\Validation\Constraint\IdentifiedBy($claims['jti']));
+        $config->setValidationConstraints(new \Lcobucci\JWT\Validation\Constraint\SignedWith($signer,$key));
 
         if (! $config->validator()->validate($parser, ...$config->validationConstraints())) {
             return false;
