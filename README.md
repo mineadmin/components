@@ -1,6 +1,6 @@
-## MineAdmin 核心依赖包
+## MineAdmin Office 依赖包
 
 ### 安装
 ``` shell
-composer require xmo/mine
+composer require xmo/mine-office
 ```
