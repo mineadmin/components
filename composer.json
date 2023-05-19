@@ -22,11 +22,7 @@
     },
     "require": {
         "php": ">=8.0",
-        "ext-xlswriter": "*",
         "phpoffice/phpspreadsheet": "^1.24"
-    },
-    "suggest": {
-        "ext-xlswriter": "Required to use xlswriter."
     },
     "config": {
         "optimize-autoloader": true,
