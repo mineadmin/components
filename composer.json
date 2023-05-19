@@ -9,11 +9,8 @@
     "description": "mineadmin office package",
     "autoload": {
         "psr-4": {
-            "Mine\\": "src/"
-        },
-        "files": [
-            "./src/Helper/functions.php"
-        ]
+            "Mine\\Office\\": "src/"
+        }
     },
     "autoload-dev": {
         "psr-4": {
