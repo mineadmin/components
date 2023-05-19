@@ -1,0 +1,44 @@
+{
+    "name": "xmo/mine-office",
+    "type": "library",
+    "license": "Apache-2.0",
+    "keywords": [
+        "mineadmin",
+        "office"
+    ],
+    "description": "mineadmin office package",
+    "autoload": {
+        "psr-4": {
+            "Mine\\": "src/"
+        },
+        "files": [
+            "./src/Helper/functions.php"
+        ]
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "MineTest\\": "tests"
+        }
+    },
+    "require": {
+        "php": ">=8.0",
+        "ext-xlswriter": "*",
+        "phpoffice/phpspreadsheet": "^1.24"
+    },
+    "suggest": {
+        "ext-xlswriter": "Required to use xlswriter."
+    },
+    "config": {
+        "optimize-autoloader": true,
+        "sort-packages": true
+    },
+    "scripts": {
+        "cs-fix": "php-cs-fixer fix $1"
+    },
+    "repositories": {
+        "packagist": {
+            "type": "composer",
+            "url": "https://mirrors.tencent.com/composer/"
+        }
+    }
+}
