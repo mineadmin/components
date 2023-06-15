@@ -149,9 +149,9 @@ abstract class MineExcel
         if ($columnIndex < 26) {
             return chr(65 + $columnIndex);
         } else if ($columnIndex < 702) {
-            return chr(64 + ($columnIndex / 26)) . chr(65 + $columnIndex % 26);
+            return chr(64 + intval($columnIndex / 26)) . chr(65 + $columnIndex % 26);
         } else {
-            return chr(64 + (($columnIndex - 26) / 676)) . chr(65 + ((($columnIndex - 26) % 676) / 26)) . chr(65 + $columnIndex % 26);
+            return chr(64 + intval(($columnIndex - 26) / 676)) . chr(65 + intval((($columnIndex - 26) % 676) / 26)) . chr(65 + $columnIndex % 26);
         }
     }
 }
