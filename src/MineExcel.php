@@ -113,6 +113,7 @@ abstract class MineExcel
     {
         return container()->get(MineResponse::class)->getResponse()
             ->withHeader('Server', 'MineAdmin')
+            ->withHeader('access-control-expose-headers', 'content-disposition')
             ->withHeader('content-description', 'File Transfer')
             ->withHeader('content-type', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
             ->withHeader('content-disposition', "attachment; filename={$filename}; filename*=UTF-8''" . rawurlencode($filename))
