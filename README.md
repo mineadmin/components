@@ -7,13 +7,13 @@ ps: 组件从 `hyperf-ext/translatable` fork而来，原组件只支持到hyperf
 ## 安装
 
 ```shell script
-composer require xmo/translatable
+composer require xmo/mine-translatable
 ```
 
 ## 发布配置
 
 ```shell script
-php bin/hyperf.php vendor:publish xmo/translatable
+php bin/hyperf.php vendor:publish xmo/mine-translatable
 ```
 
 > 文件位于 `config/autoload/translatable.php`。
