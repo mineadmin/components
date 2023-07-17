@@ -155,7 +155,7 @@ php bin/hyperf.php vendor:publish xmo/mine-translatable
     |
      */
     'rule_factory' => [
-        'format' => \HyperfExt\Translatable\Validation\RuleFactory::FORMAT_ARRAY,
+        'format' => \Mine\Translatable\Validation\RuleFactory::FORMAT_ARRAY,
         'prefix' => '%',
         'suffix' => '%',
     ],
@@ -224,8 +224,8 @@ class CreatePostTranslationsTable extends Migration
 Post.php
 ```php
 use Hyperf\Database\Model\Model;
-use HyperfExt\Translatable\Contracts\TranslatableInterface;
-use HyperfExt\Translatable\Translatable;
+use Mine\Translatable\Contracts\TranslatableInterface;
+use Mine\Translatable\Translatable;
 
 class Post extends Model implements TranslatableInterface
 {

@@ -77,7 +77,7 @@ trait Translatable
         return self::$deleteTranslationsCascade;
     }
 
-    public function attributesToArray()
+    public function attributesToArray(): array
     {
         $attributes = parent::attributesToArray();
 

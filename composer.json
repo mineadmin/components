@@ -70,7 +70,7 @@
     },
     "extra": {
         "hyperf": {
-            "config": "HyperfExt\\Translatable\\ConfigProvider"
+            "config": "Mine\\Translatable\\ConfigProvider"
         }
     }
 }

@@ -150,7 +150,7 @@ return [
     |
      */
     'rule_factory' => [
-        'format' => \HyperfExt\Translatable\Validation\RuleFactory::FORMAT_ARRAY,
+        'format' => \Mine\Translatable\Validation\RuleFactory::FORMAT_ARRAY,
         'prefix' => '%',
         'suffix' => '%',
     ],

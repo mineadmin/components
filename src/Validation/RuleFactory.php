@@ -43,7 +43,7 @@ class RuleFactory
     protected $locales;
 
     /**
-     * @var \HyperfExt\Translatable\Contracts\LocalesInterface
+     * @var \Mine\Translatable\Contracts\LocalesInterface
      */
     protected $helper;
 

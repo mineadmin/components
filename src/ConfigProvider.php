@@ -25,7 +25,7 @@ class ConfigProvider
             'publish' => [
                 [
                     'id' => 'config',
-                    'description' => 'The config for xmo/translatable.',
+                    'description' => 'The config for xmo/mine-translatable.',
                     'source' => __DIR__ . '/../publish/translatable.php',
                     'destination' => BASE_PATH . '/config/autoload/translatable.php',
                 ],
