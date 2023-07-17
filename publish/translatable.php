@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 /**
- * This file is part of hyperf-ext/translatable.
+ * This file is part of xmo/translatable.
  *
- * @link     https://github.com/hyperf-ext/translatable
- * @contact  eric@zhu.email
- * @license  https://github.com/hyperf-ext/translatable/blob/master/LICENSE
+ * @link     https://github.com/xmo/translatable
+ * @contact  root@imoi.cn
+ * @license  https://github.com/xmo/translatable/blob/master/LICENSE
  */
 return [
     /*

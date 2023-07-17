@@ -2,22 +2,24 @@
 
 declare(strict_types=1);
 /**
- * This file is part of hyperf-ext/translatable.
+ * MineAdmin is committed to providing solutions for quickly building web applications
+ * Please view the LICENSE file that was distributed with this source code,
+ * For the full copyright and license information.
+ * Thank you very much for using MineAdmin.
  *
- * @link     https://github.com/hyperf-ext/translatable
- * @contact  eric@zhu.email
- * @license  https://github.com/hyperf-ext/translatable/blob/master/LICENSE
+ * @Author X.Mo<root@imoi.cn>
+ * @Link   https://gitee.com/xmo/MineAdmin
  */
-namespace HyperfExt\Translatable;
+namespace Mine\Translatable;
 
 use Hyperf\Database\Model\Collection;
 use Hyperf\Database\Model\Model;
 use Hyperf\Database\Model\ModelNotFoundException;
 use Hyperf\ModelListener\Collector\ListenerCollector;
-use Hyperf\Utils\ApplicationContext;
-use Hyperf\Utils\Str;
-use HyperfExt\Translatable\Traits\Relationship;
-use HyperfExt\Translatable\Traits\Scopes;
+use Hyperf\Context\ApplicationContext;
+use Hyperf\Stringable\Str;
+use Mine\Translatable\Traits\Relationship;
+use Mine\Translatable\Traits\Scopes;
 
 /**
  * @property null|Model $translation

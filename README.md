@@ -2,16 +2,18 @@
 
 该组件为数据库模型提供实现多语言的能力。
 
+ps: 组件从 `hyperf-ext/translatable` fork而来，原组件只支持到hyperf2.2版本。作者目前长时间未更新。
+
 ## 安装
 
 ```shell script
-composer require hyperf-ext/translatable
+composer require xmo/translatable
 ```
 
 ## 发布配置
 
 ```shell script
-php bin/hyperf.php vendor:publish hyperf-ext/translatable
+php bin/hyperf.php vendor:publish xmo/translatable
 ```
 
 > 文件位于 `config/autoload/translatable.php`。
@@ -264,7 +266,7 @@ class PostTranslation extends Model
 ```php
 use App\Post;
 use Hyperf\Contract\TranslatorInterface;
-use Hyperf\Utils\ApplicationContext;
+use Hyperf\Context\ApplicationContext;
 
 $post = Post::query()->first();
 echo $post->translate('en')->title; // My first post

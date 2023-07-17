@@ -2,15 +2,17 @@
 
 declare(strict_types=1);
 /**
- * This file is part of hyperf-ext/translatable.
+ * MineAdmin is committed to providing solutions for quickly building web applications
+ * Please view the LICENSE file that was distributed with this source code,
+ * For the full copyright and license information.
+ * Thank you very much for using MineAdmin.
  *
- * @link     https://github.com/hyperf-ext/translatable
- * @contact  eric@zhu.email
- * @license  https://github.com/hyperf-ext/translatable/blob/master/LICENSE
+ * @Author X.Mo<root@imoi.cn>
+ * @Link   https://gitee.com/xmo/MineAdmin
  */
 use Hyperf\Di\Container;
 use Hyperf\Di\Definition\DefinitionSourceFactory;
-use Hyperf\Utils\ApplicationContext;
+use Hyperf\Context\ApplicationContext;
 
 ! defined('BASE_PATH') && define('BASE_PATH', dirname(__DIR__, 1));
 ! defined('SWOOLE_HOOK_FLAGS') && define('SWOOLE_HOOK_FLAGS', SWOOLE_HOOK_ALL);
