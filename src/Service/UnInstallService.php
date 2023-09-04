@@ -2,7 +2,9 @@
 
 namespace Mine\Gateway\Service;
 
-class UnInstallService
+use Mine\Gateway\AbstractService;
+
+class UnInstallService extends AbstractService
 {
 
 }

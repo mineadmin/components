@@ -2,7 +2,9 @@
 
 namespace Mine\Gateway\Service;
 
-class MemberService
+use Mine\Gateway\AbstractService;
+
+class MemberService extends AbstractService
 {
 
 }

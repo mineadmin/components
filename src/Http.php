@@ -4,5 +4,4 @@ namespace Mine\Gateway;
 
 class Http
 {
-
 }
