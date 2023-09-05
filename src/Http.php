@@ -22,9 +22,9 @@ class Http
      * @param string $uri
      * @param array $options
      * @param bool $getResponse
-     * @return ResponseInterface|array
+     * @return ResponseInterface|array|null
      */
-    public function post(string $uri, array $options = [], bool $getResponse = false): ResponseInterface|array
+    public function post(string $uri, array $options = [], bool $getResponse = false): null|ResponseInterface|array
     {
         return $this->responseHandler(
             $this->client->post($uri, array_merge(['Content-Type' => 'application/json'], $options)),
@@ -37,9 +37,9 @@ class Http
      * @param string $uri
      * @param array $options
      * @param bool $getResponse
-     * @return ResponseInterface|array
+     * @return ResponseInterface|array|null
      */
-    public function get(string $uri, array $options = [], bool $getResponse = false): ResponseInterface|array
+    public function get(string $uri, array $options = [], bool $getResponse = false): null|ResponseInterface|array
     {
         return $this->responseHandler(
             $this->client->get($uri, array_merge(['Content-Type' => 'application/json'], $options)),
@@ -47,11 +47,16 @@ class Http
         );
     }
 
-    protected function responseHandler(ResponseInterface $response, bool $getResponse): ResponseInterface|array
+    /**
+     * @param ResponseInterface $response
+     * @param bool $getResponse
+     * @return ResponseInterface|array|null
+     */
+    protected function responseHandler(ResponseInterface $response, bool $getResponse): null|ResponseInterface|array
     {
         if ($response->getStatusCode() === 200) {
             return $getResponse ? $response : $response->getBody();
         }
-        return [];
+        return null;
     }
 }

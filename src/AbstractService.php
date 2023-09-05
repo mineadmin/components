@@ -13,4 +13,16 @@ class AbstractService
     {
         $this->http = $http;
     }
+
+    /**
+     * 授权登录
+     * @param string $account
+     * @param string $password
+     * @return string
+     */
+    public function auth(string $account, string $password): string
+    {
+        // todo...
+        return 'token';
+    }
 }
