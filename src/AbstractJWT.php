@@ -156,4 +156,13 @@ abstract class AbstractJWT implements JWTInterface
     {
         return $this->config->get("{$this->configPrefix}.{$this->scenePrefix}.{$scene}");
     }
+
+    /**
+     * @param bool $independentTokenVerify
+     * @return bool
+     */
+    public function getIndependentTokenVerify(bool $independentTokenVerify = false): bool
+    {
+        return $this->config->get("{$this->configPrefix}")['independentTokenVerify'] ?? $independentTokenVerify;
+    }
 }
