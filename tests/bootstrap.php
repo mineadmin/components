@@ -19,6 +19,6 @@ use Hyperf\Context\ApplicationContext;
 
 require_once dirname(dirname(__FILE__)) . '/vendor/autoload.php';
 
-$container = new Container((new DefinitionSourceFactory(true))());
+$container = new Container((new DefinitionSourceFactory())());
 
 ApplicationContext::setContainer($container);
