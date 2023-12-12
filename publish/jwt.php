@@ -112,6 +112,6 @@ return [
         'class' => '',
         'pk' => 'uid'
     ],
-    //$independentTokenVerify true时会验证当前场景配置是否是生成当前的token的配置，需要配合自定义中间件实现，false会根据当前token拿到原来的场景配置，并且验证当前token
+    // 是否验证当前场景配置是否是生成当前的token的配置，需要配合自定义中间件实现，false会根据当前token拿到原来的场景配置，并且验证当前token
     'independentTokenVerify' => false
 ];
