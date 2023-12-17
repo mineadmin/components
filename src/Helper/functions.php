@@ -111,11 +111,7 @@ if (! function_exists('format_size')) {
 if (! function_exists('lang')) {
     /**
      * 获取当前语言
-     * @param string $key
-     * @param array $replace
      * @return string
-     * @throws \Psr\Container\ContainerExceptionInterface
-     * @throws \Psr\Container\NotFoundExceptionInterface
      */
     function lang(): string
     {
@@ -135,7 +131,7 @@ if (! function_exists('t')) {
      */
     function t(string $key, array $replace = []): string
     {
-        return __($key, $replace, lang());
+        return \Hyperf\Translation\__($key, $replace, lang());
     }
 }
 
