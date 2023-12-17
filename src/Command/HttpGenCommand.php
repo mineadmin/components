@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Mine\Command;
 
 use Hyperf\Command\Annotation\Command;
-use Hyperf\Utils\Filesystem\Filesystem;
+use Hyperf\Support\Filesystem\Filesystem;
 use Mine\Exception\NormalStatusException;
 use Mine\Helper\Str;
 use Mine\MineCommand;

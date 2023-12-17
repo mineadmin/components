@@ -15,7 +15,7 @@ namespace Mine\Command\Migrate;
 use Hyperf\Command\Annotation\Command;
 use Hyperf\Database\Commands\Migrations\TableGuesser;
 use Hyperf\Database\Commands\Seeders\BaseCommand;
-use Hyperf\Utils\Str;
+use Hyperf\Stringable\Str;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputOption;
 use Throwable;

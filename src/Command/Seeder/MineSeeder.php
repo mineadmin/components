@@ -15,7 +15,7 @@ namespace Mine\Command\Seeder;
 use Hyperf\Command\Annotation\Command;
 use Hyperf\Database\Commands\Seeders\BaseCommand;
 use Hyperf\Database\Seeders\SeederCreator;
-use Hyperf\Utils\Str;
+use Hyperf\Stringable\Str;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputOption;
 

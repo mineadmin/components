@@ -17,7 +17,7 @@ namespace Mine\Generator;
 use App\Setting\Model\SettingGenerateColumns;
 use App\Setting\Model\SettingGenerateTables;
 use Mine\Interfaces\ServiceInterface\GenerateColumnServiceInterface;
-use Hyperf\Utils\Filesystem\Filesystem;
+use Hyperf\Support\Filesystem\Filesystem;
 use Mine\Exception\NormalStatusException;
 use Mine\Generator\Traits\MapperGeneratorTraits;
 use Mine\Helper\Str;

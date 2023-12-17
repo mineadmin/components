@@ -15,7 +15,7 @@ use Hyperf\Contract\StdoutLoggerInterface;
 use Hyperf\ExceptionHandler\ExceptionHandler;
 use Hyperf\HttpMessage\Stream\SwooleStream;
 use Hyperf\Logger\LoggerFactory;
-use Hyperf\Utils\Codec\Json;
+use Hyperf\Codec\Json;
 use Mine\Log\RequestIdHolder;
 use Psr\Http\Message\ResponseInterface;
 use Hyperf\Logger\Logger;

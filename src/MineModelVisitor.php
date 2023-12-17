@@ -13,7 +13,7 @@ declare(strict_types=1);
 namespace Mine;
 
 use Hyperf\Database\Commands\Ast\ModelUpdateVisitor;
-use Hyperf\Utils\Str;
+use Hyperf\Stringable;
 use Mine\Annotation\DependProxy;
 
 /**

@@ -12,10 +12,9 @@
 use App\System\Vo\QueueMessageVo;
 use Hyperf\Contract\StdoutLoggerInterface;
 use Hyperf\Logger\LoggerFactory;
-use Hyperf\Utils\ApplicationContext;
+use Hyperf\Context\ApplicationContext;
 use Mine\Helper\LoginUser;
 use Mine\Helper\AppVerify;
-use Mine\Helper\Id;
 use Mine\Interfaces\ServiceInterface\QueueLogServiceInterface;
 use Psr\EventDispatcher\EventDispatcherInterface;
 use Psr\Log\LoggerInterface;

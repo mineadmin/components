@@ -13,7 +13,7 @@ declare(strict_types=1);
 
 namespace Mine;
 
-use Hyperf\Utils\Filesystem\Filesystem;
+use Hyperf\Support\Filesystem\Filesystem;
 
 class Mine
 {

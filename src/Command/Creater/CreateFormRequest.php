@@ -13,8 +13,8 @@ declare(strict_types=1);
 namespace Mine\Command\Creater;
 
 use Hyperf\Command\Annotation\Command;
-use Hyperf\Utils\Filesystem\FileNotFoundException;
-use Hyperf\Utils\Filesystem\Filesystem;
+use Hyperf\Support\Filesystem\FileNotFoundException;
+use Hyperf\Support\Filesystem\Filesystem;
 use Mine\MineCommand;
 use Symfony\Component\Console\Input\InputArgument;
 

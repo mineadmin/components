@@ -15,7 +15,7 @@ namespace Mine\Exception\Handler;
 
 use Hyperf\ExceptionHandler\ExceptionHandler;
 use Hyperf\HttpMessage\Stream\SwooleStream;
-use Hyperf\Utils\Codec\Json;
+use Hyperf\Codec\Json;
 use Mine\Exception\TokenException;
 use Mine\Helper\MineCode;
 use Mine\Log\RequestIdHolder;

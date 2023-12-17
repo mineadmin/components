@@ -13,7 +13,7 @@ declare(strict_types=1);
 namespace Mine\Command\Seeder;
 
 use Hyperf\Command\Annotation\Command;
-use Hyperf\Command\ConfirmableTrait;
+use Hyperf\Command\Concerns\Confirmable;
 use Hyperf\Database\Commands\Seeders\BaseCommand;
 use Hyperf\Database\Seeders\Seed;
 use Symfony\Component\Console\Input\InputArgument;
@@ -26,7 +26,7 @@ use Symfony\Component\Console\Input\InputOption;
 #[Command]
 class MineSeederRun extends BaseCommand
 {
-    use ConfirmableTrait;
+    use Confirmable;
 
     /**
      * The console command name.

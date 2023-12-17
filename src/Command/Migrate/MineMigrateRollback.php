@@ -12,7 +12,7 @@
 declare(strict_types=1);
 namespace Mine\Command\Migrate;
 
-use Hyperf\Command\ConfirmableTrait;
+use Hyperf\Command\Concerns\Confirmable;
 use Hyperf\Database\Commands\Migrations\BaseCommand;
 use Hyperf\Database\Migrations\Migrator;
 use Symfony\Component\Console\Input\InputOption;
@@ -26,7 +26,7 @@ use Hyperf\Command\Annotation\Command;
 #[Command]
 class MineMigrateRollback extends BaseCommand
 {
-    use ConfirmableTrait;
+    use Confirmable;
 
     protected ?string $name = 'mine:migrate-rollback';
 

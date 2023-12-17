@@ -20,7 +20,7 @@ use Mine\Exception\NormalStatusException;
 use Mine\MineCollection;
 use Mine\MineModel;
 use Hyperf\ModelCache\Manager;
-use Hyperf\Utils\ApplicationContext;
+use Hyperf\Context\ApplicationContext;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\NotFoundExceptionInterface;
 
@@ -299,7 +299,7 @@ trait MapperTrait
      * 获取单个值
      * @param array $condition
      * @param string $columns
-     * @return \Hyperf\Utils\HigherOrderTapProxy|mixed|void|null
+     * @return \Hyperf\Tappable\HigherOrderTapProxy|mixed|void|null
      */
     public function value(array $condition, string $columns = 'id')
     {

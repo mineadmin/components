@@ -13,7 +13,7 @@ declare(strict_types=1);
 
 namespace Mine\Generator;
 
-use Hyperf\Utils\Filesystem\Filesystem;
+use Hyperf\Support\Filesystem\Filesystem;
 use Mine\Mine;
 
 class ModuleGenerator extends MineGenerator

@@ -155,7 +155,7 @@ trait ServiceTrait
      * User:mike
      * @param array $condition
      * @param string $columns
-     * @return \Hyperf\Utils\HigherOrderTapProxy|mixed|void|null
+     * @return \Hyperf\Tappable\HigherOrderTapProxy|mixed|void|null
      */
     public function value(array $condition, string $columns = 'id')
     {

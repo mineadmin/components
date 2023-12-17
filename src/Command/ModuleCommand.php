@@ -14,7 +14,7 @@ namespace Mine\Command;
 
 use Mine\Interfaces\ServiceInterface\ModuleServiceInterface;
 use Hyperf\Command\Annotation\Command;
-use Hyperf\Command\ConfirmableTrait;
+use Hyperf\Command\Concerns\Confirmable;
 use Hyperf\Database\Migrations\Migrator;
 use Mine\Helper\ConsoleTable;
 use Mine\Mine;
@@ -28,7 +28,7 @@ use Symfony\Component\Console\Input\InputOption;
 #[Command]
 class ModuleCommand extends MineCommand
 {
-    use ConfirmableTrait;
+    use Confirmable;
     /**
      * 安装命令
      * @var string|null

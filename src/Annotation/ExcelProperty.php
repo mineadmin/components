@@ -24,66 +24,29 @@ use Hyperf\Di\Annotation\AbstractAnnotation;
 class ExcelProperty extends AbstractAnnotation
 {
     /**
-     * 列表头名称
-     * @var string
+     * @param string|null $value 字段名
+     * @param int|null $index 列索引号
+     * @param int|null $width 宽度
+     * @param string|null $align 文字对齐方式
+     * @param string|null $headColor 表头字体颜色
+     * @param string|null $headBgColor 表头背景颜色
+     * @param string|null $color 表体文字颜色
+     * @param string|null $bgColor 表体表格背景颜色
+     * @param array|null $dictData 字典数据
+     * @param string|null $dictName 字典名称
+     * @param string|null $path 数据路径 用法: object.value
      */
-    public string $value;
-
-    /**
-     * 列顺序
-     * @var int
-     */
-    public int $index;
-
-    /**
-     * 宽度
-     * @var int
-     */
-    public int $width;
-
-    /**
-     * 对齐方式，默认居左
-     * @var string
-     */
-    public string $align;
-
-    /**
-     * 列表头字体颜色
-     * @var string
-     */
-    public string $headColor;
-
-    /**
-     * 列表头背景颜色
-     * @var string
-     */
-    public string $headBgColor;
-
-    /**
-     * 列表体字体颜色
-     * @var string
-     */
-    public string $color;
-
-    /**
-     * 列表体背景颜色
-     * @var string
-     */
-    public string $bgColor;
-
-    /**
-     * 字典数据列表
-     */
-    public ?array $dictData = null;
-
-    /**
-     * 字典名称
-     * @var string
-     */
-    public string $dictName;
-    /**
-     * 数据路径 用法: object.value
-     * @var string
-     */
-    public string $path;
+    public function __construct(
+        public ?string $value = null,
+        public ?int $index = null,
+        public ?int $width = null,
+        public ?string $align = null,
+        public ?string $headColor = null,
+        public ?string $headBgColor = null,
+        public ?string $color = null,
+        public ?string $bgColor = null,
+        public ?array $dictData = null,
+        public ?string $dictName = null,
+        public ?string $path = null
+    ) {}
 }
