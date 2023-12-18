@@ -1,18 +1,27 @@
 <?php
+
 declare(strict_types=1);
+/**
+ * This file is part of MineAdmin.
+ *
+ * @link     https://www.mineadmin.com
+ * @document https://doc.mineadmin.com
+ * @contact  root@imoi.cn
+ * @license  https://github.com/mineadmin/MineAdmin/blob/master/LICENSE
+ */
+
 namespace Xmo\JWTAuth;
 
 use Lcobucci\JWT\Token\Plain;
-use Xmo\JWTAuth\Util\JWTUtil;
-use Xmo\JWTAuth\Util\TimeUtil;
 use Lcobucci\JWT\Token\RegisteredClaims;
 use Psr\Container\ContainerInterface;
 use Psr\SimpleCache\CacheInterface;
+use Xmo\JWTAuth\Util\TimeUtil;
 
 /**
  * https://gitee.com/xmo/jwt-auth
  * 原作者 liyuzhao
- * 现维护者：xmo
+ * 现维护者：xmo.
  */
 class BlackList extends AbstractJWT
 {
@@ -28,8 +37,7 @@ class BlackList extends AbstractJWT
     }
 
     /**
-     * 把token加入到黑名单中
-     * @param Plain $token
+     * 把token加入到黑名单中.
      * @return mixed
      * @throws \Psr\SimpleCache\InvalidArgumentException
      */
@@ -53,8 +61,7 @@ class BlackList extends AbstractJWT
     }
 
     /**
-     * 判断token是否已经加入黑名单
-     * @param $claims
+     * 判断token是否已经加入黑名单.
      * @return bool
      * @throws \Psr\SimpleCache\InvalidArgumentException
      */
@@ -63,26 +70,26 @@ class BlackList extends AbstractJWT
         $cacheKey = $this->getCacheKey($claims['jti']);
         if ($config['blacklist_enabled'] && $config['login_type'] == 'mpop') {
             $val = $this->cache->get($cacheKey);
-            return !empty($val['valid_until']) && !TimeUtil::isFuture($val['valid_until']);
+            return ! empty($val['valid_until']) && ! TimeUtil::isFuture($val['valid_until']);
         }
 
         if ($config['blacklist_enabled'] && $config['login_type'] == 'sso') {
             $val = $this->cache->get($cacheKey);
             // 这里为什么要大于等于0，因为在刷新token时，缓存时间跟签发时间可能一致，详细请看刷新token方法
-            if (! is_null($claims['iat']) && !empty($val['valid_until'])) {
+            if (! is_null($claims['iat']) && ! empty($val['valid_until'])) {
                 $isFuture = ($claims['iat']->getTimestamp() - $val['valid_until']) >= 0;
             } else {
                 $isFuture = false;
             }
             // check whether the expiry + grace has past
-            return !$isFuture;
+            return ! $isFuture;
         }
         return false;
     }
 
     /**
-     * 黑名单移除token
-     * @param $key  token 中的jit
+     * 黑名单移除token.
+     * @param $key token 中的jit
      * @return bool
      * @throws \Psr\SimpleCache\InvalidArgumentException
      */
@@ -92,7 +99,7 @@ class BlackList extends AbstractJWT
     }
 
     /**
-     * 移除所有的token缓存
+     * 移除所有的token缓存.
      * @return bool
      * @throws \Psr\SimpleCache\InvalidArgumentException
      */
@@ -103,16 +110,6 @@ class BlackList extends AbstractJWT
     }
 
     /**
-     * @param string $jti
-     * @return string
-     */
-    private function getCacheKey(string $jti)
-    {
-        $config = $this->getSceneConfig($this->getScene());
-        return "{$config['blacklist_prefix']}_" . $jti;
-    }
-
-    /**
      * Get the cache time limit.
      *
      * @return int
@@ -120,5 +117,14 @@ class BlackList extends AbstractJWT
     public function getCacheTTL()
     {
         return $this->getSceneConfig($this->getScene())['ttl'];
+    }
+
+    /**
+     * @return string
+     */
+    private function getCacheKey(string $jti)
+    {
+        $config = $this->getSceneConfig($this->getScene());
+        return "{$config['blacklist_prefix']}_" . $jti;
     }
 }

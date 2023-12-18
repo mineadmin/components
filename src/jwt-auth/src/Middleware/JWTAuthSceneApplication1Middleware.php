@@ -1,24 +1,28 @@
 <?php
+
+declare(strict_types=1);
 /**
- * Created by PhpStorm.
- * User: liyuzhao
- * Date: 2019-08-01
- * Time: 22:32
+ * This file is part of MineAdmin.
+ *
+ * @link     https://www.mineadmin.com
+ * @document https://doc.mineadmin.com
+ * @contact  root@imoi.cn
+ * @license  https://github.com/mineadmin/MineAdmin/blob/master/LICENSE
  */
+
 namespace Xmo\JWTAuth\Middleware;
 
 use Hyperf\HttpServer\Contract\ResponseInterface as HttpResponse;
-use Xmo\JWTAuth\Util\JWTUtil;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\MiddlewareInterface;
 use Psr\Http\Server\RequestHandlerInterface;
-use Xmo\JWTAuth\JWT;
 use Xmo\JWTAuth\Exception\TokenValidException;
+use Xmo\JWTAuth\JWT;
+use Xmo\JWTAuth\Util\JWTUtil;
 
 /**
- * Class JWTAuthSceneDefaultMiddleware
- * @package Xmo\JWTAuth\Middleware
+ * Class JWTAuthSceneDefaultMiddleware.
  */
 class JWTAuthSceneApplication1Middleware implements MiddlewareInterface
 {
@@ -38,9 +42,6 @@ class JWTAuthSceneApplication1Middleware implements MiddlewareInterface
     }
 
     /**
-     * @param ServerRequestInterface  $request
-     * @param RequestHandlerInterface $handler
-     * @return ResponseInterface
      * @throws \Psr\SimpleCache\InvalidArgumentException
      * @throws \Throwable
      */

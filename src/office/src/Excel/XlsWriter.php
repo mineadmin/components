@@ -1,20 +1,17 @@
 <?php
-declare(strict_types=1);
 
+declare(strict_types=1);
 /**
- * MineAdmin is committed to providing solutions for quickly building web applications
- * Please view the LICENSE file that was distributed with this source code,
- * For the full copyright and license information.
- * Thank you very much for using MineAdmin.
+ * This file is part of MineAdmin.
  *
- * @Author X.Mo<root@imoi.cn>
- * @Link   https://gitee.com/xmo/MineAdmin
+ * @link     https://www.mineadmin.com
+ * @document https://doc.mineadmin.com
+ * @contact  root@imoi.cn
+ * @license  https://github.com/mineadmin/MineAdmin/blob/master/LICENSE
  */
 
 namespace Mine\Office\Excel;
 
-use Hyperf\HttpMessage\Stream\SwooleStream;
-use MathPHP\Probability\Distribution\Continuous\F;
 use Mine\Exception\MineException;
 use Mine\MineResponse;
 use Mine\Office\ExcelPropertyInterface;
@@ -34,10 +31,7 @@ class XlsWriter extends MineExcel implements ExcelPropertyInterface
     }
 
     /**
-     * 导入数据
-     * @param \Mine\MineModel $model
-     * @param \Closure|null $closure
-     * @return bool
+     * 导入数据.
      * @throws \Psr\Container\ContainerExceptionInterface
      * @throws \Psr\Container\NotFoundExceptionInterface
      * @throws \Exception
@@ -47,8 +41,8 @@ class XlsWriter extends MineExcel implements ExcelPropertyInterface
         $request = container()->get(\Mine\MineRequest::class);
         if ($request->hasFile('file')) {
             $file = $request->file('file');
-            $tempFileName = 'import_'.time().'.'.$file->getExtension();
-            $tempFilePath = BASE_PATH.'/runtime/'.$tempFileName;
+            $tempFileName = 'import_' . time() . '.' . $file->getExtension();
+            $tempFilePath = BASE_PATH . '/runtime/' . $tempFileName;
             file_put_contents($tempFilePath, $file->getStream()->getContents());
             $xlsxObject = new \Vtiful\Kernel\Excel(['path' => BASE_PATH . '/runtime/']);
             $data = $xlsxObject->openFile($tempFileName)->openSheet()->getSheetData();
@@ -77,16 +71,12 @@ class XlsWriter extends MineExcel implements ExcelPropertyInterface
                 throw new \Exception($e->getMessage());
             }
             return true;
-        } else {
-            return false;
         }
+        return false;
     }
 
     /**
-     * 导出excel
-     * @param string $filename
-     * @param array|\Closure $closure
-     * @return \Psr\Http\Message\ResponseInterface
+     * 导出excel.
      * @throws \Psr\Container\ContainerExceptionInterface
      * @throws \Psr\Container\NotFoundExceptionInterface
      */
@@ -101,11 +91,11 @@ class XlsWriter extends MineExcel implements ExcelPropertyInterface
             'right' => Format::FORMAT_ALIGN_RIGHT,
         ];
 
-        $columnName  = [];
+        $columnName = [];
         $columnField = [];
 
         foreach ($this->property as $item) {
-            $columnName[]  = $item['value'];
+            $columnName[] = $item['value'];
             $columnField[] = $item['name'];
         }
 
@@ -116,7 +106,7 @@ class XlsWriter extends MineExcel implements ExcelPropertyInterface
         $rowFormat = new Format($fileObject->getHandle());
 
         $index = 0;
-        for ($i = 0; $i < count($columnField); $i++) {
+        for ($i = 0; $i < count($columnField); ++$i) {
             $columnNumber = chr($i) . '1';
             $fileObject->setColumn(
                 sprintf('%s1:%s1', $this->getColumnIndex($i), $this->getColumnIndex($i)),
@@ -127,14 +117,15 @@ class XlsWriter extends MineExcel implements ExcelPropertyInterface
                     ->fontColor($this->property[$index]['color'] ?? Format::COLOR_BLACK)
                     ->toResource()
             );
-            $index++;
+            ++$index;
         }
 
         // 表头加样式
         $fileObject->setRow(
-            sprintf('A1:%s1', $this->getColumnIndex(count($columnField))), 20,
+            sprintf('A1:%s1', $this->getColumnIndex(count($columnField))),
+            20,
             $rowFormat->bold()->align(Format::FORMAT_ALIGN_CENTER, Format::FORMAT_ALIGN_VERTICAL_CENTER)
-                ->background(0x4ac1ff)->fontColor(Format::COLOR_BLACK)
+                ->background(0x4AC1FF)->fontColor(Format::COLOR_BLACK)
                 ->border(Format::BORDER_THIN)
                 ->toResource()
         );
@@ -147,13 +138,13 @@ class XlsWriter extends MineExcel implements ExcelPropertyInterface
             foreach ($this->property as $property) {
                 foreach ($item as $name => $value) {
                     if ($property['name'] == $name) {
-                        if (!empty($property['dictName'])) {
+                        if (! empty($property['dictName'])) {
                             $yield[] = $property['dictName'][$value];
-                        } else if (!empty($property['dictData'])) {
+                        } elseif (! empty($property['dictData'])) {
                             $yield[] = $property['dictData'][$value];
-                        }else if (!empty($property['path'])){
+                        } elseif (! empty($property['path'])) {
                             $yield[] = data_get($item, $property['path']);
-                        }else if(!empty($this->dictData[$name])){
+                        } elseif (! empty($this->dictData[$name])) {
                             $yield[] = $this->dictData[$name][$value] ?? '';
                         } else {
                             $yield[] = $value;
@@ -171,8 +162,8 @@ class XlsWriter extends MineExcel implements ExcelPropertyInterface
         $response->download($filePath, $filename);
 
         ob_start();
-        if ( copy($filePath, 'php://output') === false) {
-            throw new MineException('导出数据失败',  500);
+        if (copy($filePath, 'php://output') === false) {
+            throw new MineException('导出数据失败', 500);
         }
         $res = $this->downloadExcel($filename, ob_get_contents());
         ob_end_clean();

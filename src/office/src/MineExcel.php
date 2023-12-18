@@ -1,14 +1,13 @@
 <?php
-declare(strict_types=1);
 
+declare(strict_types=1);
 /**
- * MineAdmin is committed to providing solutions for quickly building web applications
- * Please view the LICENSE file that was distributed with this source code,
- * For the full copyright and license information.
- * Thank you very much for using MineAdmin.
+ * This file is part of MineAdmin.
  *
- * @Author X.Mo<root@imoi.cn>
- * @Link   https://gitee.com/xmo/MineAdmin
+ * @link     https://www.mineadmin.com
+ * @document https://doc.mineadmin.com
+ * @contact  root@imoi.cn
+ * @license  https://github.com/mineadmin/MineAdmin/blob/master/LICENSE
  */
 
 namespace Mine\Office;
@@ -26,25 +25,15 @@ abstract class MineExcel
 {
     public const ANNOTATION_NAME = 'Mine\Annotation\ExcelProperty';
 
-    /**
-     * @var array|null
-     */
     protected ?array $annotationMate;
 
-    /**
-     * @var array
-     */
     protected array $property = [];
+
     protected array $dictData = [];
 
-
-    /**
-     * @param String $dto
-     * @param MineModel $model
-     */
     public function __construct(string $dto)
     {
-        if (!(new $dto) instanceof MineModelExcel) {
+        if (! (new $dto()) instanceof MineModelExcel) {
             throw new MineException('dto does not implement an interface of the MineModelExcel', 500);
         }
         $dtoObject = new $dto();
@@ -55,31 +44,24 @@ abstract class MineExcel
         $this->parseProperty();
     }
 
-    /**
-     * @return array
-     */
     public function getProperty(): array
     {
         return $this->property;
     }
 
-    /**
-     * @return array
-     */
     public function getAnnotationInfo(): array
     {
         return $this->annotationMate;
     }
 
     /**
-     * @return void
      * @throws ContainerExceptionInterface
      * @throws NotFoundExceptionInterface
      * @throws \RedisException
      */
     protected function parseProperty(): void
     {
-        if (empty($this->annotationMate) || !isset($this->annotationMate['_c'])) {
+        if (empty($this->annotationMate) || ! isset($this->annotationMate['_c'])) {
             throw new MineException('dto annotation info is empty', 500);
         }
 
@@ -102,10 +84,7 @@ abstract class MineExcel
     }
 
     /**
-     * 下载excel
-     * @param string $filename
-     * @param string $content
-     * @return \Psr\Http\Message\ResponseInterface
+     * 下载excel.
      * @throws \Psr\Container\ContainerExceptionInterface
      * @throws \Psr\Container\NotFoundExceptionInterface
      */
@@ -123,9 +102,7 @@ abstract class MineExcel
     }
 
     /**
-     * 获取字典数据
-     * @param string $dictName
-     * @return array
+     * 获取字典数据.
      * @throws ContainerExceptionInterface
      * @throws NotFoundExceptionInterface
      * @throws \RedisException
@@ -141,18 +118,16 @@ abstract class MineExcel
     }
 
     /**
-     * 获取 excel 列索引
-     * @param int $columnIndex
-     * @return string
+     * 获取 excel 列索引.
      */
     protected function getColumnIndex(int $columnIndex = 0): string
     {
         if ($columnIndex < 26) {
             return chr(65 + $columnIndex);
-        } else if ($columnIndex < 702) {
-            return chr(64 + intval($columnIndex / 26)) . chr(65 + $columnIndex % 26);
-        } else {
-            return chr(64 + intval(($columnIndex - 26) / 676)) . chr(65 + intval((($columnIndex - 26) % 676) / 26)) . chr(65 + $columnIndex % 26);
         }
+        if ($columnIndex < 702) {
+            return chr(64 + intval($columnIndex / 26)) . chr(65 + $columnIndex % 26);
+        }
+        return chr(64 + intval(($columnIndex - 26) / 676)) . chr(65 + intval((($columnIndex - 26) % 676) / 26)) . chr(65 + $columnIndex % 26);
     }
 }

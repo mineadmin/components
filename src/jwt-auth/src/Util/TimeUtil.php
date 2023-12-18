@@ -1,13 +1,17 @@
 <?php
+
 declare(strict_types=1);
 /**
- * Created by PhpStorm.
- * User: liyuzhao
- * Date: 2020/4/21
- * Time: 1:59 下午
+ * This file is part of MineAdmin.
+ *
+ * @link     https://www.mineadmin.com
+ * @document https://doc.mineadmin.com
+ * @contact  root@imoi.cn
+ * @license  https://github.com/mineadmin/MineAdmin/blob/master/LICENSE
  */
 
 namespace Xmo\JWTAuth\Util;
+
 use Carbon\Carbon;
 
 class TimeUtil
@@ -25,7 +29,7 @@ class TimeUtil
     /**
      * Get the Carbon instance for the timestamp.
      *
-     * @param  int  $timestamp
+     * @param int $timestamp
      *
      * @return \Carbon\Carbon
      */
@@ -37,8 +41,8 @@ class TimeUtil
     /**
      * Checks if a timestamp is in the past.
      *
-     * @param  int  $timestamp
-     * @param  int  $leeway
+     * @param int $timestamp
+     * @param int $leeway
      *
      * @return bool
      */
@@ -50,8 +54,8 @@ class TimeUtil
     /**
      * Checks if a timestamp is in the future.
      *
-     * @param  int  $timestamp
-     * @param  int  $leeway
+     * @param int $timestamp
+     * @param int $leeway
      *
      * @return bool
      */
