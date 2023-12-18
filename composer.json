@@ -11,7 +11,11 @@
   ],
   "autoload": {
     "psr-4": {
-      "Mine\\": "src/mine/src"
+      "Mine\\": "src/mine/src",
+      "Mine\\Gateway\\": "src/gateway/src",
+      "Xmo\\JWTAuth\\": "src/jwt-auth/src",
+      "Mine\\Office\\": "src/office/src",
+      "Mine\\Translatable\\": "src/translatable/src"
     },
     "files": [
       "src/mine/src/Helper/functions.php"
