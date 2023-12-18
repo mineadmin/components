@@ -39,7 +39,11 @@
     }
   ],
   "replace": {
-    "xmo/mine": "*"
+    "xmo/mine": "*",
+    "xmo/mine-gateway": "*",
+    "xmo/jwt-auth": "*",
+    "xmo/mine-office": "*",
+    "xmo/mine-translatable": "*"
   },
   "require": {
     "php": ">=8.1",
