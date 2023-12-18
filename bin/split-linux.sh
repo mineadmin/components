@@ -1,12 +1,9 @@
 #!/usr/bin/env bash
-
 set -e
 set -x
-
 CURRENT_BRANCH="main"
 BASEPATH=$(cd `dirname $0`; cd ../src/; pwd)
 REPOS=$@
-
 function split()
 {
     SHA1=`./bin/splitsh-lite-linux --prefix=$1`
