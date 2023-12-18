@@ -21,6 +21,11 @@
       "src/mine/src/Helper/functions.php"
     ]
   },
+  "autoload-dev": {
+    "psr-4": {
+      "Mine\\Tests\\": "tests"
+    }
+  },
   "authors": [
     {
       "name": "xmo",
@@ -89,11 +94,20 @@
     "phpoffice/phpspreadsheet": "^1.24",
     "hyperf/model-listener": "~3.1.0"
   },
+  "require-dev": {
+    "friendsofphp/php-cs-fixer": "^3.0",
+    "hyperf/testing": "3.1.*",
+    "phpstan/phpstan": "^1.0",
+    "swoole/ide-helper": "^5.0",
+    "mockery/mockery": "^1.0"
+  },
   "config": {
     "optimize-autoloader": true,
     "sort-packages": true
   },
   "scripts": {
-    "cs-fix": "php-cs-fixer fix $1"
+    "cs-fix": "php-cs-fixer fix $1",
+    "test": "co-phpunit --prepend test/bootstrap.php -c phpunit.xml --colors=always",
+    "analyse": "phpstan analyse --memory-limit 1000M -l 0 -c phpstan.neon ./app ./config"
   }
 }

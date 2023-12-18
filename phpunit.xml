@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<phpunit backupGlobals="false"
+         backupStaticAttributes="false"
+         bootstrap="./tests/bootstrap.php"
+         colors="true"
+         convertErrorsToExceptions="true"
+         convertNoticesToExceptions="true"
+         convertWarningsToExceptions="true"
+         processIsolation="false"
+         stopOnFailure="false">
+    <coverage processUncoveredFiles="true">
+        <include>
+            <directory suffix=".php">./src/jwt-auth/tests</directory>
+            <directory suffix=".php">./src/mine/tests</directory>
+            <directory suffix=".php">./src/office/tests</directory>
+            <directory suffix=".php">./src/gateway/tests</directory>
+            <directory suffix=".php">./src/translatable/tests</directory>
+            </include>
+    </coverage>
+    <testsuites>
+        <testsuite name="Tests">
+            <directory suffix="Test.php">./src/jwt-auth</directory>
+            <directory suffix="Test.php">./src/mine</directory>
+            <directory suffix="Test.php">./src/office</directory>
+            <directory suffix="Test.php">./src/gateway</directory>
+            <directory suffix="Test.php">./src/translatable</directory>
+        </testsuite>
+    </testsuites>
+</phpunit>
