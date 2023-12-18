@@ -1,6 +1,14 @@
 <?php
 
 declare(strict_types=1);
+/**
+ * This file is part of MineAdmin.
+ *
+ * @link     https://www.mineadmin.com
+ * @document https://doc.mineadmin.com
+ * @contact  root@imoi.cn
+ * @license  https://github.com/mineadmin/MineAdmin/blob/master/LICENSE
+ */
 
 namespace Xmo\JWTAuth\Command;
 
@@ -16,8 +24,6 @@ class JWTCommand extends HyperfCommand
 {
     /**
      * 执行的命令行.
-     *
-     * @var string
      */
     protected ?string $name = 'jwt:publish';
 
@@ -31,12 +37,12 @@ class JWTCommand extends HyperfCommand
         }
     }
 
-//    protected function getArguments()
-//    {
-//        return [
-//            ['name', InputArgument::OPTIONAL, 'Publish the configuration for jwt-auth']
-//        ];
-//    }
+    //    protected function getArguments()
+    //    {
+    //        return [
+    //            ['name', InputArgument::OPTIONAL, 'Publish the configuration for jwt-auth']
+    //        ];
+    //    }
 
     protected function getOptions()
     {
@@ -47,9 +53,6 @@ class JWTCommand extends HyperfCommand
 
     /**
      * 复制文件到指定的目录中.
-     *
-     * @param $copySource
-     * @param $toSource
      */
     protected function copySource($copySource, $toSource): void
     {

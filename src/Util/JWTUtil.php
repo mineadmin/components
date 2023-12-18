@@ -1,46 +1,45 @@
 <?php
+
 declare(strict_types=1);
+/**
+ * This file is part of MineAdmin.
+ *
+ * @link     https://www.mineadmin.com
+ * @document https://doc.mineadmin.com
+ * @contact  root@imoi.cn
+ * @license  https://github.com/mineadmin/MineAdmin/blob/master/LICENSE
+ */
+
 namespace Xmo\JWTAuth\Util;
 
-use Hyperf\Utils\ApplicationContext;
 use Lcobucci\JWT\Configuration;
-
 use Lcobucci\JWT\Signer;
-use Lcobucci\JWT\Signer\Hmac\Sha256;
 use Lcobucci\JWT\Signer\Key;
-use Lcobucci\JWT\Signer\Key\InMemory;
-
 use Lcobucci\JWT\Token\Parser;
-use Lcobucci\JWT\Parsing\Decoder;
-use Lcobucci\JWT\Parsing\Encoder;
-use Lcobucci\JWT\Token\Plain;
 use Lcobucci\JWT\ValidationData;
 
 /**
- * JWT工具类
+ * JWT工具类.
  */
 class JWTUtil
 {
     /**
-     * claims对象转换成数组
-     * @param $claims
+     * claims对象转换成数组.
      * @return mixed
      */
     public static function claimsToArray(array $claims)
     {
         /**
-         *  @var $claim \Lcobucci\JWT\Claim
+         * @var \Lcobucci\JWT\Claim $claim
          */
-        foreach($claims as $k => $claim) {
+        foreach ($claims as $k => $claim) {
             $claims[$k] = $claim->getValue();
         }
         return $claims;
     }
 
     /**
-     * 处理token
-     * @param string $token
-     * @param string $prefix
+     * 处理token.
      * @return bool|mixed|string
      */
     public static function handleToken(string $token, string $prefix = 'Bearer')
@@ -49,7 +48,9 @@ class JWTUtil
             $token = ucfirst($token);
             $arr = explode("{$prefix} ", $token);
             $token = $arr[1] ?? '';
-            if (strlen($token) > 0) return $token;
+            if (strlen($token) > 0) {
+                return $token;
+            }
         }
         return false;
     }
@@ -86,12 +87,12 @@ class JWTUtil
         $claims = $parser->claims()->all();
         $now = new \DateTimeImmutable();
 
-        if($claims['nbf'] > $now || $claims['exp'] < $now){
+        if ($claims['nbf'] > $now || $claims['exp'] < $now) {
             return false;
         }
 
         $config->setValidationConstraints(new \Lcobucci\JWT\Validation\Constraint\IdentifiedBy($claims['jti']));
-        $config->setValidationConstraints(new \Lcobucci\JWT\Validation\Constraint\SignedWith($signer,$key));
+        $config->setValidationConstraints(new \Lcobucci\JWT\Validation\Constraint\SignedWith($signer, $key));
 
         if (! $config->validator()->validate($parser, ...$config->validationConstraints())) {
             return false;

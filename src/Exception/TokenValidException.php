@@ -1,14 +1,15 @@
 <?php
+
+declare(strict_types=1);
 /**
- * Created by PhpStorm.
- * User: liyuzhao
- * Date: 2019-08-01
- * Time: 13:43
+ * This file is part of MineAdmin.
+ *
+ * @link     https://www.mineadmin.com
+ * @document https://doc.mineadmin.com
+ * @contact  root@imoi.cn
+ * @license  https://github.com/mineadmin/MineAdmin/blob/master/LICENSE
  */
 
 namespace Xmo\JWTAuth\Exception;
 
-class TokenValidException extends \RuntimeException
-{
-
-}
+class TokenValidException extends \RuntimeException {}
