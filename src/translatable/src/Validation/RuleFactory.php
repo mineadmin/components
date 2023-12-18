@@ -57,7 +57,7 @@ class RuleFactory
     public static function make(array $rules, ?int $format = null, ?string $prefix = null, ?string $suffix = null, ?array $locales = null): array
     {
         /** @var RuleFactory $factory */
-        $factory = make(static::class, compact('format', 'prefix', 'suffix'));
+        $factory = \Hyperf\Support\make(static::class, compact('format', 'prefix', 'suffix'));
 
         $factory->setLocales($locales);
 

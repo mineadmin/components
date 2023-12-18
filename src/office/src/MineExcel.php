@@ -17,6 +17,7 @@ use Hyperf\Di\Annotation\AnnotationCollector;
 use Hyperf\HttpMessage\Stream\SwooleStream;
 use Mine\Exception\MineException;
 use Mine\Interfaces\MineModelExcel;
+use Mine\Interfaces\ServiceInterface\DictDataServiceInterface;
 use Mine\MineResponse;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\NotFoundExceptionInterface;
@@ -110,7 +111,9 @@ abstract class MineExcel
     protected function getDictData(string $dictName): array
     {
         $data = [];
-        foreach (container()->get(SystemDictDataService::class)->getList(['code' => $dictName]) as $item) {
+        foreach (container()
+                     ->get(DictDataServiceInterface::class)
+                     ->getList(['code' => $dictName]) as $item) {
             $data[$item['key']] = $item['title'];
         }
 

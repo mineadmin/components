@@ -112,6 +112,6 @@
   "scripts": {
     "cs-fix": "php-cs-fixer fix $1",
     "test": "co-phpunit --prepend test/bootstrap.php -c phpunit.xml --colors=always",
-    "analyse": "phpstan analyse --memory-limit 1000M -l 0 -c phpstan.neon ./app ./config"
+    "analyse": "phpstan analyse --memory-limit 1000M -l 0 -c phpstan.neon ./src"
   }
 }

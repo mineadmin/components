@@ -14,6 +14,8 @@ namespace Mine\Translatable\Traits;
 
 use Hyperf\Database\Model\Relations\HasMany;
 use Hyperf\Database\Model\Relations\HasOne;
+use function Hyperf\Config\config;
+use function Hyperf\Support\class_basename;
 
 /**
  * @property string $translationModel
@@ -48,7 +50,7 @@ trait Relationship
             $modelName = $namespace . '\\' . class_basename(get_class($this));
         }
 
-        return $modelName . config('translatable.translation_suffix', 'Translation');
+        return $modelName . \Hyperf\Config\config('translatable.translation_suffix', 'Translation');
     }
 
     /**

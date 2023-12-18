@@ -18,6 +18,7 @@ use Mine\Office\MineExcel;
 use PhpOffice\PhpSpreadsheet\IOFactory;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use PhpOffice\PhpSpreadsheet\Style\Color;
+use function Hyperf\Collection\data_get;
 
 class PhpOffice extends MineExcel implements ExcelPropertyInterface
 {
