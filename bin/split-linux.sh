@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 set -e
 set -x
-CURRENT_BRANCH="main"
+CURRENT_BRANCH="2.0"
 BASEPATH=$(cd `dirname $0`; cd ../src/; pwd)
 REPOS=$@
 function split()
