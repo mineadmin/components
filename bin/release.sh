@@ -1,7 +1,5 @@
 #!/usr/bin/env bash
-
 set -e
-
 if (( "$#" == 0 ))
 then
     echo "Tag has to be provided"
