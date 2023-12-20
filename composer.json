@@ -15,7 +15,9 @@
       "Mine\\Gateway\\": "src/gateway/src",
       "Xmo\\JWTAuth\\": "src/jwt-auth/src",
       "Mine\\Office\\": "src/office/src",
-      "Mine\\Translatable\\": "src/translatable/src"
+      "Mine\\Translatable\\": "src/translatable/src",
+      "Mine\\Helper\\": "src/mine-helpers/src",
+      "Mine\\Generator\\": "src/mine-generator/src"
     },
     "files": [
       "src/mine-helpers/src/functions.php"
@@ -43,7 +45,9 @@
     "xmo/mine-gateway": "*",
     "xmo/jwt-auth": "*",
     "xmo/mine-office": "*",
-    "xmo/mine-translatable": "*"
+    "xmo/mine-translatable": "*",
+    "xmo/mine-helpers": "*",
+    "xmo/mine-genertor": "*"
   },
   "require": {
     "php": ">=8.1",
@@ -105,6 +109,7 @@
     "swoole/ide-helper": "^5.0",
     "mockery/mockery": "^1.0"
   },
+  "minimum-stability": "dev",
   "config": {
     "optimize-autoloader": true,
     "sort-packages": true
