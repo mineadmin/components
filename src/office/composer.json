@@ -27,11 +27,5 @@
     },
     "scripts": {
         "cs-fix": "php-cs-fixer fix $1"
-    },
-    "repositories": {
-        "packagist": {
-            "type": "composer",
-            "url": "https://mirrors.tencent.com/composer/"
-        }
     }
 }

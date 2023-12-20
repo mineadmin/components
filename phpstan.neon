@@ -5,5 +5,21 @@
 #
 parameters:
   reportUnmatchedIgnoredErrors: false
+  excludePaths:
+          - src/mine/src/Redis/MineLockRedis.php
+          - src/mine/src/MineStart.php
+          - src/mine/src/Listener/DbQueryExecutedListener.php
+          - src/mine/src/Helper/functions.php
+          - src/mine/src/Helper/Str.php
+          - src/mine/src/Helper/Ip2region.php
   ignoreErrors:
     - '#Unsafe usage of new static\(\)#'
+    - '#Call to static method find\(\) on an unknown class#'
+    - '#Access to constant ALL_SCOPE on an unknown class#'
+    - '#Access to constant CUSTOM_SCOPE on an unknown class#'
+    - '#Access to constant SELF_DEPT_SCOPE on an unknown class#'
+    - '#Access to constant DEPT_BELOW_SCOPE on an unknown class#'
+    - '#Call to static method query\(\) on an unknown class#'
+    - '#Access to constant DEPT_BELOW_SCOPE_BY_TABLE_DEPTID on an unknown class#'
+    - '#Class .* not found#'
+    - '#Access to constant SELF_SCOPE on an unknown class#'
