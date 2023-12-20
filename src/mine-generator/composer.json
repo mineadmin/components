@@ -7,6 +7,18 @@
     "MineAdmin","Hyperf","admin",
     "generator-code"
   ],
+  "authors": [
+    {
+      "name": "xmo",
+      "email": "root@imoi.cn",
+      "role": "Developer"
+    },
+    {
+      "name": "Death-Satan",
+      "email": "2771717608@qq.com",
+      "role": "Developer"
+    }
+  ],
   "autoload": {
     "psr-4": {
       "Mine\\Generator\\": "src"

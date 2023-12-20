@@ -6,6 +6,18 @@
         "mineadmin",
         "office"
     ],
+    "authors": [
+        {
+            "name": "xmo",
+            "email": "root@imoi.cn",
+            "role": "Developer"
+        },
+        {
+            "name": "Death-Satan",
+            "email": "2771717608@qq.com",
+            "role": "Developer"
+        }
+    ],
     "description": "mineadmin office package",
     "autoload": {
         "psr-4": {
