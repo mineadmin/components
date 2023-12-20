@@ -21,6 +21,7 @@ declare(strict_types=1);
 
 namespace Mine\Generator;
 
+use Composer\InstalledVersions;
 use Psr\Container\ContainerInterface;
 
 abstract class MineGenerator
@@ -40,7 +41,12 @@ abstract class MineGenerator
      */
     public function __construct(ContainerInterface $container)
     {
-        $this->setStubDir(BASE_PATH . '/vendor/xmo/mine-core/src/Generator/Stubs/');
+        $this->setStubDir(
+            realpath(
+                InstalledVersions::getInstallPath(
+                    'xmo/mine-generator')
+            ).DIRECTORY_SEPARATOR.'Stubs'.DIRECTORY_SEPARATOR
+        );
         $this->container = $container;
     }
 

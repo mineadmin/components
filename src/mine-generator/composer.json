@@ -1,0 +1,23 @@
+{
+  "name": "xmo/mine-generator",
+  "type": "library",
+  "license": "Apache-2.0",
+  "description": "MineAdmin Code Generator",
+  "keywords": [
+    "MineAdmin","Hyperf","admin",
+    "generator-code"
+  ],
+  "autoload": {
+    "psr-4": {
+      "Mine\\Generator\\": "src"
+    }
+  },
+  "require": {
+    "php": ">=8.1",
+    "phpoffice/phpspreadsheet": "^1.24"
+  },
+  "config": {
+    "optimize-autoloader": true,
+    "sort-packages": true
+  }
+}
