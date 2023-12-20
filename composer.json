@@ -18,7 +18,7 @@
       "Mine\\Translatable\\": "src/translatable/src"
     },
     "files": [
-      "src/mine/src/Helper/functions.php"
+      "src/mine-helpers/src/functions.php"
     ]
   },
   "autoload-dev": {
