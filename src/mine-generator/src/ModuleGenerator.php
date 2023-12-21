@@ -23,6 +23,7 @@ namespace Mine\Generator;
 
 use Hyperf\Support\Filesystem\Filesystem;
 use Mine\Mine;
+
 use function Hyperf\Support\make;
 
 class ModuleGenerator extends MineGenerator

@@ -24,16 +24,15 @@ declare(strict_types=1);
 
 namespace Mine\Generator;
 
-use App\Setting\Model\SettingGenerateColumns;
 use Hyperf\Support\Filesystem\Filesystem;
 use Mine\Exception\NormalStatusException;
 use Mine\Generator\Contracts\GeneratorTablesContract;
 use Mine\Generator\Traits\MapperGeneratorTraits;
 use Mine\Helper\Str;
 use Mine\Interfaces\ServiceInterface\GenerateColumnServiceInterface;
-
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\NotFoundExceptionInterface;
+
 use function Hyperf\Support\env;
 use function Hyperf\Support\make;
 
