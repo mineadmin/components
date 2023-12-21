@@ -130,6 +130,7 @@ if (! function_exists('mine_collect')) {
 if (! function_exists('context_set')) {
     /**
      * 设置上下文数据.
+     * @param mixed $data
      */
     function context_set(string $key, $data): bool
     {
@@ -164,7 +165,7 @@ if (! function_exists('snowflake_id')) {
      */
     function snowflake_id(): string
     {
-        return (string)container()->get(\Hyperf\Snowflake\IdGeneratorInterface::class)->generate();
+        return (string) container()->get(\Hyperf\Snowflake\IdGeneratorInterface::class)->generate();
     }
 }
 

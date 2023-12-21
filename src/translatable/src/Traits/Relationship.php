@@ -14,6 +14,7 @@ namespace Mine\Translatable\Traits;
 
 use Hyperf\Database\Model\Relations\HasMany;
 use Hyperf\Database\Model\Relations\HasOne;
+
 use function Hyperf\Config\config;
 use function Hyperf\Support\class_basename;
 

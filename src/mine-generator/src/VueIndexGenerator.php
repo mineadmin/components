@@ -21,12 +21,18 @@ declare(strict_types=1);
 
 namespace Mine\Generator;
 
-use App\Setting\Model\SettingGenerateColumns;
-use App\Setting\Model\SettingGenerateTables;
+use Hyperf\Database\Model\Builder;
 use Hyperf\Database\Model\Collection;
 use Hyperf\Support\Filesystem\Filesystem;
 use Mine\Exception\NormalStatusException;
+use Mine\Generator\Contracts\GeneratorTablesContract;
+use Mine\Generator\Enums\ComponentTypeEnum;
 use Mine\Helper\Str;
+use Psr\Container\ContainerExceptionInterface;
+use Psr\Container\NotFoundExceptionInterface;
+
+use function Hyperf\Support\env;
+use function Hyperf\Support\make;
 
 /**
  * Vue index文件生成
@@ -34,7 +40,7 @@ use Mine\Helper\Str;
  */
 class VueIndexGenerator extends MineGenerator implements CodeGenerator
 {
-    protected SettingGenerateTables $model;
+    protected GeneratorTablesContract $tablesContract;
 
     protected string $codeContent;
 
@@ -44,23 +50,23 @@ class VueIndexGenerator extends MineGenerator implements CodeGenerator
 
     /**
      * 设置生成信息.
-     * @throws \Psr\Container\ContainerExceptionInterface
-     * @throws \Psr\Container\NotFoundExceptionInterface
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
      */
-    public function setGenInfo(SettingGenerateTables $model): VueIndexGenerator
+    public function setGenInfo(GeneratorTablesContract $tablesContract): VueIndexGenerator
     {
-        $this->model = $model;
+        $this->tablesContract = $tablesContract;
         $this->filesystem = make(Filesystem::class);
-        if (empty($model->module_name) || empty($model->menu_name)) {
+        if (empty($tablesContract->getModuleName()) || empty($tablesContract->getMenuName())) {
             throw new NormalStatusException(t('setting.gen_code_edit'));
         }
-        $this->columns = SettingGenerateColumns::query()
-            ->where('table_id', $model->id)->orderByDesc('sort')
-            ->get([
-                'column_name', 'column_comment', 'allow_roles', 'options', 'is_required', 'is_insert',
-                'is_edit', 'is_query', 'is_sort', 'is_pk', 'is_list', 'view_type', 'dict_type',
-            ]);
-
+        $this->columns = $this->tablesContract->handleQuery(function (Builder $query) {
+            return $query->where('table_id', $this->tablesContract->getId())->orderByDesc('sort')
+                ->get([
+                    'column_name', 'column_comment', 'allow_roles', 'options', 'is_required', 'is_insert',
+                    'is_edit', 'is_query', 'is_sort', 'is_pk', 'is_list', 'view_type', 'dict_type',
+                ]);
+        });
         return $this->placeholderReplace();
     }
 
@@ -69,7 +75,7 @@ class VueIndexGenerator extends MineGenerator implements CodeGenerator
      */
     public function generator(): void
     {
-        $module = Str::lower($this->model->module_name);
+        $module = Str::lower($this->tablesContract->getModuleName());
         $path = BASE_PATH . "/runtime/generate/vue/src/views/{$module}/{$this->getShortBusinessName()}/index.vue";
         $this->filesystem->makeDirectory(
             BASE_PATH . "/runtime/generate/vue/src/views/{$module}/{$this->getShortBusinessName()}",
@@ -94,9 +100,9 @@ class VueIndexGenerator extends MineGenerator implements CodeGenerator
     public function getShortBusinessName(): string
     {
         return Str::camel(str_replace(
-            Str::lower($this->model->module_name),
+            Str::lower($this->tablesContract->getModuleName()),
             '',
-            str_replace(env('DB_PREFIX'), '', $this->model->table_name)
+            str_replace(env('DB_PREFIX'), '', $this->tablesContract->getTableName())
         ));
     }
 
@@ -199,7 +205,7 @@ class VueIndexGenerator extends MineGenerator implements CodeGenerator
      */
     protected function getCode(): string
     {
-        return Str::lower($this->model->module_name) . ':' . $this->getShortBusinessName();
+        return Str::lower($this->tablesContract->getModuleName()) . ':' . $this->getShortBusinessName();
     }
 
     /**
@@ -209,45 +215,45 @@ class VueIndexGenerator extends MineGenerator implements CodeGenerator
     {
         // 配置项
         $options = [];
-        $options['id'] = "'" . $this->model->table_name . "'";
+        $options['id'] = "'" . $this->tablesContract->getTableName() . "'";
         $options['rowSelection'] = ['showCheckedAll' => true];
         $options['pk'] = "'" . $this->getPk() . "'";
         $options['operationColumn'] = false;
         $options['operationColumnWidth'] = 160;
         $options['formOption'] = [
-            'viewType' => $this->getComponentType($this->model->component_type),
+            'viewType' => $this->tablesContract->getComponentType()->value,
             'width' => 600,
         ];
-        if ($this->model->component_type === 3) {
-            $options['formOption']['tagId'] = "'" . ($this->model->options['tag_id'] ?? $this->model->table_name) . "'";
-            $options['formOption']['tagName'] = "'" . ($this->model->options['tag_name'] ?? $this->model->table_comment) . "'";
-            $options['formOption']['titleDataIndex'] = "'" . ($this->model->options['tag_view_name'] ?? $this->getPk()) . "'";
+        if ($this->tablesContract->getComponentType() === ComponentTypeEnum::TAG) {
+            $options['formOption']['tagId'] = "'" . ($this->tablesContract->options['tag_id'] ?? $this->tablesContract->getTableName()) . "'";
+            $options['formOption']['tagName'] = "'" . ($this->tablesContract->options['tag_name'] ?? $this->tablesContract->table_comment) . "'";
+            $options['formOption']['titleDataIndex'] = "'" . ($this->tablesContract->options['tag_view_name'] ?? $this->getPk()) . "'";
         }
         $options['api'] = $this->getBusinessEnName() . '.getList';
-        if (Str::contains($this->model->generate_menus, 'recycle')) {
+        if (Str::contains($this->tablesContract->getGenerateMenus(), 'recycle')) {
             $options['recycleApi'] = $this->getBusinessEnName() . '.getRecycleList';
         }
-        if (Str::contains($this->model->generate_menus, 'save')) {
+        if (Str::contains($this->tablesContract->getGenerateMenus(), 'save')) {
             $options['add'] = [
                 'show' => true, 'api' => $this->getBusinessEnName() . '.save',
                 'auth' => "['" . $this->getCode() . ":save']",
             ];
         }
-        if (Str::contains($this->model->generate_menus, 'update')) {
+        if (Str::contains($this->tablesContract->getGenerateMenus(), 'update')) {
             $options['operationColumn'] = true;
             $options['edit'] = [
                 'show' => true, 'api' => $this->getBusinessEnName() . '.update',
                 'auth' => "['" . $this->getCode() . ":update']",
             ];
         }
-        if (Str::contains($this->model->generate_menus, 'delete')) {
+        if (Str::contains($this->tablesContract->getGenerateMenus(), 'delete')) {
             $options['operationColumn'] = true;
             $options['delete'] = [
                 'show' => true,
                 'api' => $this->getBusinessEnName() . '.deletes',
                 'auth' => "['" . $this->getCode() . ":delete']",
             ];
-            if (Str::contains($this->model->generate_menus, 'recycle')) {
+            if (Str::contains($this->tablesContract->getGenerateMenus(), 'recycle')) {
                 $options['delete']['realApi'] = $this->getBusinessEnName() . '.realDeletes';
                 $options['delete']['realAuth'] = "['" . $this->getCode() . ":realDeletes']";
                 $options['recovery'] = [
@@ -257,9 +263,9 @@ class VueIndexGenerator extends MineGenerator implements CodeGenerator
                 ];
             }
         }
-        $requestRoute = Str::lower($this->model->module_name) . '/' . $this->getShortBusinessName();
+        $requestRoute = Str::lower($this->tablesContract->getModuleName()) . '/' . $this->getShortBusinessName();
         // 导入
-        if (Str::contains($this->model->generate_menus, 'import')) {
+        if (Str::contains($this->tablesContract->getGenerateMenus(), 'import')) {
             $options['import'] = [
                 'show' => true,
                 'url' => "'" . $requestRoute . '/import' . "'",
@@ -268,7 +274,7 @@ class VueIndexGenerator extends MineGenerator implements CodeGenerator
             ];
         }
         // 导出
-        if (Str::contains($this->model->generate_menus, 'export')) {
+        if (Str::contains($this->tablesContract->getGenerateMenus(), 'export')) {
             $options['export'] = [
                 'show' => true,
                 'url' => "'" . $requestRoute . '/export' . "'",
@@ -356,7 +362,7 @@ class VueIndexGenerator extends MineGenerator implements CodeGenerator
 
     protected function getShowRecycle(): string
     {
-        return (strpos($this->model->generate_menus, 'recycle') > 0) ? 'true' : 'false';
+        return (strpos($this->tablesContract->getGenerateMenus(), 'recycle') > 0) ? 'true' : 'false';
     }
 
     /**
@@ -364,12 +370,12 @@ class VueIndexGenerator extends MineGenerator implements CodeGenerator
      */
     protected function getBusinessEnName(): string
     {
-        return Str::camel(str_replace(env('DB_PREFIX'), '', $this->model->table_name));
+        return Str::camel(str_replace(env('DB_PREFIX'), '', $this->tablesContract->getTableName()));
     }
 
     protected function getModuleName(): string
     {
-        return Str::lower($this->model->module_name);
+        return Str::lower($this->tablesContract->getModuleName());
     }
 
     /**
@@ -391,7 +397,7 @@ class VueIndexGenerator extends MineGenerator implements CodeGenerator
      */
     protected function getInputNumber(): string
     {
-        if (in_array('numberOperation', explode(',', $this->model->generate_menus))) {
+        if (in_array('numberOperation', explode(',', $this->tablesContract->getGenerateMenus()))) {
             return str_replace('{BUSINESS_EN_NAME}', $this->getBusinessEnName(), $this->getOtherTemplate('numberOperation'));
         }
         return '';
@@ -403,7 +409,7 @@ class VueIndexGenerator extends MineGenerator implements CodeGenerator
      */
     protected function getSwitchStatus(): string
     {
-        if (in_array('changeStatus', explode(',', $this->model->generate_menus))) {
+        if (in_array('changeStatus', explode(',', $this->tablesContract->getGenerateMenus()))) {
             return str_replace('{BUSINESS_EN_NAME}', $this->getBusinessEnName(), $this->getOtherTemplate('switchStatus'));
         }
         return '';

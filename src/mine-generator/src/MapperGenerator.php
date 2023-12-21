@@ -25,12 +25,17 @@ declare(strict_types=1);
 namespace Mine\Generator;
 
 use App\Setting\Model\SettingGenerateColumns;
-use App\Setting\Model\SettingGenerateTables;
 use Hyperf\Support\Filesystem\Filesystem;
 use Mine\Exception\NormalStatusException;
+use Mine\Generator\Contracts\GeneratorTablesContract;
 use Mine\Generator\Traits\MapperGeneratorTraits;
 use Mine\Helper\Str;
 use Mine\Interfaces\ServiceInterface\GenerateColumnServiceInterface;
+
+use Psr\Container\ContainerExceptionInterface;
+use Psr\Container\NotFoundExceptionInterface;
+use function Hyperf\Support\env;
+use function Hyperf\Support\make;
 
 /**
  * Mapper类生成
@@ -40,7 +45,7 @@ class MapperGenerator extends MineGenerator implements CodeGenerator
 {
     use MapperGeneratorTraits;
 
-    protected SettingGenerateTables $model;
+    protected GeneratorTablesContract $tablesContract;
 
     protected string $codeContent;
 
@@ -48,17 +53,17 @@ class MapperGenerator extends MineGenerator implements CodeGenerator
 
     /**
      * 设置生成信息.
-     * @throws \Psr\Container\ContainerExceptionInterface
-     * @throws \Psr\Container\NotFoundExceptionInterface
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
      */
-    public function setGenInfo(SettingGenerateTables $model): MapperGenerator
+    public function setGenInfo(GeneratorTablesContract $tablesContract): MapperGenerator
     {
-        $this->model = $model;
+        $this->tablesContract = $tablesContract;
         $this->filesystem = make(Filesystem::class);
-        if (empty($model->module_name) || empty($model->menu_name)) {
+        if (empty($tablesContract->getModuleName()) || empty($tablesContract->getMenuName())) {
             throw new NormalStatusException(t('setting.gen_code_edit'));
         }
-        $this->setNamespace($this->model->namespace);
+        $this->setNamespace($this->tablesContract->getNamespace());
         return $this->placeholderReplace();
     }
 
@@ -67,8 +72,11 @@ class MapperGenerator extends MineGenerator implements CodeGenerator
      */
     public function generator(): void
     {
-        $module = Str::title($this->model->module_name[0]) . mb_substr($this->model->module_name, 1);
-        if ($this->model->generate_type === 1) {
+        $module = Str::title(
+            $this->tablesContract->getModuleName()[0]
+        ) .
+            mb_substr($this->tablesContract->getModuleName(), 1);
+        if ($this->tablesContract->getGenerateType()->value === 1) {
             $path = BASE_PATH . "/runtime/generate/php/app/{$module}/Mapper/";
         } else {
             $path = BASE_PATH . "/app/{$module}/Mapper/";
@@ -90,7 +98,7 @@ class MapperGenerator extends MineGenerator implements CodeGenerator
      */
     public function getType(): string
     {
-        return ucfirst($this->model->type);
+        return ucfirst($this->tablesContract->getType()->value);
     }
 
     /**
@@ -98,7 +106,7 @@ class MapperGenerator extends MineGenerator implements CodeGenerator
      */
     public function getBusinessName(): string
     {
-        return Str::studly(str_replace(env('DB_PREFIX'), '', $this->model->table_name));
+        return Str::studly(str_replace(env('DB_PREFIX'), '', $this->tablesContract->getTableName()));
     }
 
     /**
@@ -196,7 +204,7 @@ class MapperGenerator extends MineGenerator implements CodeGenerator
      */
     protected function getComment(): string
     {
-        return $this->model->menu_name . 'Mapper类';
+        return $this->tablesContract->getMenuName() . 'Mapper类';
     }
 
     /**
@@ -231,8 +239,8 @@ UseNamespace;
     protected function getFieldIdName(): string
     {
         if ($this->getType() == 'Tree') {
-            if ($this->model->options['tree_id'] ?? false) {
-                return $this->model->options['tree_id'];
+            if ($this->tablesContract->getoptions()['tree_id'] ?? false) {
+                return $this->tablesContract->getOptions()['tree_id'];
             }
             return 'id';
         }
@@ -245,8 +253,8 @@ UseNamespace;
     protected function getFieldPidName(): string
     {
         if ($this->getType() == 'Tree') {
-            if ($this->model->options['tree_pid'] ?? false) {
-                return $this->model->options['tree_pid'];
+            if ($this->tablesContract->getoptions()['tree_pid'] ?? false) {
+                return $this->tablesContract->getoptions()['tree_pid'];
             }
             return 'parent_id';
         }
@@ -259,8 +267,8 @@ UseNamespace;
     protected function getFieldName(): string
     {
         if ($this->getType() == 'Tree') {
-            if ($this->model->options['tree_name'] ?? false) {
-                return $this->model->options['tree_name'];
+            if ($this->tablesContract->getoptions()['tree_name'] ?? false) {
+                return $this->tablesContract->getoptions()['tree_name'];
             }
             return 'name';
         }
@@ -272,13 +280,12 @@ UseNamespace;
      */
     protected function getSearch(): string
     {
-        /* @var SettingGenerateColumns $model */
         $model = make(GenerateColumnServiceInterface::class)->mapper->getModel();
-        $columns = $model->newQuery()
-            ->where('table_id', $this->model->id)
-            ->where('is_query', self::YES)
-            ->get(['column_name', 'column_comment', 'query_type'])->toArray();
-
+        //        $columns = $model->newQuery()
+        //            ->where('table_id', $this->tablesContract->id)
+        //            ->where('is_query', self::YES)
+        //            ->get(['column_name', 'column_comment', 'query_type'])->toArray();
+        $columns = $this->tablesContract->getColumns();
         $phpContent = '';
         foreach ($columns as $column) {
             $phpContent .= $this->getSearchCode($column);

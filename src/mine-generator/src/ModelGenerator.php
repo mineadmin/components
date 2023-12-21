@@ -23,13 +23,16 @@ declare(strict_types=1);
 
 namespace Mine\Generator;
 
-use App\Setting\Model\SettingGenerateTables;
 use Hyperf\Support\Filesystem\Filesystem;
 use Mine\Exception\NormalStatusException;
+use Mine\Generator\Contracts\GeneratorTablesContract;
 use Mine\Helper\Str;
 use Mine\Interfaces\ServiceInterface\GenerateColumnServiceInterface;
 use Symfony\Component\Console\Input\ArrayInput;
 use Symfony\Component\Console\Output\NullOutput;
+
+use function Hyperf\Support\env;
+use function Hyperf\Support\make;
 
 /**
  * 模型生成
@@ -37,7 +40,7 @@ use Symfony\Component\Console\Output\NullOutput;
  */
 class ModelGenerator extends MineGenerator implements CodeGenerator
 {
-    protected SettingGenerateTables $model;
+    protected GeneratorTablesContract $tablesContract;
 
     protected string $codeContent;
 
@@ -48,14 +51,14 @@ class ModelGenerator extends MineGenerator implements CodeGenerator
      * @throws \Psr\Container\ContainerExceptionInterface
      * @throws \Psr\Container\NotFoundExceptionInterface
      */
-    public function setGenInfo(SettingGenerateTables $model): ModelGenerator
+    public function setGenInfo(GeneratorTablesContract $tablesContract): ModelGenerator
     {
-        $this->model = $model;
+        $this->tablesContract = $tablesContract;
         $this->filesystem = make(Filesystem::class);
-        if (empty($model->module_name) || empty($model->menu_name)) {
+        if (empty($tablesContract->getModuleName()) || empty($tablesContract->getMenuName())) {
             throw new NormalStatusException(t('setting.gen_code_edit'));
         }
-        $this->setNamespace($this->model->namespace);
+        $this->setNamespace($this->tablesContract->getNamespace());
         return $this;
     }
 
@@ -66,8 +69,8 @@ class ModelGenerator extends MineGenerator implements CodeGenerator
      */
     public function generator(): void
     {
-        $module = Str::title($this->model->module_name[0]) . mb_substr($this->model->module_name, 1);
-        if ($this->model->generate_type === 1) {
+        $module = Str::title($this->tablesContract->getModuleName()[0]) . mb_substr($this->tablesContract->getModuleName(), 1);
+        if ($this->tablesContract->getGenerateType()->value === 1) {
             $path = BASE_PATH . "/runtime/generate/php/app/{$module}/Model/";
         } else {
             $path = BASE_PATH . "/app/{$module}/Model/";
@@ -76,15 +79,15 @@ class ModelGenerator extends MineGenerator implements CodeGenerator
 
         $command = [
             'command' => 'mine:model-gen',
-            '--module' => $this->model->module_name,
-            '--table' => str_replace(env('DB_PREFIX'), '', $this->model->table_name),
+            '--module' => $this->tablesContract->getModuleName(),
+            '--table' => str_replace(env('DB_PREFIX'), '', $this->tablesContract->getTableName()),
         ];
 
-        if (! Str::contains($this->model->table_name, Str::lower($this->model->module_name))) {
+        if (! Str::contains($this->tablesContract->getTableName(), Str::lower($this->tablesContract->getModuleName()))) {
             throw new NormalStatusException(t('setting.gen_model_error'), 500);
         }
 
-        if (mb_strlen($this->model->table_name) === mb_strlen($this->model->module_name)) {
+        if (mb_strlen($this->tablesContract->getTableName()) === mb_strlen($this->tablesContract->getModuleName())) {
             throw new NormalStatusException(t('setting.gen_model_error'), 500);
         }
 
@@ -95,7 +98,7 @@ class ModelGenerator extends MineGenerator implements CodeGenerator
         $application = $this->container->get(\Hyperf\Contract\ApplicationInterface::class);
         $application->setAutoExit(false);
 
-        $modelName = Str::studly(str_replace(env('DB_PREFIX'), '', $this->model->table_name));
+        $modelName = Str::studly(str_replace(env('DB_PREFIX'), '', $this->tablesContract->getTableName()));
 
         if ($application->run($input, $output) === 0) {
             // 对模型文件处理
@@ -112,7 +115,7 @@ class ModelGenerator extends MineGenerator implements CodeGenerator
                 $sourcePath = BASE_PATH . "/app/{$module}/Model/{$modelName}.php";
             }
 
-            if (! empty($this->model->options['relations'])) {
+            if (! empty($this->tablesContract->options['relations'])) {
                 $this->filesystem->put(
                     $sourcePath,
                     preg_replace('/}$/', $this->getRelations() . '}', $this->filesystem->sharedGet($sourcePath))
@@ -120,7 +123,7 @@ class ModelGenerator extends MineGenerator implements CodeGenerator
             }
 
             // 压缩包下载
-            if ($this->model->generate_type === 1) {
+            if ($this->tablesContract->getGenerateType()->value === 1) {
                 $toPath = BASE_PATH . "/runtime/generate/php/app/{$module}/Model/{$modelName}.php";
 
                 $isFile = is_file($sourcePath);
@@ -149,7 +152,7 @@ class ModelGenerator extends MineGenerator implements CodeGenerator
      */
     public function getBusinessName(): string
     {
-        return Str::studly(str_replace(env('DB_PREFIX'), '', $this->model->table_name));
+        return Str::studly(str_replace(env('DB_PREFIX'), '', $this->tablesContract->getTableName()));
     }
 
     /**
@@ -247,7 +250,7 @@ class ModelGenerator extends MineGenerator implements CodeGenerator
      */
     protected function getTableName(): string
     {
-        return $this->model->table_name;
+        return $this->tablesContract->getTableName();
     }
 
     /**
@@ -255,12 +258,13 @@ class ModelGenerator extends MineGenerator implements CodeGenerator
      */
     protected function getFillAble(): string
     {
-        $data = make(GenerateColumnServiceInterface::class)->getList(
-            ['select' => 'column_name', 'table_id' => $this->model->id]
-        );
+        //        $data = make(GenerateColumnServiceInterface::class)->getList(
+        //            ['select' => 'column_name', 'table_id' => $this->tablesContract->id]
+        //        );
+        $data = array_column($this->tablesContract->getColumns()->toArray(), 'column_name');
         $columns = [];
         foreach ($data as $column) {
-            $columns[] = "'" . $column['column_name'] . "'";
+            $columns[] = "'" . $column . "'";
         }
 
         return implode(', ', $columns);
@@ -269,10 +273,10 @@ class ModelGenerator extends MineGenerator implements CodeGenerator
     protected function getRelations(): string
     {
         $prefix = env('DB_PREFIX');
-        if (! empty($this->model->options['relations'])) {
+        if (! empty($this->tablesContract->getOptions()['relations'])) {
             $path = $this->getStubDir() . 'ModelRelation/';
             $phpCode = '';
-            foreach ($this->model->options['relations'] as $relation) {
+            foreach ($this->tablesContract->getOptions()['relations'] as $relation) {
                 $content = $this->filesystem->sharedGet($path . $relation['type'] . '.stub');
                 $content = str_replace(
                     ['{RELATION_NAME}', '{MODEL_NAME}', '{TABLE_NAME}', '{FOREIGN_KEY}', '{LOCAL_KEY}'],

@@ -62,6 +62,7 @@ class BlackList extends AbstractJWT
 
     /**
      * 判断token是否已经加入黑名单.
+     * @param mixed $claims
      * @return bool
      * @throws \Psr\SimpleCache\InvalidArgumentException
      */

@@ -53,6 +53,8 @@ class JWTCommand extends HyperfCommand
 
     /**
      * 复制文件到指定的目录中.
+     * @param mixed $copySource
+     * @param mixed $toSource
      */
     protected function copySource($copySource, $toSource): void
     {

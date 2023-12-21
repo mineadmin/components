@@ -25,6 +25,7 @@ trait MapperGeneratorTraits
 {
     /**
      * 获取搜索代码
+     * @param mixed $column
      */
     protected function getSearchCode($column): string
     {

@@ -17,6 +17,7 @@ use Mine\MineResponse;
 use Mine\Office\ExcelPropertyInterface;
 use Mine\Office\MineExcel;
 use Vtiful\Kernel\Format;
+
 use function Hyperf\Collection\data_get;
 
 class XlsWriter extends MineExcel implements ExcelPropertyInterface

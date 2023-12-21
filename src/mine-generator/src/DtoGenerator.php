@@ -21,16 +21,17 @@ declare(strict_types=1);
 
 namespace Mine\Generator;
 
-use App\Setting\Model\SettingGenerateColumns;
-use App\Setting\Model\SettingGenerateTables;
-use Hyperf\Database\Model\Collection;
+use Hyperf\Collection\Collection;
 use Hyperf\Support\Filesystem\Filesystem;
 use Mine\Exception\NormalStatusException;
+use Mine\Generator\Contracts\GeneratorTablesContract;
 use Mine\Helper\Str;
+use function Hyperf\Support\env;
+use function Hyperf\Support\make;
 
 class DtoGenerator extends MineGenerator implements CodeGenerator
 {
-    protected SettingGenerateTables $model;
+    protected GeneratorTablesContract $tablesContract;
 
     protected string $codeContent;
 
@@ -43,18 +44,16 @@ class DtoGenerator extends MineGenerator implements CodeGenerator
      * @throws \Psr\Container\ContainerExceptionInterface
      * @throws \Psr\Container\NotFoundExceptionInterface
      */
-    public function setGenInfo(SettingGenerateTables $model): DtoGenerator
+    public function setGenInfo(GeneratorTablesContract $tablesContract): DtoGenerator
     {
-        $this->model = $model;
+        $this->tablesContract = $tablesContract;
         $this->filesystem = make(Filesystem::class);
-        if (empty($model->module_name) || empty($model->menu_name)) {
+        if (empty($tablesContract->getModuleName()) || empty($tablesContract->getMenuName())) {
             throw new NormalStatusException(t('setting.gen_code_edit'));
         }
-        $this->setNamespace($this->model->namespace);
+        $this->setNamespace($this->tablesContract->getNamespace());
 
-        $this->columns = SettingGenerateColumns::query()
-            ->where('table_id', $model->id)->orderByDesc('sort')
-            ->get(['column_name', 'column_comment']);
+        $this->columns = $tablesContract->getColumns();
 
         return $this->placeholderReplace();
     }
@@ -64,8 +63,8 @@ class DtoGenerator extends MineGenerator implements CodeGenerator
      */
     public function generator(): void
     {
-        $module = Str::title($this->model->module_name[0]) . mb_substr($this->model->module_name, 1);
-        if ($this->model->generate_type === 1) {
+        $module = Str::title($this->tablesContract->getModuleName()[0]) . mb_substr($this->tablesContract->getModuleName(), 1);
+        if ($this->tablesContract->getGenerateType()->value === 1) {
             $path = BASE_PATH . "/runtime/generate/php/app/{$module}/Dto/";
         } else {
             $path = BASE_PATH . "/app/{$module}/Dto/";
@@ -84,7 +83,7 @@ class DtoGenerator extends MineGenerator implements CodeGenerator
      */
     public function getBusinessName(): string
     {
-        return Str::studly(str_replace(env('DB_PREFIX'), '', $this->model->table_name));
+        return Str::studly(str_replace(env('DB_PREFIX'), '', $this->tablesContract->getTableName()));
     }
 
     /**
@@ -172,7 +171,7 @@ class DtoGenerator extends MineGenerator implements CodeGenerator
      */
     protected function getComment(): string
     {
-        return $this->model->menu_name . 'Dto （导入导出）';
+        return $this->tablesContract->getMenuName() . 'Dto （导入导出）';
     }
 
     /**

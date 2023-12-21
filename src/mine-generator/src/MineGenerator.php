@@ -44,8 +44,9 @@ abstract class MineGenerator
         $this->setStubDir(
             realpath(
                 InstalledVersions::getInstallPath(
-                    'xmo/mine-generator')
-            ).DIRECTORY_SEPARATOR.'Stubs'.DIRECTORY_SEPARATOR
+                    'xmo/mine-generator'
+                )
+            ) . DIRECTORY_SEPARATOR . 'Stubs' . DIRECTORY_SEPARATOR
         );
         $this->container = $container;
     }

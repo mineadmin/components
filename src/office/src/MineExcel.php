@@ -12,7 +12,6 @@ declare(strict_types=1);
 
 namespace Mine\Office;
 
-use App\System\Service\SystemDictDataService;
 use Hyperf\Di\Annotation\AnnotationCollector;
 use Hyperf\HttpMessage\Stream\SwooleStream;
 use Mine\Exception\MineException;
@@ -112,8 +111,8 @@ abstract class MineExcel
     {
         $data = [];
         foreach (container()
-                     ->get(DictDataServiceInterface::class)
-                     ->getList(['code' => $dictName]) as $item) {
+            ->get(DictDataServiceInterface::class)
+            ->getList(['code' => $dictName]) as $item) {
             $data[$item['key']] = $item['title'];
         }
 

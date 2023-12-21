@@ -23,10 +23,15 @@ declare(strict_types=1);
 
 namespace Mine\Generator;
 
-use App\Setting\Model\SettingGenerateTables;
 use Hyperf\Support\Filesystem\Filesystem;
 use Mine\Exception\NormalStatusException;
+use Mine\Generator\Contracts\GeneratorTablesContract;
 use Mine\Helper\Str;
+use Psr\Container\ContainerExceptionInterface;
+use Psr\Container\NotFoundExceptionInterface;
+
+use function Hyperf\Support\env;
+use function Hyperf\Support\make;
 
 /**
  * 服务类生成
@@ -34,7 +39,7 @@ use Mine\Helper\Str;
  */
 class ServiceGenerator extends MineGenerator implements CodeGenerator
 {
-    protected SettingGenerateTables $model;
+    protected GeneratorTablesContract $tablesContract;
 
     protected string $codeContent;
 
@@ -42,17 +47,17 @@ class ServiceGenerator extends MineGenerator implements CodeGenerator
 
     /**
      * 设置生成信息.
-     * @throws \Psr\Container\ContainerExceptionInterface
-     * @throws \Psr\Container\NotFoundExceptionInterface
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
      */
-    public function setGenInfo(SettingGenerateTables $model): ServiceGenerator
+    public function setGenInfo(GeneratorTablesContract $tablesContract): ServiceGenerator
     {
-        $this->model = $model;
+        $this->tablesContract = $tablesContract;
         $this->filesystem = make(Filesystem::class);
-        if (empty($model->module_name) || empty($model->menu_name)) {
+        if (empty($tablesContract->getModuleName()) || empty($tablesContract->menu_name)) {
             throw new NormalStatusException(t('setting.gen_code_edit'));
         }
-        $this->setNamespace($this->model->namespace);
+        $this->setNamespace($this->tablesContract->getNamespace());
         return $this->placeholderReplace();
     }
 
@@ -61,8 +66,8 @@ class ServiceGenerator extends MineGenerator implements CodeGenerator
      */
     public function generator(): void
     {
-        $module = Str::title($this->model->module_name[0]) . mb_substr($this->model->module_name, 1);
-        if ($this->model->generate_type === 1) {
+        $module = Str::title($this->tablesContract->getModuleName()[0]) . mb_substr($this->tablesContract->getModuleName(), 1);
+        if ($this->tablesContract->getGenerateType()->value === 1) {
             $path = BASE_PATH . "/runtime/generate/php/app/{$module}/Service/";
         } else {
             $path = BASE_PATH . "/app/{$module}/Service/";
@@ -84,7 +89,7 @@ class ServiceGenerator extends MineGenerator implements CodeGenerator
      */
     public function getType(): string
     {
-        return ucfirst($this->model->type);
+        return ucfirst($this->tablesContract->getType()->value);
     }
 
     /**
@@ -92,7 +97,7 @@ class ServiceGenerator extends MineGenerator implements CodeGenerator
      */
     public function getBusinessName(): string
     {
-        return Str::studly(str_replace(env('DB_PREFIX'), '', $this->model->table_name));
+        return Str::studly(str_replace(env('DB_PREFIX'), '', $this->tablesContract->getTableName()));
     }
 
     /**
@@ -186,7 +191,7 @@ class ServiceGenerator extends MineGenerator implements CodeGenerator
      */
     protected function getComment(): string
     {
-        return $this->model->menu_name . '服务类';
+        return $this->tablesContract->getMenuName() . '服务类';
     }
 
     /**
@@ -221,8 +226,8 @@ UseNamespace;
     protected function getFieldIdName(): string
     {
         if ($this->getType() == 'Tree') {
-            if ($this->model->options['tree_id'] ?? false) {
-                return $this->model->options['tree_id'];
+            if ($this->tablesContract->getOptions()['tree_id'] ?? false) {
+                return $this->tablesContract->getOptions()['tree_id'];
             }
             return 'id';
         }
@@ -235,8 +240,8 @@ UseNamespace;
     protected function getFieldPidName(): string
     {
         if ($this->getType() == 'Tree') {
-            if ($this->model->options['tree_pid'] ?? false) {
-                return $this->model->options['tree_pid'];
+            if ($this->tablesContract->getOptions()['tree_pid'] ?? false) {
+                return $this->tablesContract->getOptions()['tree_pid'];
             }
             return 'parent_id';
         }

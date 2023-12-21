@@ -24,14 +24,17 @@ declare(strict_types=1);
 
 namespace Mine\Generator;
 
-use App\Setting\Model\SettingGenerateTables;
-use App\System\Model\SystemMenu;
+use Hyperf\Database\Model\Builder;
 use Hyperf\DbConnection\Db;
 use Hyperf\Support\Filesystem\Filesystem;
 use Mine\Exception\NormalStatusException;
+use Mine\Generator\Contracts\GeneratorTablesContract;
 use Mine\Helper\Str;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\NotFoundExceptionInterface;
+
+use function Hyperf\Support\env;
+use function Hyperf\Support\make;
 
 /**
  * 菜单SQL文件生成
@@ -39,7 +42,7 @@ use Psr\Container\NotFoundExceptionInterface;
  */
 class SqlGenerator extends MineGenerator implements CodeGenerator
 {
-    protected SettingGenerateTables $model;
+    protected GeneratorTablesContract $tablesContract;
 
     protected string $codeContent;
 
@@ -53,12 +56,13 @@ class SqlGenerator extends MineGenerator implements CodeGenerator
      * @throws NotFoundExceptionInterface
      * @throws \Exception
      */
-    public function setGenInfo(SettingGenerateTables $model, int $adminId): SqlGenerator
+    public function setGenInfo(GeneratorTablesContract $tablesContract, int $adminId): SqlGenerator
     {
-        $this->model = $model;
+        $this->tablesContract = $tablesContract;
         $this->adminId = $adminId;
         $this->filesystem = make(Filesystem::class);
-        if (empty($model->module_name) || empty($model->menu_name)) {
+        if (empty($tablesContract->getModuleName())
+            || empty($tablesContract->getMenuName())) {
             throw new NormalStatusException(t('setting.gen_code_edit'));
         }
         return $this->placeholderReplace();
@@ -74,7 +78,7 @@ class SqlGenerator extends MineGenerator implements CodeGenerator
         $this->filesystem->makeDirectory(BASE_PATH . '/runtime/generate/', 0755, true, true);
         $this->filesystem->put($path, $this->placeholderReplace()->getCodeContent());
 
-        if ($this->model->build_menu === self::YES) {
+        if ($this->tablesContract->build_menu === self::YES) {
             Db::connection('default')->getPdo()->exec(
                 str_replace(["\r", "\n"], ['', ''], $this->replace()->getCodeContent())
             );
@@ -95,9 +99,9 @@ class SqlGenerator extends MineGenerator implements CodeGenerator
     public function getShortBusinessName(): string
     {
         return Str::camel(str_replace(
-            Str::lower($this->model->module_name),
+            Str::lower($this->tablesContract->getModuleName()),
             '',
-            str_replace(env('DB_PREFIX'), '', $this->model->table_name)
+            str_replace(env('DB_PREFIX'), '', $this->tablesContract->table_name)
         ));
     }
 
@@ -177,7 +181,7 @@ class SqlGenerator extends MineGenerator implements CodeGenerator
             $this->getParentId(),
             $this->getTableName(),
             $this->getLevel(),
-            $this->model->menu_name,
+            $this->tablesContract->getMenuName(),
             $this->getCode(),
             $this->getRoute(),
             $this->getVueTemplate(),
@@ -187,7 +191,7 @@ class SqlGenerator extends MineGenerator implements CodeGenerator
 
     protected function getLoadMenu(): string
     {
-        $menus = $this->model->generate_menus ? explode(',', $this->model->generate_menus) : [];
+        $menus = $this->tablesContract->getGenerateMenus() ? explode(',', $this->tablesContract->getGenerateMenus()) : [];
         $ignoreMenus = ['realDelete', 'recovery', 'changeStatus', 'numberOperation'];
 
         foreach ($ignoreMenus as $menu) {
@@ -210,7 +214,7 @@ class SqlGenerator extends MineGenerator implements CodeGenerator
      */
     protected function getParentId(): int
     {
-        return $this->model->belong_menu_id;
+        return $this->tablesContract->getBelongMenuId();
     }
 
     /**
@@ -218,7 +222,7 @@ class SqlGenerator extends MineGenerator implements CodeGenerator
      */
     protected function getTableName(): string
     {
-        return env('DB_PREFIX') . SystemMenu::getModel()->getTable();
+        return env('DB_PREFIX') . 'system_menu';
     }
 
     /**
@@ -226,8 +230,11 @@ class SqlGenerator extends MineGenerator implements CodeGenerator
      */
     protected function getLevel(): string
     {
-        if ($this->model->belong_menu_id !== 0) {
-            $model = SystemMenu::find($this->model->belong_menu_id, ['id', 'level']);
+        if ($this->tablesContract->getBelongMenuId() !== 0) {
+            $model = $this->tablesContract->getSystemMenuFind(function (Builder $query) {
+                return $query->where('id', $this->tablesContract->getBelongMenuId())
+                    ->first();
+            });
             return $model->level . ',' . $model->id;
         }
         return '0';
@@ -238,7 +245,7 @@ class SqlGenerator extends MineGenerator implements CodeGenerator
      */
     protected function getCode(): string
     {
-        return Str::lower($this->model->module_name) . ':' . $this->getShortBusinessName();
+        return Str::lower($this->tablesContract->getModuleName()) . ':' . $this->getShortBusinessName();
     }
 
     /**
@@ -246,7 +253,7 @@ class SqlGenerator extends MineGenerator implements CodeGenerator
      */
     protected function getRoute(): string
     {
-        return Str::lower($this->model->module_name) . '/' . $this->getShortBusinessName();
+        return Str::lower($this->tablesContract->getModuleName()) . '/' . $this->getShortBusinessName();
     }
 
     /**
@@ -254,7 +261,7 @@ class SqlGenerator extends MineGenerator implements CodeGenerator
      */
     protected function getVueTemplate(): string
     {
-        return Str::lower($this->model->module_name) . '/' . $this->getShortBusinessName() . '/index';
+        return Str::lower($this->tablesContract->getModuleName()) . '/' . $this->getShortBusinessName() . '/index';
     }
 
     /**

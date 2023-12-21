@@ -24,10 +24,12 @@ declare(strict_types=1);
 
 namespace Mine\Generator;
 
-use App\Setting\Model\SettingGenerateTables;
 use Hyperf\Support\Filesystem\Filesystem;
 use Mine\Exception\NormalStatusException;
+use Mine\Generator\Contracts\GeneratorTablesContract;
 use Mine\Helper\Str;
+use function Hyperf\Support\env;
+use function Hyperf\Support\make;
 
 /**
  * JS API文件生成
@@ -35,7 +37,7 @@ use Mine\Helper\Str;
  */
 class ApiGenerator extends MineGenerator implements CodeGenerator
 {
-    protected SettingGenerateTables $model;
+    protected GeneratorTablesContract $tablesContract;
 
     protected string $codeContent;
 
@@ -46,11 +48,11 @@ class ApiGenerator extends MineGenerator implements CodeGenerator
      * @throws \Psr\Container\ContainerExceptionInterface
      * @throws \Psr\Container\NotFoundExceptionInterface
      */
-    public function setGenInfo(SettingGenerateTables $model): ApiGenerator
+    public function setGenInfo(GeneratorTablesContract $generatorTablesContract): ApiGenerator
     {
-        $this->model = $model;
+        $this->tablesContract = $generatorTablesContract;
         $this->filesystem = make(Filesystem::class);
-        if (empty($model->module_name) || empty($model->menu_name)) {
+        if (empty($generatorTablesContract->getModuleName()) || empty($generatorTablesContract->getMenuName())) {
             throw new NormalStatusException(t('setting.gen_code_edit'));
         }
         return $this->placeholderReplace();
@@ -61,8 +63,8 @@ class ApiGenerator extends MineGenerator implements CodeGenerator
      */
     public function generator(): void
     {
-        $filename = Str::camel(str_replace(env('DB_PREFIX'), '', $this->model->table_name));
-        $module = Str::lower($this->model->module_name);
+        $filename = Str::camel(str_replace(env('DB_PREFIX'), '', $this->tablesContract->getTablename()));
+        $module = Str::lower($this->tablesContract->getModuleName());
         $this->filesystem->makeDirectory(BASE_PATH . "/runtime/generate/vue/src/api/{$module}", 0755, true, true);
         $path = BASE_PATH . "/runtime/generate/vue/src/api/{$module}/{$filename}.js";
         $this->filesystem->put($path, $this->replace()->getCodeContent());
@@ -82,9 +84,9 @@ class ApiGenerator extends MineGenerator implements CodeGenerator
     public function getShortBusinessName(): string
     {
         return Str::camel(str_replace(
-            Str::lower($this->model->module_name),
+            Str::lower($this->tablesContract->getModuleName()),
             '',
-            str_replace(env('DB_PREFIX'), '', $this->model->table_name)
+            str_replace(env('DB_PREFIX'), '', $this->tablesContract->getTablename())
         ));
     }
 
@@ -162,10 +164,10 @@ class ApiGenerator extends MineGenerator implements CodeGenerator
 
     protected function getLoadApi(): string
     {
-        $menus = $this->model->generate_menus ? explode(',', $this->model->generate_menus) : [];
+        $menus = $this->tablesContract->getGenerateMenus() ? explode(',', $this->tablesContract->getGenerateMenus()) : [];
         $ignoreMenus = ['realDelete', 'recovery'];
 
-        array_unshift($menus, $this->model->type === 'single' ? 'singleList' : 'treeList');
+        array_unshift($menus, $this->tablesContract->getType()->value === 'single' ? 'singleList' : 'treeList');
 
         foreach ($ignoreMenus as $menu) {
             if (in_array($menu, $menus)) {
@@ -196,7 +198,7 @@ class ApiGenerator extends MineGenerator implements CodeGenerator
      */
     protected function getRequestRoute(): string
     {
-        return Str::lower($this->model->module_name) . '/' . $this->getShortBusinessName();
+        return Str::lower($this->tablesContract->getModuleName()) . '/' . $this->getShortBusinessName();
     }
 
     /**
@@ -204,6 +206,6 @@ class ApiGenerator extends MineGenerator implements CodeGenerator
      */
     protected function getBusinessName(): string
     {
-        return $this->model->menu_name;
+        return $this->tablesContract->getMenuName();
     }
 }

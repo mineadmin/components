@@ -24,11 +24,12 @@ declare(strict_types=1);
 
 namespace Mine\Generator;
 
-use App\Setting\Model\SettingGenerateColumns;
-use App\Setting\Model\SettingGenerateTables;
 use Hyperf\Support\Filesystem\Filesystem;
 use Mine\Exception\NormalStatusException;
+use Mine\Generator\Contracts\GeneratorTablesContract;
 use Mine\Helper\Str;
+use function Hyperf\Support\env;
+use function Hyperf\Support\make;
 
 /**
  * 控制器生成
@@ -36,7 +37,7 @@ use Mine\Helper\Str;
  */
 class ControllerGenerator extends MineGenerator implements CodeGenerator
 {
-    protected SettingGenerateTables $model;
+    protected GeneratorTablesContract $tablesContract;
 
     protected string $codeContent;
 
@@ -47,14 +48,14 @@ class ControllerGenerator extends MineGenerator implements CodeGenerator
      * @throws \Psr\Container\ContainerExceptionInterface
      * @throws \Psr\Container\NotFoundExceptionInterface
      */
-    public function setGenInfo(SettingGenerateTables $model): ControllerGenerator
+    public function setGenInfo(GeneratorTablesContract $tablesContract): ControllerGenerator
     {
-        $this->model = $model;
+        $this->tablesContract = $tablesContract;
         $this->filesystem = make(Filesystem::class);
-        if (empty($model->module_name) || empty($model->menu_name)) {
+        if (empty($tablesContract->getModuleName()) || empty($tablesContract->getMenuName())) {
             throw new NormalStatusException(t('setting.gen_code_edit'));
         }
-        $this->setNamespace($this->model->namespace);
+        $this->setNamespace($this->tablesContract->getNamespace());
         return $this->placeholderReplace();
     }
 
@@ -63,14 +64,14 @@ class ControllerGenerator extends MineGenerator implements CodeGenerator
      */
     public function generator(): void
     {
-        $module = Str::title($this->model->module_name[0]) . mb_substr($this->model->module_name, 1);
-        if ($this->model->generate_type === 1) {
+        $module = Str::title($this->tablesContract->getModuleName()[0]) . mb_substr($this->tablesContract->getModuleName(), 1);
+        if ($this->tablesContract->getGenerateType() === 1) {
             $path = BASE_PATH . "/runtime/generate/php/app/{$module}/Controller/";
         } else {
             $path = BASE_PATH . "/app/{$module}/Controller/";
         }
-        if (! empty($this->model->package_name)) {
-            $path .= Str::title($this->model->package_name) . '/';
+        if (! empty($this->tablesContract->getPackageName())) {
+            $path .= Str::title($this->tablesContract->getPackageName()) . '/';
         }
         $this->filesystem->exists($path) || $this->filesystem->makeDirectory($path, 0755, true, true);
         $this->filesystem->put($path . "{$this->getClassName()}.php", $this->replace()->getCodeContent());
@@ -89,7 +90,7 @@ class ControllerGenerator extends MineGenerator implements CodeGenerator
      */
     public function getType(): string
     {
-        return ucfirst($this->model->type);
+        return ucfirst($this->tablesContract->getType()->value);
     }
 
     /**
@@ -97,7 +98,7 @@ class ControllerGenerator extends MineGenerator implements CodeGenerator
      */
     public function getBusinessName(): string
     {
-        return Str::studly(str_replace(env('DB_PREFIX'), '', $this->model->table_name));
+        return Str::studly(str_replace(env('DB_PREFIX'), '', $this->tablesContract->getTableName()));
     }
 
     /**
@@ -106,9 +107,9 @@ class ControllerGenerator extends MineGenerator implements CodeGenerator
     public function getShortBusinessName(): string
     {
         return Str::camel(str_replace(
-            Str::lower($this->model->module_name),
+            Str::lower($this->tablesContract->getModuleName()),
             '',
-            str_replace(env('DB_PREFIX'), '', $this->model->table_name)
+            str_replace(env('DB_PREFIX'), '', $this->tablesContract->getTableName())
         ));
     }
 
@@ -206,7 +207,7 @@ class ControllerGenerator extends MineGenerator implements CodeGenerator
             $this->getControllerRoute(),
             $this->getFunctions(),
             $this->getRequestName(),
-            sprintf('%s, %s', Str::lower($this->model->module_name) . ':' . $this->getShortBusinessName(), $this->getMethodRoute('index')),
+            sprintf('%s, %s', Str::lower($this->tablesContract->getModuleName()) . ':' . $this->getShortBusinessName(), $this->getMethodRoute('index')),
             $this->getMethodRoute('recycle'),
             $this->getMethodRoute('save'),
             $this->getMethodRoute('read'),
@@ -232,8 +233,8 @@ class ControllerGenerator extends MineGenerator implements CodeGenerator
     protected function initNamespace(): string
     {
         $namespace = $this->getNamespace() . '\\Controller';
-        if (! empty($this->model->package_name)) {
-            return $namespace . '\\' . Str::title($this->model->package_name);
+        if (! empty($this->tablesContract->getPackageName())) {
+            return $namespace . '\\' . Str::title($this->tablesContract->getPackageName());
         }
         return $namespace;
     }
@@ -243,7 +244,7 @@ class ControllerGenerator extends MineGenerator implements CodeGenerator
      */
     protected function getComment(): string
     {
-        return $this->model->menu_name . '控制器';
+        return $this->tablesContract->getMenuName() . '控制器';
     }
 
     /**
@@ -280,17 +281,17 @@ UseNamespace;
     {
         return sprintf(
             '%s/%s',
-            Str::lower($this->model->module_name),
+            Str::lower($this->tablesContract->getModuleName()),
             $this->getShortBusinessName()
         );
     }
 
     protected function getFunctions(): string
     {
-        $menus = $this->model->generate_menus ? explode(',', $this->model->generate_menus) : [];
-        $otherMenu = [$this->model->type === 'single' ? 'singleList' : 'treeList'];
+        $menus = $this->tablesContract->getGenerateMenus() ? explode(',', $this->tablesContract->getGenerateMenus()) : [];
+        $otherMenu = [$this->tablesContract->getType()->value === 'single' ? 'singleList' : 'treeList'];
         if (in_array('recycle', $menus)) {
-            $otherMenu[] = $this->model->type === 'single' ? 'singleRecycleList' : 'treeRecycleList';
+            $otherMenu[] = $this->tablesContract->getType()->value === 'single' ? 'singleRecycleList' : 'treeRecycleList';
             array_push($otherMenu, ...['realDelete', 'recovery']);
             unset($menus[array_search('recycle', $menus)]);
         }
@@ -311,7 +312,7 @@ UseNamespace;
     {
         return sprintf(
             '%s:%s:%s',
-            Str::lower($this->model->module_name),
+            Str::lower($this->tablesContract->getModuleName()),
             $this->getShortBusinessName(),
             $route
         );
@@ -321,17 +322,14 @@ UseNamespace;
     {
         return sprintf(
             '\\%s\\Dto\\%s::class',
-            $this->model->namespace,
+            $this->tablesContract->getNamespace(),
             $this->getBusinessName() . 'Dto'
         );
     }
 
     protected function getPk(): string
     {
-        return SettingGenerateColumns::query()
-            ->where('table_id', $this->model->id)
-            ->where('is_pk', self::YES)
-            ->value('column_name');
+        return $this->tablesContract->getPkName();
     }
 
     protected function getStatusValue(): string
