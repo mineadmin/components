@@ -181,36 +181,6 @@ if (! function_exists('event')) {
     }
 }
 
-if (! function_exists('push_queue_message')) {
-    /**
-     * 推送消息到队列.
-     * @throws Throwable
-     * @throws ContainerExceptionInterface
-     * @throws NotFoundExceptionInterface
-     */
-    function push_queue_message(QueueMessageVo $message, array $receiveUsers = []): bool
-    {
-        return container()
-            ->get(QueueLogServiceInterface::class)
-            ->pushMessage($message, $receiveUsers);
-    }
-}
-
-if (! function_exists('add_queue')) {
-    /**
-     * 添加任务到队列.
-     * @throws Throwable
-     * @throws ContainerExceptionInterface
-     * @throws NotFoundExceptionInterface
-     */
-    function add_queue(App\System\Vo\AmqpQueueVo $amqpQueueVo): bool
-    {
-        return container()
-            ->get(QueueLogServiceInterface::class)
-            ->addQueue($amqpQueueVo);
-    }
-}
-
 if (! function_exists('blank')) {
     /**
      * 判断给定的值是否为空.
