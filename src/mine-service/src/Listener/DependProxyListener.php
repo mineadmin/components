@@ -16,8 +16,6 @@ use Hyperf\Context\ApplicationContext;
 use Hyperf\Event\Contract\ListenerInterface;
 use Hyperf\Framework\Event\BootApplication;
 use Mine\Annotation\DependProxyCollector;
-use Mine\Factory\DependProxyFactory;
-use function Hyperf\Support\env;
 
 class DependProxyListener implements ListenerInterface
 {
@@ -33,7 +31,7 @@ class DependProxyListener implements ListenerInterface
             $definition = $collector->provider;
             foreach ($targets as $target) {
                 ApplicationContext::getContainer()
-                    ->define($definition,$target);
+                    ->define($definition, $target);
             }
         }
     }

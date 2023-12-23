@@ -1,5 +1,15 @@
 <?php
 
+declare(strict_types=1);
+/**
+ * This file is part of MineAdmin.
+ *
+ * @link     https://www.mineadmin.com
+ * @document https://doc.mineadmin.com
+ * @contact  root@imoi.cn
+ * @license  https://github.com/mineadmin/MineAdmin/blob/master/LICENSE
+ */
+
 namespace Mine;
 
 use Mine\Annotation\CrudModelCollector;
@@ -15,10 +25,10 @@ class ServiceConfigProvider
             'dependencies' => [
             ],
             'commands' => [
-                MineGenServiceCommand::class
+                MineGenServiceCommand::class,
             ],
             'listeners' => [
-                DependProxyListener::class  =>  PHP_INT_MAX
+                DependProxyListener::class => PHP_INT_MAX,
             ],
             // 合并到  config/autoload/annotations.php 文件
             'annotations' => [
@@ -28,10 +38,10 @@ class ServiceConfigProvider
                     ],
                     'collectors' => [
                         DependProxyCollector::class,
-                        CrudModelCollector::class
+                        CrudModelCollector::class,
                     ],
                 ],
-            ]
+            ],
         ];
     }
 }

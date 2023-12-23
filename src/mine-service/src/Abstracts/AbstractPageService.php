@@ -1,11 +1,20 @@
 <?php
 
+declare(strict_types=1);
+/**
+ * This file is part of MineAdmin.
+ *
+ * @link     https://www.mineadmin.com
+ * @document https://doc.mineadmin.com
+ * @contact  root@imoi.cn
+ * @license  https://github.com/mineadmin/MineAdmin/blob/master/LICENSE
+ */
+
 namespace Mine\Abstracts;
 
 use Hyperf\Collection\Collection;
 use Hyperf\Contract\LengthAwarePaginatorInterface;
 use Hyperf\Database\Model\Builder;
-use Hyperf\Paginator\Paginator;
 use Mine\Contract\PageServiceContract;
 use Mine\ServiceException;
 use Mine\Traits\GetModelTrait;
@@ -18,38 +27,9 @@ abstract class AbstractPageService implements PageServiceContract
     use GetModelTrait;
 
     /**
-     * @var null|class-string<T> $model
+     * @var null|class-string<T>
      */
     public ?string $model = null;
-
-    /**
-     * 查询列
-     * @return array
-     * @throws ServiceException
-     */
-    protected function getSelectFields(): array
-    {
-        return $this->getModelInstance()->getFillable();
-    }
-
-    /**
-     * 查询处理
-     * @param array $params
-     * @param Builder $query
-     * @return Builder
-     */
-    abstract protected function handleSearch(array $params,Builder $query): Builder;
-
-
-    /**
-     * initialization DbBuilder
-     * @throws ServiceException
-     */
-    protected function preQuery(): Builder
-    {
-        return $this
-            ->getModelQuery();
-    }
 
     /**
      * @throws ServiceException
@@ -60,7 +40,6 @@ abstract class AbstractPageService implements PageServiceContract
     }
 
     /**
-     * @inheritDoc
      * @throws ServiceException
      */
     public function page(mixed $params = null, int $page = 1, int $size = 10): LengthAwarePaginatorInterface
@@ -68,11 +47,10 @@ abstract class AbstractPageService implements PageServiceContract
         return $this->handleSearch(
             $params,
             $this->__handleSelect($this->preQuery())
-        )->paginate(perPage: $size,page: $page);
+        )->paginate(perPage: $size, page: $page);
     }
 
     /**
-     * @inheritDoc
      * @throws ServiceException
      */
     public function count(mixed $params = null): int
@@ -84,7 +62,6 @@ abstract class AbstractPageService implements PageServiceContract
     }
 
     /**
-     * @inheritDoc
      * @throws ServiceException
      */
     public function list(mixed $params): Collection
@@ -96,11 +73,34 @@ abstract class AbstractPageService implements PageServiceContract
     }
 
     /**
-     * @inheritDoc
      * @throws ServiceException
      */
     public function getById(mixed $id): Collection
     {
         return Collection::make($this->getModel()::find($id));
+    }
+
+    /**
+     * 查询列.
+     * @throws ServiceException
+     */
+    protected function getSelectFields(): array
+    {
+        return $this->getModelInstance()->getFillable();
+    }
+
+    /**
+     * 查询处理.
+     */
+    abstract protected function handleSearch(array $params, Builder $query): Builder;
+
+    /**
+     * initialization DbBuilder.
+     * @throws ServiceException
+     */
+    protected function preQuery(): Builder
+    {
+        return $this
+            ->getModelQuery();
     }
 }
