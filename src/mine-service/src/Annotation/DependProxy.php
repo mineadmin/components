@@ -30,10 +30,20 @@ class DependProxy extends AbstractAnnotation
             $this->provider = $className;
         }
         if (count($this->values) == 0 && class_exists($className)) {
-            $reflectionClass = new \ReflectionClass(make($className));
-            $this->values = array_keys($reflectionClass->getInterfaces());
+            $reflection = new \ReflectionClass($className);
+            $interfaces = $reflection->getInterfaces();
+            // 按照定义顺序排序接口列表
+            uasort($interfaces, function ($a, $b) {
+                if (in_array($a->getName(), class_implements($b->getName()))) {
+                    return 1;
+                }
+                if (in_array($b->getName(), class_implements($a->getName()))) {
+                    return -1;
+                }
+                return 0;
+            });
+            $this->values = array_values($interfaces)[0]->getName();
         }
-        parent::collectClass($className);
         DependProxyCollector::setAround($className, $this);
     }
 }

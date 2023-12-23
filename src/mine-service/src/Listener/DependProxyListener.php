@@ -12,13 +12,13 @@ declare(strict_types=1);
 
 namespace Mine\Listener;
 
-use Hyperf\Event\Annotation\Listener;
+use Hyperf\Context\ApplicationContext;
 use Hyperf\Event\Contract\ListenerInterface;
 use Hyperf\Framework\Event\BootApplication;
 use Mine\Annotation\DependProxyCollector;
 use Mine\Factory\DependProxyFactory;
+use function Hyperf\Support\env;
 
-// #[Listener]
 class DependProxyListener implements ListenerInterface
 {
     public function listen(): array
@@ -32,7 +32,8 @@ class DependProxyListener implements ListenerInterface
             $targets = $collector->values;
             $definition = $collector->provider;
             foreach ($targets as $target) {
-                DependProxyFactory::define($target, $definition, true);
+                ApplicationContext::getContainer()
+                    ->define($definition,$target);
             }
         }
     }

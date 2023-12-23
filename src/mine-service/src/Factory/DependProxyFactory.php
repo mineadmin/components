@@ -15,9 +15,15 @@ namespace Mine\Factory;
 use Hyperf\Context\ApplicationContext;
 use Hyperf\Contract\ConfigInterface;
 use Hyperf\Contract\ContainerInterface;
+use Psr\Container\ContainerExceptionInterface;
+use Psr\Container\NotFoundExceptionInterface;
 
 class DependProxyFactory
 {
+    /**
+     * @throws NotFoundExceptionInterface
+     * @throws ContainerExceptionInterface
+     */
     public static function define(string $name, string $definition, bool $isLogger = true): void
     {
         /** @var ContainerInterface $container */

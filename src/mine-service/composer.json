@@ -1,0 +1,42 @@
+{
+  "name": "xmo/mine-service",
+  "type": "library",
+  "license": "Apache-2.0",
+  "keywords": [
+    "mineadmin",
+    "service"
+  ],
+  "authors": [
+    {
+      "name": "xmo",
+      "email": "root@imoi.cn",
+      "role": "Developer"
+    },
+    {
+      "name": "Death-Satan",
+      "email": "2771717608@qq.com",
+      "role": "Developer"
+    }
+  ],
+  "description": "mineadmin Service package",
+  "autoload": {
+    "psr-4": {
+      "Mine\\": "src/"
+    }
+  },
+  "require": {
+    "php": ">=8.1"
+  },
+  "config": {
+    "optimize-autoloader": true,
+    "sort-packages": true
+  },
+  "scripts": {
+    "cs-fix": "php-cs-fixer fix $1"
+  },
+  "extra": {
+    "hyperf": {
+      "config": "Mine\\ServiceConfigProvider"
+    }
+  }
+}
