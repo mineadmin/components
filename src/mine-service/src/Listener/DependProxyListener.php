@@ -27,7 +27,10 @@ class DependProxyListener implements ListenerInterface
         return [BootApplication::class];
     }
 
-    public function process(object $event): void {}
+    public function process(object $event): void {
+        $this->handleComponent();
+        $this->handleDefined();
+    }
 
     private function handleComponent(): void
     {
