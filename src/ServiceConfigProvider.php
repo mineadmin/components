@@ -12,6 +12,7 @@ declare(strict_types=1);
 
 namespace Mine;
 
+use Mine\Annotation\ComponentCollector;
 use Mine\Annotation\CrudModelCollector;
 use Mine\Annotation\DependProxyCollector;
 use Mine\Command\MineGenServiceCommand;
@@ -39,6 +40,7 @@ class ServiceConfigProvider
                     'collectors' => [
                         DependProxyCollector::class,
                         CrudModelCollector::class,
+                        ComponentCollector::class,
                     ],
                 ],
             ],
