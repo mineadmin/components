@@ -40,7 +40,7 @@ class DependProxy extends AbstractAnnotation
                 }
                 return 0;
             });
-            $this->values = array_values($interfaces)[0]->getName();
+            $this->values = [array_values($interfaces)[0]->getName()];
         }
         DependProxyCollector::setAround($className, $this);
     }
