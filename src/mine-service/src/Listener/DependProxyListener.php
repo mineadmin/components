@@ -61,7 +61,7 @@ class DependProxyListener implements ListenerInterface
             $definition = $collector->provider;
             foreach ($targets as $target) {
                 $this->container
-                    ->define($definition, $target);
+                    ->define($target,$definition);
             }
         }
     }
