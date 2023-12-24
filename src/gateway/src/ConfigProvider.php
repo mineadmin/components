@@ -10,21 +10,32 @@ declare(strict_types=1);
  * @license  https://github.com/mineadmin/MineAdmin/blob/master/LICENSE
  */
 
-namespace Mine;
+namespace Mine\Gateway;
 
 class ConfigProvider
 {
     public function __invoke(): array
     {
         return [
-            // 合并到  config/autoload/mineadmin.php 文件
-            'mineadmin' => [
-                // 应用中心配置（只有在开发模式下可以使用应用中心）
-                'appstore_config' => [
-                    // 是否开启应用中心
-                    'enabled' => true,
-                    // 前端vue所在目录，默认后端根目录的 ./web 下
-                    'web_path' => BASE_PATH . '/web',
+            'dependencies' => [
+            ],
+            'commands' => [
+            ],
+            'listeners' => [],
+            // 合并到  config/autoload/annotations.php 文件
+            'annotations' => [
+                'scan' => [
+                    'paths' => [
+                        __DIR__,
+                    ],
+                ],
+            ],
+            'publish' => [
+                [
+                    'id' => 'mineadmin-gateway',
+                    'description' => 'gateway',
+                    'source' => __DIR__ . '/../publish/mine-gateway.php',
+                    'destination' => BASE_PATH . '/config/autoload/mine-gateway.php',
                 ],
             ],
         ];
