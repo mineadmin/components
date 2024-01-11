@@ -12,10 +12,11 @@ declare(strict_types=1);
 
 namespace Mine\Annotation;
 
+use Attribute;
 use Hyperf\Di\Annotation\AbstractAnnotation;
 use Mine\ServiceException;
 
-#[\Attribute(\Attribute::TARGET_FUNCTION)]
+#[Attribute(Attribute::TARGET_FUNCTION)]
 class Override extends AbstractAnnotation
 {
     public function collectMethod(string $className, ?string $target): void

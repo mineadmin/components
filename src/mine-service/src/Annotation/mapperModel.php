@@ -12,10 +12,11 @@ declare(strict_types=1);
 
 namespace Mine\Annotation;
 
+use Attribute;
 use Hyperf\Di\Annotation\AbstractAnnotation;
 
-#[\Attribute(\Attribute::TARGET_CLASS)]
-class CrudModel extends AbstractAnnotation
+#[Attribute(Attribute::TARGET_CLASS)]
+class mapperModel extends AbstractAnnotation
 {
     public function __construct(
         public string $model

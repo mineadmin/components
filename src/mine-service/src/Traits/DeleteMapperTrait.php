@@ -14,12 +14,15 @@ namespace Mine\Traits;
 
 use Hyperf\DbConnection\Annotation\Transactional;
 use Hyperf\DbConnection\Model\Model;
+use Mine\Abstracts\Mapper;
 use Mine\ServiceException;
 
-trait DeleteServiceTrait
-{
-    use GetModelTrait;
 
+/**
+ * @mixin Mapper
+ */
+trait DeleteMapperTrait
+{
     /**
      * @throws ServiceException
      */

@@ -16,7 +16,7 @@ namespace Mine\Contract;
  * 更新 Service 契约.
  * @template T
  */
-interface UpdateServiceContract
+interface UpdateMapperContract
 {
     /**
      * 使用模型插入单挑记录,

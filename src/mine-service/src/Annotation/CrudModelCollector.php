@@ -18,10 +18,21 @@ class CrudModelCollector extends MetadataCollector
 {
     protected static array $container = [];
 
-    public static function collect(string $service, string $model)
+    public static function collect(string $mapper, string $model)
     {
-        static::$container['crud_collect_model'][$service] = $model;
+        static::$container['crud_collect_model'][$mapper] = $model;
     }
+
+    public static function collectMapper(string $service, string $mapper): void
+    {
+        static::$container['crud_collect_mapper'][$service] = $mapper;
+    }
+
+    public static function mapperList(): array
+    {
+        return static::$container['crud_collect_mapper'] ?? [];
+    }
+
 
     public static function list(): array
     {

@@ -1,27 +1,17 @@
 <?php
 
-declare(strict_types=1);
-/**
- * This file is part of MineAdmin.
- *
- * @link     https://www.mineadmin.com
- * @document https://doc.mineadmin.com
- * @contact  root@imoi.cn
- * @license  https://github.com/mineadmin/MineAdmin/blob/master/LICENSE
- */
-
-namespace Mine\Traits;
+namespace Mine\Abstracts;
 
 use Hyperf\Database\Model\Builder;
 use Hyperf\DbConnection\Model\Model;
 use Mine\Annotation\CrudModelCollector;
 use Mine\ServiceException;
 
-trait GetModelTrait
+abstract class Mapper
 {
     /**
      * 获取模型类名.
-     * @return Model|string
+     * @return string|Model
      * @throws ServiceException
      */
     public function getModel(): string
@@ -36,7 +26,7 @@ trait GetModelTrait
         if (! empty(CrudModelCollector::list()[static::class])) {
             $modelClass = CrudModelCollector::list()[static::class];
         }
-        if (! class_exists($modelClass) || ($modelClass instanceof Model)) {
+        if (! class_exists($modelClass) || !($modelClass instanceof Model)) {
             throw new ServiceException('The class to which the ' . static::class . ' class belongs was not found');
         }
         return $modelClass;
