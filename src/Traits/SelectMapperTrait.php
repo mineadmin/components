@@ -1,40 +1,22 @@
 <?php
 
-declare(strict_types=1);
-/**
- * This file is part of MineAdmin.
- *
- * @link     https://www.mineadmin.com
- * @document https://doc.mineadmin.com
- * @contact  root@imoi.cn
- * @license  https://github.com/mineadmin/MineAdmin/blob/master/LICENSE
- */
-
-namespace Mine\Abstracts;
+namespace Mine\Traits;
 
 use Hyperf\Collection\Collection;
 use Hyperf\Contract\LengthAwarePaginatorInterface;
 use Hyperf\Database\Model\Builder;
-use Mine\Contract\PageServiceContract;
+use Mine\Abstracts\Mapper;
 use Mine\ServiceException;
-use Mine\Traits\GetModelTrait;
 
 /**
- * @template T
+ * @mixin Mapper
  */
-abstract class AbstractPageService implements PageServiceContract
+trait SelectMapperTrait
 {
-    use GetModelTrait;
-
-    /**
-     * @var null|class-string<T>
-     */
-    public ?string $model = null;
-
     /**
      * @throws ServiceException
      */
-    protected function __handleSelect(Builder $query): Builder
+    protected function handleSelect(Builder $query): Builder
     {
         return $query->select($this->getSelectFields() ?? ['*']);
     }
@@ -46,7 +28,7 @@ abstract class AbstractPageService implements PageServiceContract
     {
         return $this->handleSearch(
             $params,
-            $this->__handleSelect($this->preQuery())
+            $this->handleSelect($this->preQuery())
         )->paginate(perPage: $size, page: $page);
     }
 
@@ -68,7 +50,7 @@ abstract class AbstractPageService implements PageServiceContract
     {
         return $this->handleSearch(
             $params,
-            $this->__handleSelect($this->preQuery())
+            $this->handleSelect($this->preQuery())
         )->get();
     }
 

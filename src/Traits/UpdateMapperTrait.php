@@ -18,9 +18,8 @@ use Hyperf\Database\Model\Relations\HasOne;
 use Hyperf\DbConnection\Annotation\Transactional;
 use Mine\ServiceException;
 
-trait UpdateServiceTrait
+trait UpdateMapperTrait
 {
-    use GetModelTrait;
 
     /**
      * 使用模型插入单挑记录,

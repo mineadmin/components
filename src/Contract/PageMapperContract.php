@@ -19,7 +19,7 @@ use Hyperf\Contract\LengthAwarePaginatorInterface;
  * 查询 BaseService 锲约.
  * @template T
  */
-interface PageServiceContract
+interface PageMapperContract
 {
     /**
      * 列表查询.

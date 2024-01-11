@@ -15,7 +15,7 @@ namespace Mine\Contract;
 /**
  * 更新|插入 Service.
  */
-interface SaveOrUpdateServiceContract
+interface SaveOrUpdateMapperContract
 {
     /**
      * 单条记录插入或更新,

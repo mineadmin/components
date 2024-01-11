@@ -16,10 +16,9 @@ use Hyperf\Collection\Arr;
 use Hyperf\DbConnection\Annotation\Transactional;
 use Mine\ServiceException;
 
-trait SaveOrUpdateServiceTrait
-{
-    use GetModelTrait;
 
+trait SaveOrUpdateMapperTrait
+{
     /**
      * 单条记录插入或更新,
      * 只传入 data 时,策略为当 model 主键不存在时就插入一条数据
