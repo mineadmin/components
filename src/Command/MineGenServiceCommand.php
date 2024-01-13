@@ -18,7 +18,6 @@ use Symfony\Component\Console\Input\InputOption;
 #[\Hyperf\Command\Annotation\Command]
 class MineGenServiceCommand extends Command
 {
-
     public function handle()
     {
         $path = $this->input->getArgument('path');
@@ -33,9 +32,8 @@ class MineGenServiceCommand extends Command
         $this->setDescription('基于 Ast语法树解析 快速生成Service');
         $this->setDescription('快速生成 mapper');
         $this->setName('mine:gen-service');
-        $this->addOption('name','n',InputOption::VALUE_NONE,'build file name');
-        $this->addOption('path','p',InputOption::VALUE_NONE,'build path');
-        $this->addOption('model','mo',InputOption::VALUE_REQUIRED,'model class');
+        $this->addOption('name', 'n', InputOption::VALUE_NONE, 'build file name');
+        $this->addOption('path', 'p', InputOption::VALUE_NONE, 'build path');
+        $this->addOption('model', 'mo', InputOption::VALUE_REQUIRED, 'model class');
     }
-
 }

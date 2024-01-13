@@ -17,7 +17,6 @@ use Hyperf\DbConnection\Model\Model;
 use Mine\Abstracts\Mapper;
 use Mine\ServiceException;
 
-
 /**
  * @mixin Mapper
  */

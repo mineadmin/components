@@ -1,5 +1,15 @@
 <?php
 
+declare(strict_types=1);
+/**
+ * This file is part of MineAdmin.
+ *
+ * @link     https://www.mineadmin.com
+ * @document https://doc.mineadmin.com
+ * @contact  root@imoi.cn
+ * @license  https://github.com/mineadmin/MineAdmin/blob/master/LICENSE
+ */
+
 namespace Mine\Abstracts;
 
 use Hyperf\Database\Model\Builder;
@@ -13,7 +23,7 @@ use Mine\ServiceException;
 abstract class Mapper
 {
     /**
-     * @var string|class-string<ModelClass>
+     * @var class-string<ModelClass>|string
      */
     protected string $model;
 
@@ -34,7 +44,7 @@ abstract class Mapper
         if (! empty(CrudModelCollector::list()[static::class])) {
             $modelClass = CrudModelCollector::list()[static::class];
         }
-        if (! class_exists($modelClass) || !($modelClass instanceof Model)) {
+        if (! class_exists($modelClass) || ! ($modelClass instanceof Model)) {
             throw new ServiceException('The class to which the ' . static::class . ' class belongs was not found');
         }
         return $modelClass;

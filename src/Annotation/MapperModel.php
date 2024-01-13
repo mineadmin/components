@@ -12,10 +12,9 @@ declare(strict_types=1);
 
 namespace Mine\Annotation;
 
-use Attribute;
 use Hyperf\Di\Annotation\AbstractAnnotation;
 
-#[Attribute(Attribute::TARGET_CLASS)]
+#[\Attribute(\Attribute::TARGET_CLASS)]
 class MapperModel extends AbstractAnnotation
 {
     public function __construct(

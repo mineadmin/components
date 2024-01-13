@@ -24,14 +24,10 @@ use Mine\Traits\UpdateMapperTrait;
 /**
  * CrudService.
  */
-abstract class CrudMapper extends Mapper implements
-    PageMapperContract,
-    UpdateMapperContract,
-    SaveOrUpdateMapperContract,
-    DeleteMapperContract
+abstract class CrudMapper extends Mapper implements PageMapperContract, UpdateMapperContract, SaveOrUpdateMapperContract, DeleteMapperContract
 {
-    use UpdateMapperTrait,
-        SaveOrUpdateMapperTrait,
-        DeleteMapperTrait,
-        SelectMapperTrait;
+    use UpdateMapperTrait;
+    use SaveOrUpdateMapperTrait;
+    use DeleteMapperTrait;
+    use SelectMapperTrait;
 }
