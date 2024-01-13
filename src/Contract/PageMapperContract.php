@@ -23,23 +23,23 @@ interface PageMapperContract
 {
     /**
      * 列表查询.
-     * @param mixed $params 查询条件
+     * @param array $params 查询条件
      * @param int $page 页码
      * @param int $size 页数
      */
-    public function page(mixed $params = null, int $page = 1, int $size = 10): LengthAwarePaginatorInterface;
+    public function page(array $params = [], int $page = 1, int $size = 10): LengthAwarePaginatorInterface;
 
     /**
      * 查询总记录数.
-     * @param null|mixed $params 查询条件
+     * @param array $params 查询条件
      */
-    public function count(mixed $params = null): int;
+    public function count(array $params = []): int;
 
     /**
      * 查询所有列表.
      * @return Collection<string,T>
      */
-    public function list(mixed $params): Collection;
+    public function list(array $params = []): Collection;
 
     /**
      * 根据主键查询一条记录.

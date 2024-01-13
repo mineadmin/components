@@ -9,11 +9,11 @@ use Hyperf\Di\Annotation\AbstractAnnotation;
 class Mapper extends AbstractAnnotation
 {
     public function __construct(
-        public string $mapper
+        public string $value
     ){}
 
     public function collectClass(string $className): void
     {
-        CrudModelCollector::collectMapper($className,$this->mapper);
+        CrudModelCollector::collectMapper($className,$this->value);
     }
 }

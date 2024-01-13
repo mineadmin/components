@@ -13,15 +13,11 @@ declare(strict_types=1);
 namespace Mine\Command;
 
 use Hyperf\Command\Command;
+use Symfony\Component\Console\Input\InputOption;
 
+#[\Hyperf\Command\Annotation\Command]
 class MineGenServiceCommand extends Command
 {
-    protected ?string $signature = 'mine:gen-crud-service
-                                    {path: the base path of project}
-                                    {--model=: The class name or absolute path of the model}
-                                    {--mode: Based on which strategy, the default is to only generate query contracts}
-                                    {--search-params: Field name to generate query conditions}
-                                    {--sort-field: sort fields,like id desc,created_at,desc}';
 
     public function handle()
     {
@@ -35,5 +31,11 @@ class MineGenServiceCommand extends Command
     protected function configure()
     {
         $this->setDescription('基于 Ast语法树解析 快速生成Service');
+        $this->setDescription('快速生成 mapper');
+        $this->setName('mine:gen-service');
+        $this->addOption('name','n',InputOption::VALUE_NONE,'build file name');
+        $this->addOption('path','p',InputOption::VALUE_NONE,'build path');
+        $this->addOption('model','mo',InputOption::VALUE_REQUIRED,'model class');
     }
+
 }

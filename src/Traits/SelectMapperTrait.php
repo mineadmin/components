@@ -24,33 +24,33 @@ trait SelectMapperTrait
     /**
      * @throws ServiceException
      */
-    public function page(mixed $params = null, int $page = 1, int $size = 10): LengthAwarePaginatorInterface
+    public function page(array $params = [], int $page = 1, int $size = 10): LengthAwarePaginatorInterface
     {
         return $this->handleSearch(
-            $params,
-            $this->handleSelect($this->preQuery())
+            $this->handleSelect($this->preQuery()),
+            $params
         )->paginate(perPage: $size, page: $page);
     }
 
     /**
      * @throws ServiceException
      */
-    public function count(mixed $params = null): int
+    public function count(array $params = []): int
     {
         return $this->handleSearch(
-            $params,
-            $this->preQuery()
+            $this->preQuery(),
+            $params
         )->count();
     }
 
     /**
      * @throws ServiceException
      */
-    public function list(mixed $params): Collection
+    public function list(array $params = []): Collection
     {
         return $this->handleSearch(
-            $params,
-            $this->handleSelect($this->preQuery())
+            $this->handleSelect($this->preQuery()),
+            $params
         )->get();
     }
 
@@ -74,7 +74,7 @@ trait SelectMapperTrait
     /**
      * 查询处理.
      */
-    abstract protected function handleSearch(array $params, Builder $query): Builder;
+    abstract protected function handleSearch(Builder $query,array $params = []): Builder;
 
     /**
      * initialization DbBuilder.
