@@ -12,12 +12,10 @@ declare(strict_types=1);
 
 namespace Mine\Traits;
 
-use Hyperf\DbConnection\Annotation\Transactional;
 use Hyperf\DbConnection\Db;
 use Hyperf\DbConnection\Model\Model;
 use Mine\Abstracts\Mapper;
 use Mine\Contract\DeleteMapperContract;
-use Mine\ServiceException;
 
 /**
  * @mixin Mapper
@@ -25,12 +23,9 @@ use Mine\ServiceException;
  */
 trait DeleteMapperTrait
 {
-    /**
-     * @inheritDoc
-     */
     public function remove(mixed $idOrWhere, bool $force = false): bool
     {
-        return Db::transaction(function ()use ($idOrWhere,$force){
+        return Db::transaction(function () use ($idOrWhere, $force) {
             $modelClass = $this->getModel();
             $query = $modelClass::query();
             /**
@@ -56,9 +51,6 @@ trait DeleteMapperTrait
         });
     }
 
-    /**
-     * @inheritDoc
-     */
     public function delete(mixed $id): bool
     {
         $model = $this->getModel();
@@ -87,9 +79,6 @@ trait DeleteMapperTrait
             )->delete();
     }
 
-    /**
-     * @inheritDoc
-     */
     public function removeByIds(array $ids): bool
     {
         $query = $this->getModelQuery();

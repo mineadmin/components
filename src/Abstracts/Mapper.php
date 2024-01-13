@@ -47,7 +47,7 @@ abstract class Mapper
         if (! class_exists($modelClass) || ! ($modelClass instanceof Model)) {
             throw new ServiceException('The class to which the ' . static::class . ' class belongs was not found');
         }
-        /** @var class-string<Model> $modelClass */
+        /* @var class-string<Model> $modelClass */
         return $modelClass;
     }
 
