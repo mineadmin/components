@@ -13,7 +13,7 @@ declare(strict_types=1);
 namespace Mine\Contract;
 
 /**
- * 删除
+ * 删除.
  */
 interface DeleteMapperContract
 {

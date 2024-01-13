@@ -25,16 +25,16 @@ interface UpdateMapperContract
     /**
      * 使用模型插入单挑记录,
      * 如果传入的数组 有对应的关联管理则会自动调用对应的关联模型进行关联插入.
-     * @throws ServiceException
      * @return T
+     * @throws ServiceException
      */
     public function save(array $data, null|array $withs = null): Model;
 
     /**
      * 批量插入
      * 将传入的二维数组 foreach 后调用 save 方法批量插入数据.
-     * @throws ServiceException
      * @return Collection<int,T>
+     * @throws ServiceException
      */
     public function batchSave(array $data): Collection;
 

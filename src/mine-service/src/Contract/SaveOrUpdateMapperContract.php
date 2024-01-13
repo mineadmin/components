@@ -26,8 +26,8 @@ interface SaveOrUpdateMapperContract
      * 单条记录插入或更新,
      * 只传入 data 时,策略为当 model 主键不存在时就插入一条数据
      * 当 model主键存在时则为更新.
-     * @throws ServiceException
      * @return T
+     * @throws ServiceException
      */
     public function saveOrUpdate(array $data, null|array $where = null): Model;
 
@@ -35,8 +35,8 @@ interface SaveOrUpdateMapperContract
      * 批量插入更新.
      * @param null|array $whereKeys 对应的key值
      * @param int $batchSize 分批处理数量
-     * @throws ServiceException
      * @return Collection<string,T>
+     * @throws ServiceException
      */
     public function batchSaveOrUpdate(
         array $data,

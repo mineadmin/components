@@ -17,7 +17,6 @@ use Hyperf\Collection\Collection;
 use Hyperf\Database\Model\Model;
 use Hyperf\Database\Model\Relations\HasMany;
 use Hyperf\Database\Model\Relations\HasOne;
-use Hyperf\DbConnection\Annotation\Transactional;
 use Hyperf\DbConnection\Db;
 use Mine\Contract\UpdateMapperContract;
 use Mine\ServiceException;
@@ -27,12 +26,9 @@ use Mine\ServiceException;
  */
 trait UpdateMapperTrait
 {
-    /**
-     * @inheritDoc
-     */
     public function save(array $data, null|array $withs = null): Model
     {
-        return Db::transaction(function ()use ($data,$withs){
+        return Db::transaction(function () use ($data, $withs) {
             $modelClass = $this->getModel();
             $withAttr = [];
             if ($withs !== null) {
@@ -64,12 +60,9 @@ trait UpdateMapperTrait
         });
     }
 
-    /**
-     * @inheritDoc
-     */
     public function batchSave(array $data): Collection
     {
-        return Db::transaction(function ()use ($data){
+        return Db::transaction(function () use ($data) {
             $result = [];
             foreach ($data as $attr) {
                 $with = $attr['__with__'] ?? null;
@@ -80,22 +73,16 @@ trait UpdateMapperTrait
         });
     }
 
-    /**
-     * @inheritDoc
-     */
     public function insert(array $data): bool
     {
         return $this->getModel()::insert($data);
     }
 
-    /**
-     * @inheritDoc
-     */
     public function batchInsert(array $data): bool
     {
-        Db::transaction(function ()use ($data){
+        Db::transaction(function () use ($data) {
             foreach ($data as $attr) {
-                if (!$this->insert($data)){
+                if (! $this->insert($data)) {
                     throw new ServiceException('batch insert fail');
                 }
             }

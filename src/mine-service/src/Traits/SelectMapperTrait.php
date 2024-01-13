@@ -25,9 +25,6 @@ use Mine\ServiceException;
  */
 trait SelectMapperTrait
 {
-    /**
-     * @inheritDoc
-     */
     public function page(mixed $params = null, int $page = 1, int $size = 10): LengthAwarePaginatorInterface
     {
         return $this->handleSearch(
@@ -36,10 +33,6 @@ trait SelectMapperTrait
         )->paginate(perPage: $size, page: $page);
     }
 
-
-    /**
-     * @inheritDoc
-     */
     public function count(mixed $params = null): int
     {
         return $this->handleSearch(
@@ -48,10 +41,6 @@ trait SelectMapperTrait
         )->count();
     }
 
-
-    /**
-     * @inheritDoc
-     */
     public function list(mixed $params = null): Collection
     {
         return $this->handleSearch(
@@ -60,19 +49,13 @@ trait SelectMapperTrait
         )->get();
     }
 
-
-    /**
-     * @inheritDoc
-     */
     public function getById(mixed $id): Collection
     {
         return Collection::make($this->getModel()::find($id));
     }
 
+    abstract public function handleSearch(Builder $query, mixed $params = null): Builder;
 
-    /**
-     * @inheritDoc
-     */
     protected function handleSelect(Builder $query): Builder
     {
         return $query->select($this->getSelectFields() ?? ['*']);
@@ -86,11 +69,6 @@ trait SelectMapperTrait
     {
         return $this->getModelInstance()->getFillable();
     }
-
-    /**
-     * @inheritDoc
-     */
-    abstract public function handleSearch(Builder $query, mixed $params = null): Builder;
 
     /**
      * initialization DbBuilder.

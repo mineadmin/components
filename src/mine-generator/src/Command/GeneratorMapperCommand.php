@@ -117,14 +117,14 @@ class GeneratorMapperCommand extends AbstractGeneratorCommand
             throw new \RuntimeException(sprintf('The class has already inherited AbstractMapper'));
         }
         $this->buildComment($class);
-        $this->addUse($class,CrudMapper::class,'Base');
+        $this->addUse($class, CrudMapper::class, 'Base');
         if ($class->getExtends() && $class->getExtends() !== CrudMapper::class) {
             throw new \RuntimeException('the Mapper not extend fail');
         }
         if ($class->getExtends() === null) {
             $class->setExtends(CrudMapper::class);
         }
-        $this->addUse($class,$model,'CrudModel');
+        $this->addUse($class, $model, 'CrudModel');
         $attributes = $class->getAttributes();
         if (empty($attributes) || count(Arr::where($attributes, function (Attribute $attribute) {
             return $attribute->getName() === MapperModel::class;
@@ -137,12 +137,13 @@ class GeneratorMapperCommand extends AbstractGeneratorCommand
         }
     }
 
-    protected function addUse(ClassType $class,string $use,?string $alias = null)
+    protected function addUse(ClassType $class, string $use, ?string $alias = null)
     {
-        if (!$this->hasUse($class,$use)){
-            $class->getNamespace()?->addUse($use,$alias);
+        if (! $this->hasUse($class, $use)) {
+            $class->getNamespace()?->addUse($use, $alias);
         }
     }
+
     protected function buildComment(ClassType $class)
     {
         if ($class->getComment() === null || ! str_contains($class->getComment(), 'Mapper<')) {
@@ -172,52 +173,53 @@ PHPSCRIPT
 
     protected function handleCreate(ClassType $class, string $model): void
     {
-        if ($this->checkExtend($class, CrudMapper::class)){
+        if ($this->checkExtend($class, CrudMapper::class)) {
             throw new \RuntimeException('CurdMapper extend');
         }
-        $this->addUse($class,SaveOrUpdateMapperContract::class,'Create');
-        $this->addUse($class,SaveOrUpdateMapperTrait::class,'CreateTrait');
-        $this->addUse($class,$model,'CrudModel');
+        $this->addUse($class, SaveOrUpdateMapperContract::class, 'Create');
+        $this->addUse($class, SaveOrUpdateMapperTrait::class, 'CreateTrait');
+        $this->addUse($class, $model, 'CrudModel');
         $class->addTrait(SaveOrUpdateMapperTrait::class);
-        $class->addComment(<<<PHPSCRIPT
+        $class->addComment(
+            <<<'PHPSCRIPT'
 @implements Create<CrudModel>
 PHPSCRIPT
-);
+        );
         $this->buildComment($class);
     }
 
     protected function handleRead(ClassType $class, string $model): void
     {
-        if ($this->checkExtend($class, CrudMapper::class)){
+        if ($this->checkExtend($class, CrudMapper::class)) {
             throw new \RuntimeException('CurdMapper extend');
         }
-        $this->addUse($class,$model,'CrudModel');
-        $this->addUse($class,PageMapperContract::class,'Select');
-        $this->addUse($class,SelectMapperTrait::class,'SelectTrait');
+        $this->addUse($class, $model, 'CrudModel');
+        $this->addUse($class, PageMapperContract::class, 'Select');
+        $this->addUse($class, SelectMapperTrait::class, 'SelectTrait');
         $class->addTrait(SelectMapperTrait::class);
         $class->addComment('@implements Select<CrudModel>');
     }
 
     protected function handleUpdate(ClassType $class, string $model): void
     {
-        if ($this->checkExtend($class, CrudMapper::class)){
+        if ($this->checkExtend($class, CrudMapper::class)) {
             throw new \RuntimeException('CurdMapper extend');
         }
-        $this->addUse($class,$model,'CrudModel');
-        $this->addUse($class,UpdateMapperContract::class,'Update');
-        $this->addUse($class,UpdateMapperTrait::class,'UpdateTrait');
+        $this->addUse($class, $model, 'CrudModel');
+        $this->addUse($class, UpdateMapperContract::class, 'Update');
+        $this->addUse($class, UpdateMapperTrait::class, 'UpdateTrait');
         $class->addTrait(UpdateMapperTrait::class);
         $class->addComment('@implements Update<CrudModel>');
     }
 
     protected function handleDelete(ClassType $class, string $model): void
     {
-        if ($this->checkExtend($class, CrudMapper::class)){
+        if ($this->checkExtend($class, CrudMapper::class)) {
             throw new \RuntimeException('CurdMapper extend');
         }
-        $this->addUse($class,$model,'CrudModel');
-        $this->addUse($class,DeleteMapperContract::class,'Delete');
-        $this->addUse($class,DeleteMapperTrait::class,'DeleteTrait');
+        $this->addUse($class, $model, 'CrudModel');
+        $this->addUse($class, DeleteMapperContract::class, 'Delete');
+        $this->addUse($class, DeleteMapperTrait::class, 'DeleteTrait');
         $class->addTrait(DeleteMapperTrait::class);
     }
 }

@@ -14,13 +14,10 @@ namespace Mine\Traits;
 
 use Hyperf\Collection\Arr;
 use Hyperf\Collection\Collection;
-use Hyperf\DbConnection\Annotation\Transactional;
 use Hyperf\Database\Model\Model;
 use Hyperf\DbConnection\Db;
-use Mine\Abstracts\CrudMapper;
 use Mine\Abstracts\Mapper;
 use Mine\Contract\SaveOrUpdateMapperContract;
-use Mine\ServiceException;
 
 /**
  * @mixin Mapper
@@ -28,10 +25,6 @@ use Mine\ServiceException;
  */
 trait SaveOrUpdateMapperTrait
 {
-
-    /**
-     * @inheritDoc
-     */
     public function saveOrUpdate(array $data, null|array $where = null): Model
     {
         $keyName = $this->getModelInstance()->getKeyName();
@@ -44,15 +37,12 @@ trait SaveOrUpdateMapperTrait
         return $this->getModelQuery()->updateOrCreate($where, $data);
     }
 
-    /**
-     * @inheritDoc
-     */
     public function batchSaveOrUpdate(
         array $data,
         null|array $whereKeys = null,
         int $batchSize = 0
     ): Collection {
-        return Db::transaction(function ()use ($data,$whereKeys,$batchSize) {
+        return Db::transaction(function () use ($data, $whereKeys) {
             $result = [];
             foreach ($data as $item) {
                 if ($whereKeys === null) {

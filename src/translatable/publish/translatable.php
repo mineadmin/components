@@ -10,7 +10,7 @@
 use Mine\Translatable\Validation\RuleFactory;
 
 declare(strict_types=1);
-/**
+/*
  * This file is part of MineAdmin.
  *
  * @see     https://www.mineadmin.com

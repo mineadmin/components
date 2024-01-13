@@ -40,7 +40,7 @@ if (! function_exists('redis')) {
      * @throws ContainerExceptionInterface
      * @throws NotFoundExceptionInterface
      */
-    function redis(): Hyperf\Redis\Redis
+    function redis(): Redis
     {
         return container()->get(Redis::class);
     }
@@ -124,7 +124,7 @@ if (! function_exists('mine_collect')) {
      * 创建一个Mine的集合类.
      * @param null|mixed $value
      */
-    function mine_collect($value = null): Mine\MineCollection
+    function mine_collect($value = null): MineCollection
     {
         return new MineCollection($value);
     }

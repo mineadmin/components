@@ -50,9 +50,7 @@ interface PageMapperContract
     public function getById(mixed $id): Collection;
 
     /**
-     * @param Builder $query
      * @param mixed|Param $params
-     * @return Builder
      */
     public function handleSearch(Builder $query, mixed $params = null): Builder;
 }
