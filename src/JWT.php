@@ -19,6 +19,7 @@ use Lcobucci\JWT\Signer\Key\InMemory;
 use Lcobucci\JWT\Token;
 use Lcobucci\JWT\Token\RegisteredClaims;
 use Psr\Container\ContainerInterface;
+use Psr\SimpleCache\InvalidArgumentException;
 use Xmo\JWTAuth\Exception\JWTException;
 use Xmo\JWTAuth\Exception\TokenValidException;
 use Xmo\JWTAuth\Util\JWTUtil;
@@ -53,7 +54,7 @@ class JWT extends AbstractJWT
      * @param bool $isInsertSsoBlack 是否把单点登录生成的token加入黑名单
      * @param bool $isConversionString 是否把token强制转换成string类型
      * @return string|Token
-     * @throws \Psr\SimpleCache\InvalidArgumentException
+     * @throws InvalidArgumentException
      */
     public function getToken(array $claims, $isInsertSsoBlack = true, $isConversionString = true)
     {
@@ -101,7 +102,7 @@ class JWT extends AbstractJWT
      * @param bool $verify
      * @param bool $independentTokenVerify true时会验证当前场景配置是否是生成当前的token的配置，需要配合自定义中间件实现，false会根据当前token拿到原来的场景配置，并且验证当前token
      * @return bool
-     * @throws \Psr\SimpleCache\InvalidArgumentException
+     * @throws InvalidArgumentException
      * @throws \Throwable
      */
     public function checkToken(string $token = null, string $scene = null, $validate = true, $verify = true, $independentTokenVerify = false)
@@ -156,7 +157,7 @@ class JWT extends AbstractJWT
     /**
      * 让token失效.
      * @return bool
-     * @throws \Psr\SimpleCache\InvalidArgumentException
+     * @throws InvalidArgumentException
      */
     public function logout(string $token = null, string $scene = null)
     {

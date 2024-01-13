@@ -19,7 +19,7 @@ class TimeUtil
     /**
      * Get the Carbon instance for the current time.
      *
-     * @return \Carbon\Carbon
+     * @return Carbon
      */
     public static function now()
     {
@@ -31,7 +31,7 @@ class TimeUtil
      *
      * @param int $timestamp
      *
-     * @return \Carbon\Carbon
+     * @return Carbon
      */
     public static function timestamp($timestamp)
     {
