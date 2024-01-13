@@ -42,7 +42,7 @@ class RuleFactory
     protected $locales;
 
     /**
-     * @var \Mine\Translatable\Contracts\LocalesInterface
+     * @var LocalesInterface
      */
     protected $helper;
 

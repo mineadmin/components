@@ -20,6 +20,9 @@ declare(strict_types=1);
 
 namespace Mine\Helper;
 
+use Psr\Container\ContainerExceptionInterface;
+use Psr\Container\NotFoundExceptionInterface;
+
 class Str
 {
     protected static $snakeCache = [];
@@ -205,8 +208,8 @@ class Str
 
     /**
      * 获取IP的区域地址
-     * @throws \Psr\Container\ContainerExceptionInterface
-     * @throws \Psr\Container\NotFoundExceptionInterface
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
      * @throws \Exception
      */
     public static function ipToRegion(string $ip): string

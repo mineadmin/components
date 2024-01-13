@@ -17,6 +17,7 @@ use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\MiddlewareInterface;
 use Psr\Http\Server\RequestHandlerInterface;
+use Psr\SimpleCache\InvalidArgumentException;
 use Xmo\JWTAuth\Exception\TokenValidException;
 use Xmo\JWTAuth\JWT;
 use Xmo\JWTAuth\Util\JWTUtil;
@@ -42,7 +43,7 @@ class JWTAuthSceneDefaultMiddleware implements MiddlewareInterface
     }
 
     /**
-     * @throws \Psr\SimpleCache\InvalidArgumentException
+     * @throws InvalidArgumentException
      * @throws \Throwable
      */
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface

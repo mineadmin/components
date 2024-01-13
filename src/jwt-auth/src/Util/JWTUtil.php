@@ -12,10 +12,13 @@ declare(strict_types=1);
 
 namespace Xmo\JWTAuth\Util;
 
+use Lcobucci\JWT\Claim;
 use Lcobucci\JWT\Configuration;
 use Lcobucci\JWT\Signer;
 use Lcobucci\JWT\Signer\Key;
 use Lcobucci\JWT\Token\Parser;
+use Lcobucci\JWT\Validation\Constraint\IdentifiedBy;
+use Lcobucci\JWT\Validation\Constraint\SignedWith;
 use Lcobucci\JWT\ValidationData;
 
 /**
@@ -30,7 +33,7 @@ class JWTUtil
     public static function claimsToArray(array $claims)
     {
         /**
-         * @var \Lcobucci\JWT\Claim $claim
+         * @var Claim $claim
          */
         foreach ($claims as $k => $claim) {
             $claims[$k] = $claim->getValue();
@@ -91,8 +94,8 @@ class JWTUtil
             return false;
         }
 
-        $config->setValidationConstraints(new \Lcobucci\JWT\Validation\Constraint\IdentifiedBy($claims['jti']));
-        $config->setValidationConstraints(new \Lcobucci\JWT\Validation\Constraint\SignedWith($signer, $key));
+        $config->setValidationConstraints(new IdentifiedBy($claims['jti']));
+        $config->setValidationConstraints(new SignedWith($signer, $key));
 
         if (! $config->validator()->validate($parser, ...$config->validationConstraints())) {
             return false;

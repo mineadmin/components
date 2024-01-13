@@ -25,6 +25,8 @@ use Mine\Exception\TokenException;
 use Mine\Interfaces\ServiceInterface\RoleServiceInterface;
 use Mine\Interfaces\ServiceInterface\UserServiceInterface;
 use Mine\MineRequest;
+use Psr\Container\ContainerExceptionInterface;
+use Psr\Container\NotFoundExceptionInterface;
 use Psr\SimpleCache\InvalidArgumentException;
 use Xmo\JWTAuth\JWT;
 
@@ -49,8 +51,8 @@ class LoginUser
 
     /**
      * 验证token.
-     * @throws \Psr\Container\ContainerExceptionInterface
-     * @throws \Psr\Container\NotFoundExceptionInterface
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
      */
     public function check(?string $token = null, string $scene = 'default'): bool
     {
@@ -141,8 +143,8 @@ class LoginUser
 
     /**
      * 是否为管理员角色.
-     * @throws \Psr\Container\ContainerExceptionInterface
-     * @throws \Psr\Container\NotFoundExceptionInterface
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
      */
     public function isAdminRole(): bool
     {

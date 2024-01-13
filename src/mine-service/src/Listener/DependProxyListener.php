@@ -27,7 +27,8 @@ class DependProxyListener implements ListenerInterface
         return [BootApplication::class];
     }
 
-    public function process(object $event): void {
+    public function process(object $event): void
+    {
         $this->handleComponent();
         $this->handleDefined();
     }
@@ -61,7 +62,7 @@ class DependProxyListener implements ListenerInterface
             $definition = $collector->provider;
             foreach ($targets as $target) {
                 $this->container
-                    ->define($target,$definition);
+                    ->define($target, $definition);
             }
         }
     }

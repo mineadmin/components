@@ -10,10 +10,15 @@ declare(strict_types=1);
  * @license  https://github.com/mineadmin/MineAdmin/blob/master/LICENSE
  */
 use Hyperf\Context\ApplicationContext;
+use Hyperf\Context\Context;
 use Hyperf\Contract\StdoutLoggerInterface;
 use Hyperf\Logger\LoggerFactory;
+use Hyperf\Redis\Redis;
+use Hyperf\Snowflake\IdGeneratorInterface;
 use Mine\Helper\AppVerify;
 use Mine\Helper\LoginUser;
+use Mine\MineCollection;
+use Mine\MineRequest;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\NotFoundExceptionInterface;
 use Psr\EventDispatcher\EventDispatcherInterface;
@@ -37,7 +42,7 @@ if (! function_exists('redis')) {
      */
     function redis(): Hyperf\Redis\Redis
     {
-        return container()->get(\Hyperf\Redis\Redis::class);
+        return container()->get(Redis::class);
     }
 }
 
@@ -97,7 +102,7 @@ if (! function_exists('lang')) {
      */
     function lang(): string
     {
-        $acceptLanguage = container()->get(\Mine\MineRequest::class)->getHeaderLine('accept-language');
+        $acceptLanguage = container()->get(MineRequest::class)->getHeaderLine('accept-language');
         return str_replace('-', '_', ! empty($acceptLanguage) ? explode(',', $acceptLanguage)[0] : 'zh_CN');
     }
 }
@@ -121,7 +126,7 @@ if (! function_exists('mine_collect')) {
      */
     function mine_collect($value = null): Mine\MineCollection
     {
-        return new \Mine\MineCollection($value);
+        return new MineCollection($value);
     }
 }
 
@@ -132,7 +137,7 @@ if (! function_exists('context_set')) {
      */
     function context_set(string $key, $data): bool
     {
-        return (bool) \Hyperf\Context\Context::set($key, $data);
+        return (bool) Context::set($key, $data);
     }
 }
 
@@ -143,7 +148,7 @@ if (! function_exists('context_get')) {
      */
     function context_get(string $key)
     {
-        return \Hyperf\Context\Context::get($key);
+        return Context::get($key);
     }
 }
 
@@ -163,7 +168,7 @@ if (! function_exists('snowflake_id')) {
      */
     function snowflake_id(): string
     {
-        return (string) container()->get(\Hyperf\Snowflake\IdGeneratorInterface::class)->generate();
+        return (string) container()->get(IdGeneratorInterface::class)->generate();
     }
 }
 

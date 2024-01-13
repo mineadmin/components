@@ -1,5 +1,15 @@
 <?php
 
+declare(strict_types=1);
+/**
+ * This file is part of MineAdmin.
+ *
+ * @link     https://www.mineadmin.com
+ * @document https://doc.mineadmin.com
+ * @contact  root@imoi.cn
+ * @license  https://github.com/mineadmin/MineAdmin/blob/master/LICENSE
+ */
+
 namespace Mine\Generator\Command;
 
 use Hyperf\Collection\Arr;
@@ -8,7 +18,6 @@ use Hyperf\Database\Model\Builder;
 use Mine\Abstracts\CrudMapper;
 use Mine\Abstracts\Mapper;
 use Mine\Annotation\MapperModel;
-use Mine\Generator\Command\AbstractGeneratorCommand;
 use Nette\PhpGenerator\Attribute;
 use Nette\PhpGenerator\ClassType;
 use Nette\PhpGenerator\EnumType;
@@ -27,8 +36,8 @@ class GeneratorMapperCommand extends AbstractGeneratorCommand
     protected function configure()
     {
         parent::configure();
-        $this->addOption('model','mo',InputOption::VALUE_REQUIRED,'model class');
-        $this->addOption('mode','md',InputOption::VALUE_OPTIONAL,'use mode,all,c,r,u,d');
+        $this->addOption('model', 'mo', InputOption::VALUE_REQUIRED, 'model class');
+        $this->addOption('mode', 'md', InputOption::VALUE_OPTIONAL, 'use mode,all,c,r,u,d');
     }
 
     protected function getDefaultPath(): string
@@ -40,6 +49,7 @@ class GeneratorMapperCommand extends AbstractGeneratorCommand
     {
         return $this->getConfig('mapper.namespace');
     }
+
     protected function defaultUse(): array
     {
         return [
@@ -49,90 +59,86 @@ class GeneratorMapperCommand extends AbstractGeneratorCommand
             ],
             [
                 Mapper::class,
-            ]
+            ],
         ];
     }
 
-    /**
-     * @inheritDoc
-     */
-    protected function handleClass(TraitType|InterfaceType|ClassType|EnumType $class, PhpFile $phpFile, PhpNamespace $namespace,)
+    protected function handleClass(ClassType|EnumType|InterfaceType|TraitType $class, PhpFile $phpFile, PhpNamespace $namespace)
     {
         $model = $this->input->getOption('model');
-        if (!class_exists($model)){
-            throw new \RuntimeException(sprintf('Model %s class not found',$model));
+        if (! class_exists($model)) {
+            throw new \RuntimeException(sprintf('Model %s class not found', $model));
         }
         $mode = $this->input->getOption('mode') ?? 'crud';
-        if ($mode === 'crud'){
-            $this->handleCrud($class,$model);
+        if ($mode === 'crud') {
+            $this->handleCrud($class, $model);
         }
 
-        if ($mode === 'r'){
-            $this->handleRead($class,$model);
+        if ($mode === 'r') {
+            $this->handleRead($class, $model);
         }
 
-        if ($mode === 'u'){
-            $this->handleUpdate($class,$model);
+        if ($mode === 'u') {
+            $this->handleUpdate($class, $model);
         }
 
-        if ($mode === 'c'){
-            $this->handleCreate($class,$model);
+        if ($mode === 'c') {
+            $this->handleCreate($class, $model);
         }
 
-        if ($mode === 'd'){
-            $this->handleDelete($class,$model);
+        if ($mode === 'd') {
+            $this->handleDelete($class, $model);
         }
     }
 
-    protected function checkExtend(ClassType $class, string|array $extend): bool
+    protected function checkExtend(ClassType $class, array|string $extend): bool
     {
         $extends = $class->getExtends();
-        if (empty($extends)){
+        if (empty($extends)) {
             return false;
         }
-        if (is_string($extend)){
+        if (is_string($extend)) {
             return $extends === $extend;
         }
         return true;
     }
 
-
-    protected function handleCrud(ClassType $class,string $model): void
+    protected function handleCrud(ClassType $class, string $model): void
     {
         if ($this->checkExtend($class, Mapper::class)) {
             throw new \RuntimeException(sprintf('The class has already inherited AbstractMapper'));
         }
         $namespace = $class->getNamespace();
-        if (!$this->hasUse($class, CrudMapper::class)) {
+        if (! $this->hasUse($class, CrudMapper::class)) {
             $namespace?->addUse(CrudMapper::class, 'Base');
         }
-        if ($class->getExtends() && $class->getExtends() !== CrudMapper::class){
+        if ($class->getExtends() && $class->getExtends() !== CrudMapper::class) {
             throw new \RuntimeException('the Mapper not extend fail');
         }
-        if ($class->getExtends() === null){
+        if ($class->getExtends() === null) {
             $class->setExtends(CrudMapper::class);
         }
-        if (!$this->hasUse($class,$model)) {
+        if (! $this->hasUse($class, $model)) {
             $namespace?->addUse($model, 'CrudModel');
         }
         $attributes = $class->getAttributes();
-        if (empty($attributes) || count(Arr::where($attributes,function (Attribute $attribute){
-                return $attribute->getName() === MapperModel::class;
-            })) <= 0) {
-            $class->addAttribute(MapperModel::class, ['model'=>new Literal('CrudModel::class')]);
+        if (empty($attributes) || count(Arr::where($attributes, function (Attribute $attribute) {
+            return $attribute->getName() === MapperModel::class;
+        })) <= 0) {
+            $class->addAttribute(MapperModel::class, ['model' => new Literal('CrudModel::class')]);
         }
-        if ($class->getComment()===null || !str_contains($class->getComment(),'Mapper<')){
+        if ($class->getComment() === null || ! str_contains($class->getComment(), 'Mapper<')) {
             $class->addComment('@implements Mapper<CrudModel>');
         }
         $methods = $class->getMethods();
-        if (empty($methods['handleSearch'])){
+        if (empty($methods['handleSearch'])) {
             $this->buildCrudHandleSearch($class);
         }
     }
 
     protected function buildCrudHandleSearch(ClassType $class)
     {
-        if (!$this->hasUse($class,Builder::class)){
+        if (! $this->hasUse($class, Builder::class)) {
             $class->getNamespace()?->addUse(Builder::class);
         }
         $method = $class->addMethod('handleSearch');
@@ -141,31 +147,32 @@ class GeneratorMapperCommand extends AbstractGeneratorCommand
         $method->setProtected();
         $builder = $method->addParameter('query');
         $builder->setType(Builder::class);
-        $params = $method->addParameter('params',[]);
+        $params = $method->addParameter('params', []);
         $params->setType('array');
-        $method->addBody(<<<PHPSCRIPT
-return \$query;
+        $method->addBody(
+            <<<'PHPSCRIPT'
+return $query;
 PHPSCRIPT
-);
+        );
     }
 
-    protected function handleCreate(ClassType $class,string $model): void
+    protected function handleCreate(ClassType $class, string $model): void
     {
-        $this->checkExtend($class,CrudMapper::class);
+        $this->checkExtend($class, CrudMapper::class);
     }
 
-    protected function handleRead(ClassType $class,string $model): void
+    protected function handleRead(ClassType $class, string $model): void
     {
-        $this->checkExtend($class,CrudMapper::class);
+        $this->checkExtend($class, CrudMapper::class);
     }
 
-    protected function handleUpdate(ClassType $class,string $model): void
+    protected function handleUpdate(ClassType $class, string $model): void
     {
-        $this->checkExtend($class,CrudMapper::class);
+        $this->checkExtend($class, CrudMapper::class);
     }
 
-    protected function handleDelete(ClassType $class,string $model): void
+    protected function handleDelete(ClassType $class, string $model): void
     {
-        $this->checkExtend($class,CrudMapper::class);
+        $this->checkExtend($class, CrudMapper::class);
     }
 }

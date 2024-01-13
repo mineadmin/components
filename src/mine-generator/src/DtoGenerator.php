@@ -26,6 +26,8 @@ use Hyperf\Support\Filesystem\Filesystem;
 use Mine\Exception\NormalStatusException;
 use Mine\Generator\Contracts\GeneratorTablesContract;
 use Mine\Helper\Str;
+use Psr\Container\ContainerExceptionInterface;
+use Psr\Container\NotFoundExceptionInterface;
 
 use function Hyperf\Support\env;
 use function Hyperf\Support\make;
@@ -42,8 +44,8 @@ class DtoGenerator extends MineGenerator implements CodeGenerator
 
     /**
      * 设置生成信息.
-     * @throws \Psr\Container\ContainerExceptionInterface
-     * @throws \Psr\Container\NotFoundExceptionInterface
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
      */
     public function setGenInfo(GeneratorTablesContract $tablesContract): DtoGenerator
     {

@@ -30,7 +30,7 @@ class Locales implements LocalesInterface
     protected $locales = [];
 
     /**
-     * @var \Hyperf\Contract\TranslatorInterface
+     * @var TranslatorInterface
      */
     protected $translator;
 

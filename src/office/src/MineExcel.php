@@ -20,6 +20,7 @@ use Mine\Interfaces\ServiceInterface\DictDataServiceInterface;
 use Mine\MineResponse;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\NotFoundExceptionInterface;
+use Psr\Http\Message\ResponseInterface;
 
 abstract class MineExcel
 {
@@ -85,10 +86,10 @@ abstract class MineExcel
 
     /**
      * 下载excel.
-     * @throws \Psr\Container\ContainerExceptionInterface
-     * @throws \Psr\Container\NotFoundExceptionInterface
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
      */
-    protected function downloadExcel(string $filename, string $content): \Psr\Http\Message\ResponseInterface
+    protected function downloadExcel(string $filename, string $content): ResponseInterface
     {
         return container()->get(MineResponse::class)->getResponse()
             ->withHeader('Server', 'MineAdmin')

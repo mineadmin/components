@@ -16,6 +16,7 @@ use Lcobucci\JWT\Token\Plain;
 use Lcobucci\JWT\Token\RegisteredClaims;
 use Psr\Container\ContainerInterface;
 use Psr\SimpleCache\CacheInterface;
+use Psr\SimpleCache\InvalidArgumentException;
 use Xmo\JWTAuth\Util\TimeUtil;
 
 /**
@@ -39,7 +40,7 @@ class BlackList extends AbstractJWT
     /**
      * 把token加入到黑名单中.
      * @return mixed
-     * @throws \Psr\SimpleCache\InvalidArgumentException
+     * @throws InvalidArgumentException
      */
     public function addTokenBlack(Plain $token, array $config = []): bool
     {
@@ -64,7 +65,7 @@ class BlackList extends AbstractJWT
      * 判断token是否已经加入黑名单.
      * @param mixed $claims
      * @return bool
-     * @throws \Psr\SimpleCache\InvalidArgumentException
+     * @throws InvalidArgumentException
      */
     public function hasTokenBlack($claims, array $config = [])
     {
@@ -92,7 +93,7 @@ class BlackList extends AbstractJWT
      * 黑名单移除token.
      * @param $key token 中的jit
      * @return bool
-     * @throws \Psr\SimpleCache\InvalidArgumentException
+     * @throws InvalidArgumentException
      */
     public function remove($key)
     {
@@ -102,7 +103,7 @@ class BlackList extends AbstractJWT
     /**
      * 移除所有的token缓存.
      * @return bool
-     * @throws \Psr\SimpleCache\InvalidArgumentException
+     * @throws InvalidArgumentException
      */
     public function clear()
     {

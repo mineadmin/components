@@ -20,7 +20,6 @@ use Mine\ServiceException;
 
 trait UpdateMapperTrait
 {
-
     /**
      * 使用模型插入单挑记录,
      * 如果传入的数组 有对应的关联管理则会自动调用对应的关联模型进行关联插入.

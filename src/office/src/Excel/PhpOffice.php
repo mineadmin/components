@@ -13,11 +13,18 @@ declare(strict_types=1);
 namespace Mine\Office\Excel;
 
 use Mine\Exception\MineException;
+use Mine\MineModel;
+use Mine\MineRequest;
 use Mine\Office\ExcelPropertyInterface;
 use Mine\Office\MineExcel;
 use PhpOffice\PhpSpreadsheet\IOFactory;
+use PhpOffice\PhpSpreadsheet\Reader\Exception;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use PhpOffice\PhpSpreadsheet\Style\Color;
+use PhpOffice\PhpSpreadsheet\Style\Fill;
+use Psr\Container\ContainerExceptionInterface;
+use Psr\Container\NotFoundExceptionInterface;
+use Psr\Http\Message\ResponseInterface;
 
 use function Hyperf\Collection\data_get;
 
@@ -25,13 +32,13 @@ class PhpOffice extends MineExcel implements ExcelPropertyInterface
 {
     /**
      * 导入.
-     * @throws \PhpOffice\PhpSpreadsheet\Reader\Exception
-     * @throws \Psr\Container\ContainerExceptionInterface
-     * @throws \Psr\Container\NotFoundExceptionInterface
+     * @throws Exception
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
      */
-    public function import(\Mine\MineModel $model, ?\Closure $closure = null): bool
+    public function import(MineModel $model, ?\Closure $closure = null): bool
     {
-        $request = container()->get(\Mine\MineRequest::class);
+        $request = container()->get(MineRequest::class);
         $data = [];
         if ($request->hasFile('file')) {
             $file = $request->file('file');
@@ -76,10 +83,10 @@ class PhpOffice extends MineExcel implements ExcelPropertyInterface
     /**
      * 导出.
      * @throws \PhpOffice\PhpSpreadsheet\Writer\Exception
-     * @throws \Psr\Container\ContainerExceptionInterface
-     * @throws \Psr\Container\NotFoundExceptionInterface
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
      */
-    public function export(string $filename, array|\Closure $closure, \Closure $callbackData = null): \Psr\Http\Message\ResponseInterface
+    public function export(string $filename, array|\Closure $closure, \Closure $callbackData = null): ResponseInterface
     {
         $spread = new Spreadsheet();
         $sheet = $spread->getActiveSheet();
@@ -103,7 +110,7 @@ class PhpOffice extends MineExcel implements ExcelPropertyInterface
 
             if (! empty($item['headBgColor'])) {
                 $sheet->getStyle($headerColumn)->getFill()
-                    ->setFillType(\PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID)
+                    ->setFillType(Fill::FILL_SOLID)
                     ->getStartColor()->setARGB(str_replace('#', '', $item['headBgColor']));
             }
             ++$titleStart;
@@ -146,7 +153,7 @@ class PhpOffice extends MineExcel implements ExcelPropertyInterface
 
                     if (! empty($item['bgColor'])) {
                         $sheet->getStyle($columnRow)->getFill()
-                            ->setFillType(\PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID)
+                            ->setFillType(Fill::FILL_SOLID)
                             ->getStartColor()->setARGB(str_replace('#', '', $annotation['bgColor']));
                     }
                     ++$column;

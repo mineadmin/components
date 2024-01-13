@@ -1,11 +1,20 @@
 <?php
 
+declare(strict_types=1);
+/**
+ * This file is part of MineAdmin.
+ *
+ * @link     https://www.mineadmin.com
+ * @document https://doc.mineadmin.com
+ * @contact  root@imoi.cn
+ * @license  https://github.com/mineadmin/MineAdmin/blob/master/LICENSE
+ */
 use Mine\NextCoreX\Default\Client;
 use Mine\NextCoreX\Default\LocalStore;
 
 return [
-    'contracts' =>  [
-        'clientContract'    =>  Client::class,
-        'localStoreContract'    => LocalStore::class,
-    ]
+    'contracts' => [
+        'clientContract' => Client::class,
+        'localStoreContract' => LocalStore::class,
+    ],
 ];

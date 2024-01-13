@@ -1,5 +1,15 @@
 <?php
 
+declare(strict_types=1);
+/**
+ * This file is part of MineAdmin.
+ *
+ * @link     https://www.mineadmin.com
+ * @document https://doc.mineadmin.com
+ * @contact  root@imoi.cn
+ * @license  https://github.com/mineadmin/MineAdmin/blob/master/LICENSE
+ */
+
 namespace Mine\Traits;
 
 use Hyperf\Collection\Collection;
@@ -13,14 +23,6 @@ use Mine\ServiceException;
  */
 trait SelectMapperTrait
 {
-    /**
-     * @throws ServiceException
-     */
-    protected function handleSelect(Builder $query): Builder
-    {
-        return $query->select($this->getSelectFields() ?? ['*']);
-    }
-
     /**
      * @throws ServiceException
      */
@@ -63,6 +65,14 @@ trait SelectMapperTrait
     }
 
     /**
+     * @throws ServiceException
+     */
+    protected function handleSelect(Builder $query): Builder
+    {
+        return $query->select($this->getSelectFields() ?? ['*']);
+    }
+
+    /**
      * 查询列.
      * @throws ServiceException
      */
@@ -74,7 +84,7 @@ trait SelectMapperTrait
     /**
      * 查询处理.
      */
-    abstract protected function handleSearch(Builder $query,array $params = []): Builder;
+    abstract protected function handleSearch(Builder $query, array $params = []): Builder;
 
     /**
      * initialization DbBuilder.

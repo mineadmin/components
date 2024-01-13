@@ -12,6 +12,9 @@ declare(strict_types=1);
 
 namespace Mine\Helper;
 
+use Psr\Container\ContainerExceptionInterface;
+use Psr\Container\NotFoundExceptionInterface;
+
 use function Hyperf\Config\config;
 
 class SensitiveWordFilter
@@ -21,8 +24,8 @@ class SensitiveWordFilter
     /**
      * 加载词库数据，通过闭包形式，加载词库.
      * @return $this
-     * @throws \Psr\Container\ContainerExceptionInterface
-     * @throws \Psr\Container\NotFoundExceptionInterface
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
      * @throws \RedisException
      */
     public function loadDictData(\Closure $closure = null): self

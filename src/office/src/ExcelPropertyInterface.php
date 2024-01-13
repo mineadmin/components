@@ -12,9 +12,12 @@ declare(strict_types=1);
 
 namespace Mine\Office;
 
+use Mine\MineModel;
+use Psr\Http\Message\ResponseInterface;
+
 interface ExcelPropertyInterface
 {
-    public function import(\Mine\MineModel $model, ?\Closure $closure = null): bool;
+    public function import(MineModel $model, ?\Closure $closure = null): bool;
 
-    public function export(string $filename, array|\Closure $closure): \Psr\Http\Message\ResponseInterface;
+    public function export(string $filename, array|\Closure $closure): ResponseInterface;
 }

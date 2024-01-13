@@ -23,11 +23,15 @@ declare(strict_types=1);
 
 namespace Mine\Generator;
 
+use Hyperf\Contract\ApplicationInterface;
 use Hyperf\Support\Filesystem\Filesystem;
 use Mine\Exception\NormalStatusException;
 use Mine\Generator\Contracts\GeneratorTablesContract;
 use Mine\Helper\Str;
 use Mine\Interfaces\ServiceInterface\GenerateColumnServiceInterface;
+use Psr\Container\ContainerExceptionInterface;
+use Psr\Container\NotFoundExceptionInterface;
+use Symfony\Component\Console\Application;
 use Symfony\Component\Console\Input\ArrayInput;
 use Symfony\Component\Console\Output\NullOutput;
 
@@ -48,8 +52,8 @@ class ModelGenerator extends MineGenerator implements CodeGenerator
 
     /**
      * 设置生成信息.
-     * @throws \Psr\Container\ContainerExceptionInterface
-     * @throws \Psr\Container\NotFoundExceptionInterface
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
      */
     public function setGenInfo(GeneratorTablesContract $tablesContract): ModelGenerator
     {
@@ -64,8 +68,8 @@ class ModelGenerator extends MineGenerator implements CodeGenerator
 
     /**
      * 生成代码
-     * @throws \Psr\Container\ContainerExceptionInterface
-     * @throws \Psr\Container\NotFoundExceptionInterface
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
      */
     public function generator(): void
     {
@@ -94,8 +98,8 @@ class ModelGenerator extends MineGenerator implements CodeGenerator
         $input = new ArrayInput($command);
         $output = new NullOutput();
 
-        /** @var \Symfony\Component\Console\Application $application */
-        $application = $this->container->get(\Hyperf\Contract\ApplicationInterface::class);
+        /** @var Application $application */
+        $application = $this->container->get(ApplicationInterface::class);
         $application->setAutoExit(false);
 
         $modelName = Str::studly(str_replace(env('DB_PREFIX'), '', $this->tablesContract->getTableName()));

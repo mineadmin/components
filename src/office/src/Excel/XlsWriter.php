@@ -13,9 +13,15 @@ declare(strict_types=1);
 namespace Mine\Office\Excel;
 
 use Mine\Exception\MineException;
+use Mine\MineModel;
+use Mine\MineRequest;
 use Mine\MineResponse;
 use Mine\Office\ExcelPropertyInterface;
 use Mine\Office\MineExcel;
+use Psr\Container\ContainerExceptionInterface;
+use Psr\Container\NotFoundExceptionInterface;
+use Psr\Http\Message\ResponseInterface;
+use Vtiful\Kernel\Excel;
 use Vtiful\Kernel\Format;
 
 use function Hyperf\Collection\data_get;
@@ -28,25 +34,25 @@ class XlsWriter extends MineExcel implements ExcelPropertyInterface
         $tempFileName = 'import_' . time() . '.' . $file->getExtension();
         $tempFilePath = BASE_PATH . '/runtime/' . $tempFileName;
         file_put_contents($tempFilePath, $file->getStream()->getContents());
-        $xlsxObject = new \Vtiful\Kernel\Excel(['path' => BASE_PATH . '/runtime/']);
+        $xlsxObject = new Excel(['path' => BASE_PATH . '/runtime/']);
         return $xlsxObject->openFile($tempFileName)->openSheet()->getSheetData();
     }
 
     /**
      * 导入数据.
-     * @throws \Psr\Container\ContainerExceptionInterface
-     * @throws \Psr\Container\NotFoundExceptionInterface
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
      * @throws \Exception
      */
-    public function import(\Mine\MineModel $model, ?\Closure $closure = null): bool
+    public function import(MineModel $model, ?\Closure $closure = null): bool
     {
-        $request = container()->get(\Mine\MineRequest::class);
+        $request = container()->get(MineRequest::class);
         if ($request->hasFile('file')) {
             $file = $request->file('file');
             $tempFileName = 'import_' . time() . '.' . $file->getExtension();
             $tempFilePath = BASE_PATH . '/runtime/' . $tempFileName;
             file_put_contents($tempFilePath, $file->getStream()->getContents());
-            $xlsxObject = new \Vtiful\Kernel\Excel(['path' => BASE_PATH . '/runtime/']);
+            $xlsxObject = new Excel(['path' => BASE_PATH . '/runtime/']);
             $data = $xlsxObject->openFile($tempFileName)->openSheet()->getSheetData();
             unset($data[0]);
 
@@ -79,10 +85,10 @@ class XlsWriter extends MineExcel implements ExcelPropertyInterface
 
     /**
      * 导出excel.
-     * @throws \Psr\Container\ContainerExceptionInterface
-     * @throws \Psr\Container\NotFoundExceptionInterface
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
      */
-    public function export(string $filename, array|\Closure $closure, \Closure $callbackData = null): \Psr\Http\Message\ResponseInterface
+    public function export(string $filename, array|\Closure $closure, \Closure $callbackData = null): ResponseInterface
     {
         $filename .= '.xlsx';
         is_array($closure) ? $data = &$closure : $data = $closure();
@@ -102,7 +108,7 @@ class XlsWriter extends MineExcel implements ExcelPropertyInterface
         }
 
         $tempFileName = 'export_' . time() . '.xlsx';
-        $xlsxObject = new \Vtiful\Kernel\Excel(['path' => BASE_PATH . '/runtime/']);
+        $xlsxObject = new Excel(['path' => BASE_PATH . '/runtime/']);
         $fileObject = $xlsxObject->fileName($tempFileName)->header($columnName);
         $columnFormat = new Format($fileObject->getHandle());
         $rowFormat = new Format($fileObject->getHandle());
