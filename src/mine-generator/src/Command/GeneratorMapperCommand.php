@@ -218,6 +218,6 @@ PHPSCRIPT
         $this->addUse($class,$model,'CrudModel');
         $this->addUse($class,DeleteMapperContract::class,'Delete');
         $this->addUse($class,DeleteMapperTrait::class,'DeleteTrait');
-        $class->addTrait(DeleteMapperTrait::class);s
+        $class->addTrait(DeleteMapperTrait::class);
     }
 }
