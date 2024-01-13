@@ -16,17 +16,19 @@ use Hyperf\Collection\Collection;
 use Hyperf\Contract\LengthAwarePaginatorInterface;
 use Hyperf\Database\Model\Builder;
 use Mine\Abstracts\Mapper;
+use Mine\Contract\PageMapperContract;
 use Mine\ServiceException;
 
 /**
  * @mixin Mapper
+ * @mixin PageMapperContract
  */
 trait SelectMapperTrait
 {
     /**
-     * @throws ServiceException
+     * @inheritDoc
      */
-    public function page(array $params = [], int $page = 1, int $size = 10): LengthAwarePaginatorInterface
+    public function page(mixed $params = null, int $page = 1, int $size = 10): LengthAwarePaginatorInterface
     {
         return $this->handleSearch(
             $this->handleSelect($this->preQuery()),
@@ -34,10 +36,11 @@ trait SelectMapperTrait
         )->paginate(perPage: $size, page: $page);
     }
 
+
     /**
-     * @throws ServiceException
+     * @inheritDoc
      */
-    public function count(array $params = []): int
+    public function count(mixed $params = null): int
     {
         return $this->handleSearch(
             $this->preQuery(),
@@ -45,10 +48,11 @@ trait SelectMapperTrait
         )->count();
     }
 
+
     /**
-     * @throws ServiceException
+     * @inheritDoc
      */
-    public function list(array $params = []): Collection
+    public function list(mixed $params = null): Collection
     {
         return $this->handleSearch(
             $this->handleSelect($this->preQuery()),
@@ -56,16 +60,18 @@ trait SelectMapperTrait
         )->get();
     }
 
+
     /**
-     * @throws ServiceException
+     * @inheritDoc
      */
     public function getById(mixed $id): Collection
     {
         return Collection::make($this->getModel()::find($id));
     }
 
+
     /**
-     * @throws ServiceException
+     * @inheritDoc
      */
     protected function handleSelect(Builder $query): Builder
     {
@@ -82,9 +88,9 @@ trait SelectMapperTrait
     }
 
     /**
-     * 查询处理.
+     * @inheritDoc
      */
-    abstract protected function handleSearch(Builder $query, array $params = []): Builder;
+    abstract public function handleSearch(Builder $query, mixed $params = null): Builder;
 
     /**
      * initialization DbBuilder.

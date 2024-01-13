@@ -23,6 +23,10 @@ use Mine\Traits\UpdateMapperTrait;
 
 /**
  * CrudService.
+ * @template T
+ * @implements PageMapperContract<T>
+ * @implements SaveOrUpdateMapperContract<T>
+ *
  */
 abstract class CrudMapper extends Mapper implements PageMapperContract, UpdateMapperContract, SaveOrUpdateMapperContract, DeleteMapperContract
 {

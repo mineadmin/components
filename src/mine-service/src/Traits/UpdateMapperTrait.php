@@ -13,70 +13,75 @@ declare(strict_types=1);
 namespace Mine\Traits;
 
 use Hyperf\Collection\Arr;
+use Hyperf\Collection\Collection;
+use Hyperf\Database\Model\Model;
 use Hyperf\Database\Model\Relations\HasMany;
 use Hyperf\Database\Model\Relations\HasOne;
 use Hyperf\DbConnection\Annotation\Transactional;
+use Hyperf\DbConnection\Db;
+use Mine\Contract\UpdateMapperContract;
 use Mine\ServiceException;
 
+/**
+ * @implements UpdateMapperContract<Model>
+ */
 trait UpdateMapperTrait
 {
     /**
-     * 使用模型插入单挑记录,
-     * 如果传入的数组 有对应的关联管理则会自动调用对应的关联模型进行关联插入.
-     * @throws ServiceException
+     * @inheritDoc
      */
-    #[Transactional]
-    public function save(array $data, null|array $withs = null): bool
+    public function save(array $data, null|array $withs = null): Model
     {
-        $modelClass = $this->getModel();
-        $withAttr = [];
-        if ($withs !== null) {
-            foreach ($withs as $with) {
-                if (! empty($data[$with])) {
-                    $withAttr[$with] = $data[$with];
-                    unset($data[$with]);
-                }
-            }
-        }
-        $model = $modelClass::create($data);
-        if (! empty($withAttr)) {
-            foreach ($withAttr as $with => $attr) {
-                if (method_exists($model, $with)) {
-                    /**
-                     * @var HasMany|HasOne $withFunc
-                     */
-                    $withFunc = $model->{$with}();
-                    // 如果是二维
-                    if (Arr::isAssoc($attr)) {
-                        $withFunc->saveMany($attr);
-                    } else {
-                        $withFunc->save($attr);
+        return Db::transaction(function ()use ($data,$withs){
+            $modelClass = $this->getModel();
+            $withAttr = [];
+            if ($withs !== null) {
+                foreach ($withs as $with) {
+                    if (! empty($data[$with])) {
+                        $withAttr[$with] = $data[$with];
+                        unset($data[$with]);
                     }
                 }
             }
-        }
-        return true;
+            $model = $modelClass::create($data);
+            if (! empty($withAttr)) {
+                foreach ($withAttr as $with => $attr) {
+                    if (method_exists($model, $with)) {
+                        /**
+                         * @var HasMany|HasOne $withFunc
+                         */
+                        $withFunc = $model->{$with}();
+                        // 如果是二维
+                        if (Arr::isAssoc($attr)) {
+                            $withFunc->saveMany($attr);
+                        } else {
+                            $withFunc->save($attr);
+                        }
+                    }
+                }
+            }
+            return $model;
+        });
     }
 
     /**
-     * 批量插入
-     * 将传入的二维数组 foreach 后调用 save 方法批量插入数据.
-     * @throws ServiceException
+     * @inheritDoc
      */
-    #[Transactional]
-    public function batchSave(array $data): bool
+    public function batchSave(array $data): Collection
     {
-        foreach ($data as $attr) {
-            $with = $attr['__with__'] ?? null;
-            unset($attr['__with__']);
-            $this->save($data, $with);
-        }
-        return true;
+        return Db::transaction(function ()use ($data){
+            $result = [];
+            foreach ($data as $attr) {
+                $with = $attr['__with__'] ?? null;
+                unset($attr['__with__']);
+                $result = $this->save($data, $with);
+            }
+            return $result;
+        });
     }
 
     /**
-     * 使用 Db::insert 方法拼接sql 单条插入,不支持关联插入.
-     * @throws ServiceException
+     * @inheritDoc
      */
     public function insert(array $data): bool
     {
@@ -84,15 +89,17 @@ trait UpdateMapperTrait
     }
 
     /**
-     * 使用 Db::insert 方法拼接sql进行批量插入.
-     * @throws ServiceException
+     * @inheritDoc
      */
-    #[Transactional]
     public function batchInsert(array $data): bool
     {
-        foreach ($data as $attr) {
-            $this->insert($data);
-        }
+        Db::transaction(function ()use ($data){
+            foreach ($data as $attr) {
+                if (!$this->insert($data)){
+                    throw new ServiceException('batch insert fail');
+                }
+            }
+        });
         return true;
     }
 }

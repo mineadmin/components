@@ -13,49 +13,51 @@ declare(strict_types=1);
 namespace Mine\Traits;
 
 use Hyperf\DbConnection\Annotation\Transactional;
+use Hyperf\DbConnection\Db;
 use Hyperf\DbConnection\Model\Model;
 use Mine\Abstracts\Mapper;
+use Mine\Contract\DeleteMapperContract;
 use Mine\ServiceException;
 
 /**
  * @mixin Mapper
+ * @implements DeleteMapperContract
  */
 trait DeleteMapperTrait
 {
     /**
-     * @throws ServiceException
+     * @inheritDoc
      */
-    #[Transactional]
     public function remove(mixed $idOrWhere, bool $force = false): bool
     {
-        $modelClass = $this->getModel();
-        $query = $modelClass::query();
-        /**
-         * @var null|bool|Model $instance
-         */
-        $instance = false;
-        if (is_array($idOrWhere)) {
-            $instance = $query->where($idOrWhere)->first();
-        }
-        if (is_callable($idOrWhere)) {
-            $instance = $query->where($idOrWhere)->first();
-        }
-        if ($instance === false) {
-            $instance = $query->find($idOrWhere);
-        }
-        if (empty($instance)) {
+        return Db::transaction(function ()use ($idOrWhere,$force){
+            $modelClass = $this->getModel();
+            $query = $modelClass::query();
+            /**
+             * @var null|bool|Model $instance
+             */
+            $instance = false;
+            if (is_array($idOrWhere)) {
+                $instance = $query->where($idOrWhere)->first();
+            }
+            if (is_callable($idOrWhere)) {
+                $instance = $query->where($idOrWhere)->first();
+            }
+            if ($instance === false) {
+                $instance = $query->find($idOrWhere);
+            }
+            if (empty($instance)) {
+                return false;
+            }
+            if ($force) {
+                return $instance->forceDelete();
+            }
             return false;
-        }
-        if ($force) {
-            return $instance->forceDelete();
-        }
-        return false;
+        });
     }
 
     /**
-     * 删除单条记录 不会触发 model 事件.
-     * @param array|Closure|int|string $id 主键或自定义条件
-     * @throws ServiceException
+     * @inheritDoc
      */
     public function delete(mixed $id): bool
     {
@@ -86,10 +88,8 @@ trait DeleteMapperTrait
     }
 
     /**
-     * 根据主键批量删除.
-     * @throws ServiceException
+     * @inheritDoc
      */
-    #[Transactional]
     public function removeByIds(array $ids): bool
     {
         $query = $this->getModelQuery();
