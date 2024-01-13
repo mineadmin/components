@@ -26,7 +26,12 @@
   },
   "require": {
     "php": ">=8.1",
-    "phpoffice/phpspreadsheet": "^1.24"
+    "nette/php-generator": "v4.1.2"
+  },
+  "extra": {
+    "hyperf": {
+      "config": "Mine\\Generator\\GeneratorConfigProvider"
+    }
   },
   "config": {
     "optimize-autoloader": true,

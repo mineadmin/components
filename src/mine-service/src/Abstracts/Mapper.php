@@ -7,11 +7,19 @@ use Hyperf\DbConnection\Model\Model;
 use Mine\Annotation\CrudModelCollector;
 use Mine\ServiceException;
 
+/**
+ * @template ModelClass
+ */
 abstract class Mapper
 {
     /**
+     * @var string|class-string<ModelClass>
+     */
+    protected string $model;
+
+    /**
      * 获取模型类名.
-     * @return string|Model
+     * @return ModelClass
      * @throws ServiceException
      */
     public function getModel(): string

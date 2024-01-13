@@ -9,14 +9,23 @@ use Mine\Contract\PageMapperContract;
 use Mine\Contract\SaveOrUpdateMapperContract;
 use Mine\Contract\UpdateMapperContract;
 use Mine\ServiceException;
+use Psr\Container\ContainerExceptionInterface;
+use Psr\Container\NotFoundExceptionInterface;
 
 /**
  * crud service
+ * @template Mapper
  */
 abstract class AbstractCurdService
 {
+    /**
+     * @return Mapper|PageMapperContract|DeleteMapperContract|SaveOrUpdateMapperContract|UpdateMapperContract
+     * @throws ServiceException
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
+     */
     public function getMapper()
-    : PageMapperContract | DeleteMapperContract | SaveOrUpdateMapperContract | UpdateMapperContract
+    : UpdateMapperContract|PageMapperContract|SaveOrUpdateMapperContract|DeleteMapperContract
     {
         $mapper = null;
         if (property_exists($this,'mapper')){
