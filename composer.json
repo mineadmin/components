@@ -11,7 +11,7 @@
   ],
   "autoload": {
     "psr-4": {
-      "Mine\\": "src/mine/src",
+      "Mine\\": "src/mine-core/src",
       "Mine\\Gateway\\": "src/gateway/src",
       "Xmo\\JWTAuth\\": "src/jwt-auth/src",
       "Mine\\Office\\": "src/office/src",
