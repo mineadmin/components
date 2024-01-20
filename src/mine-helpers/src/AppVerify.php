@@ -64,7 +64,7 @@ class AppVerify
     /**
      * 获取JWT对象
      */
-    public function getJwt(): Jwt
+    public function getJwt(): JWT
     {
         return $this->jwt;
     }

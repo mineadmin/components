@@ -20,6 +20,7 @@ use Mine\Helper\LoginUser;
 use Mine\MineCollection;
 use Mine\MineRequest;
 use Psr\Container\ContainerExceptionInterface;
+use Psr\Container\ContainerInterface;
 use Psr\Container\NotFoundExceptionInterface;
 use Psr\EventDispatcher\EventDispatcherInterface;
 use Psr\Log\LoggerInterface;
@@ -28,7 +29,7 @@ if (! function_exists('container')) {
     /**
      * 获取容器实例.
      */
-    function container(): Psr\Container\ContainerInterface
+    function container(): ContainerInterface
     {
         return ApplicationContext::getContainer();
     }

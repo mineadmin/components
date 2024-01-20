@@ -12,6 +12,7 @@ parameters:
           - src/mine/src/Helper/functions.php
           - src/mine/src/Helper/Str.php
           - src/mine/src/Helper/Ip2region.php
+          - src/gateway/*
   ignoreErrors:
     - '#Unsafe usage of new static\(\)#'
     - '#Call to static method find\(\) on an unknown class#'
