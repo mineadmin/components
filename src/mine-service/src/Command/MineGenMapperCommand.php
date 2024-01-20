@@ -41,7 +41,6 @@ use function Hyperf\Support\class_basename;
 #[\Hyperf\Command\Annotation\Command]
 class MineGenMapperCommand extends Command
 {
-    #[\Override]
     public function __invoke(): void
     {
         $model = $this->input->getOption('model');
