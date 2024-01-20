@@ -97,7 +97,7 @@
     "yurunsoft/phpmailer-swoole": "^1.0",
     "zoujingli/ip2region": "2.0.*",
     "ramsey/uuid": "^4.7",
-    "lcobucci/jwt": "~4.1.0",
+    "lcobucci/jwt": "~5.2.0",
     "nesbot/carbon": "^1.0 || ^2.0",
     "phpoffice/phpspreadsheet": "^1.24",
     "hyperf/model-listener": "~3.1.0"
