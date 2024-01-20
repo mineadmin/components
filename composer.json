@@ -18,13 +18,22 @@
       "Mine\\Translatable\\": "src/translatable/src"
     },
     "files": [
-      "src/mine/src/Helper/functions.php"
+      "src/mine-core/src/Helper/functions.php"
     ]
   },
   "autoload-dev": {
     "psr-4": {
       "Mine\\Tests\\": "tests"
     }
+  },
+  "replace": {
+    "xmo/mine-core": "*",
+    "xmo/mine-gateway": "*",
+    "xmo/jwt-auth": "*",
+    "xmo/mine-office": "*",
+    "xmo/mine-translatable": "*",
+    "xmo/mine-helpers": "*",
+    "xmo/mine-genertor": "*"
   },
   "authors": [
     {
@@ -108,6 +117,6 @@
   "scripts": {
     "cs-fix": "php-cs-fixer fix $1",
     "test": "co-phpunit --prepend test/bootstrap.php -c phpunit.xml --colors=always",
-    "analyse": "phpstan analyse --memory-limit 1000M -l 0 -c phpstan.neon ./app ./config"
+    "analyse": "phpstan analyse --memory-limit 1000M -l 0 -c phpstan.neon src"
   }
 }
