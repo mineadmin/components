@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 /**
  * This file is part of MineAdmin.
@@ -9,6 +10,7 @@ declare(strict_types=1);
  * @license  https://github.com/mineadmin/MineAdmin/blob/master/LICENSE
  */
 use Mine\Translatable\Validation\RuleFactory;
+
 return [
     /*
     |--------------------------------------------------------------------------
