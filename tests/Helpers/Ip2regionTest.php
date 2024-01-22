@@ -13,12 +13,13 @@ declare(strict_types=1);
 namespace Mine\Tests\Helpers;
 
 use Mine\Helper\Ip2region;
+use PHPUnit\Framework\TestCase;
 
 /**
  * @internal
  * @coversNothing
  */
-class Ip2regionTest extends \PHPUnit\Framework\TestCase
+class Ip2regionTest extends TestCase
 {
     public function testMake(): void
     {
