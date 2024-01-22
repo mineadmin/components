@@ -12,6 +12,7 @@ declare(strict_types=1);
 use Hyperf\Context\ApplicationContext;
 use Hyperf\Context\Context;
 use Hyperf\Contract\StdoutLoggerInterface;
+use Hyperf\HttpServer\Contract\RequestInterface;
 use Hyperf\Logger\LoggerFactory;
 use Hyperf\Redis\Redis;
 use Hyperf\Snowflake\IdGeneratorInterface;
@@ -103,7 +104,9 @@ if (! function_exists('lang')) {
      */
     function lang(): string
     {
-        $acceptLanguage = container()->get(MineRequest::class)->getHeaderLine('accept-language');
+        $acceptLanguage = container()
+            ->get(RequestInterface::class)
+            ->getHeaderLine('accept-language');
         return str_replace('-', '_', ! empty($acceptLanguage) ? explode(',', $acceptLanguage)[0] : 'zh_CN');
     }
 }
