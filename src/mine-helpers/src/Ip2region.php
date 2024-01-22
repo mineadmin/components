@@ -12,8 +12,8 @@ declare(strict_types=1);
 
 namespace Mine\Helper;
 
+use Composer\Autoload\ClassLoader;
 use Hyperf\Contract\StdoutLoggerInterface;
-use Hyperf\Support\Composer;
 
 class Ip2region
 {
@@ -23,9 +23,9 @@ class Ip2region
      * @see https://github.com/zoujingli/ip2region
      * @throws \Exception
      */
-    public function __construct(protected StdoutLoggerInterface $logger)
+    public function __construct(protected ?StdoutLoggerInterface $logger = null)
     {
-        $composerLoader = Composer::getLoader();
+        $composerLoader = $this->getLoader();
         $path = $composerLoader->findFile(\XdbSearcher::class);
 
         $dbFile = dirname(realpath($path)) . '/ip2region.xdb';
@@ -33,7 +33,7 @@ class Ip2region
         // 1、从 dbPath 加载整个 xdb 到内存。
         $cBuff = \XdbSearcher::loadContentFromFile($dbFile);
         if ($cBuff === null) {
-            $this->logger->error('failed to load content buffer from {db_file}', ['db_file' => $dbFile]);
+            $this->logger?->error('failed to load content buffer from {db_file}', ['db_file' => $dbFile]);
             return;
         }
         // 2、使用全局的 cBuff 创建带完全基于内存的查询对象。
@@ -58,5 +58,18 @@ class Ip2region
             return t('jwt.unknown');
         }
         return $country;
+    }
+
+    private function getLoader(): ClassLoader
+    {
+        $loaders = spl_autoload_functions();
+
+        foreach ($loaders as $loader) {
+            if (is_array($loader) && $loader[0] instanceof ClassLoader) {
+                return $loader[0];
+            }
+        }
+
+        throw new \RuntimeException('Composer loader not found.');
     }
 }

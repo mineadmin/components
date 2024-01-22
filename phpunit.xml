@@ -8,6 +8,7 @@
       <directory suffix="Test.php">./src/office</directory>
       <directory suffix="Test.php">./src/gateway</directory>
       <directory suffix="Test.php">./src/translatable</directory>
+      <directory suffix="Test.php">./tests</directory>
     </testsuite>
   </testsuites>
   <source>
@@ -17,6 +18,7 @@
       <directory suffix=".php">./src/office/tests</directory>
       <directory suffix=".php">./src/gateway/tests</directory>
       <directory suffix=".php">./src/translatable/tests</directory>
+      <directory suffix=".php">./tests</directory>
     </include>
   </source>
 </phpunit>
