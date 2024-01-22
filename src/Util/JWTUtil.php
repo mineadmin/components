@@ -20,6 +20,7 @@ use Lcobucci\JWT\Token\Parser;
 use Lcobucci\JWT\Validation\Constraint\IdentifiedBy;
 use Lcobucci\JWT\Validation\Constraint\SignedWith;
 use Lcobucci\JWT\ValidationData;
+use Xmo\JWTAuth\Exception\TokenExpireException;
 
 /**
  * JWT工具类.
@@ -83,15 +84,16 @@ class JWTUtil
     /**
      * @return ValidationData
      */
-    public static function getValidationData(Signer $signer, Key $key, string $token)
+    public static function getValidationData(Signer $signer, Key $key, string $token): bool
     {
         $config = self::getConfiguration($signer, $key);
         $parser = $config->parser()->parse($token);
         $claims = $parser->claims()->all();
         $now = new \DateTimeImmutable();
 
+        // 这是基于用户给定的。不是后端解析后来判断的
         if ($claims['nbf'] > $now || $claims['exp'] < $now) {
-            return false;
+            throw new TokenExpireException('Token has expired');
         }
 
         $config->setValidationConstraints(new IdentifiedBy($claims['jti']));
