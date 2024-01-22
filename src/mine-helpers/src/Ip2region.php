@@ -14,25 +14,10 @@ namespace Mine\Helper;
 
 use Composer\Autoload\ClassLoader;
 use Hyperf\Contract\StdoutLoggerInterface;
-use Hyperf\Support\Composer;
-use RuntimeException;
 
 class Ip2region
 {
     protected \XdbSearcher $searcher;
-
-    private function getLoader(): ClassLoader
-    {
-        $loaders = spl_autoload_functions();
-
-        foreach ($loaders as $loader) {
-            if (is_array($loader) && $loader[0] instanceof ClassLoader) {
-                return $loader[0];
-            }
-        }
-
-        throw new RuntimeException('Composer loader not found.');
-    }
 
     /**
      * @see https://github.com/zoujingli/ip2region
@@ -73,5 +58,18 @@ class Ip2region
             return t('jwt.unknown');
         }
         return $country;
+    }
+
+    private function getLoader(): ClassLoader
+    {
+        $loaders = spl_autoload_functions();
+
+        foreach ($loaders as $loader) {
+            if (is_array($loader) && $loader[0] instanceof ClassLoader) {
+                return $loader[0];
+            }
+        }
+
+        throw new \RuntimeException('Composer loader not found.');
     }
 }
