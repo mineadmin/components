@@ -19,7 +19,6 @@ use Hyperf\Snowflake\IdGeneratorInterface;
 use Mine\Helper\AppVerify;
 use Mine\Helper\LoginUser;
 use Mine\MineCollection;
-use Mine\MineRequest;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\ContainerInterface;
 use Psr\Container\NotFoundExceptionInterface;

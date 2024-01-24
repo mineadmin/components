@@ -112,7 +112,6 @@ class VueIndexGenerator extends MineGenerator implements CodeGenerator
     public function getComponentType(int $type): string
     {
         return match ($type) {
-            1 => "'modal'",
             2 => "'drawer'",
             3 => "'tag'",
             default => "'modal'"
@@ -221,7 +220,7 @@ class VueIndexGenerator extends MineGenerator implements CodeGenerator
         $options['operationColumn'] = false;
         $options['operationColumnWidth'] = 160;
         $options['formOption'] = [
-            'viewType' => $this->tablesContract->getComponentType()->value,
+            'viewType' => "'{$this->tablesContract->getComponentType()}'",
             'width' => 600,
         ];
         if ($this->tablesContract->getComponentType() === ComponentTypeEnum::TAG) {
@@ -332,7 +331,7 @@ class VueIndexGenerator extends MineGenerator implements CodeGenerator
                     $tmp['dict'] = ['data' => $collection, 'translation' => true];
                 }
                 // 对日期时间处理
-                if ($column->view_type == 'date' && $column->options['mode'] == 'date') {
+                if ($column->view_type === 'date' && $column->options['mode'] === 'date') {
                     unset($tmp['mode']);
                     if (isset($column->options['range']) && $column->options['range']) {
                         $tmp['formType'] = 'range';
@@ -350,7 +349,7 @@ class VueIndexGenerator extends MineGenerator implements CodeGenerator
                 ];
             }
             // 密码处理
-            if ($column->view_type == 'password') {
+            if ($column->view_type === 'password') {
                 $tmp['type'] = 'password';
             }
             // 允许查看字段的角色（前端还待支持）
