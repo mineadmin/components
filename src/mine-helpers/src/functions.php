@@ -167,11 +167,23 @@ if (! function_exists('app_verify')) {
 
 if (! function_exists('snowflake_id')) {
     /**
-     * 生成雪花ID.
+     * 生成雪花ID
+     * @return String
      */
     function snowflake_id(): string
     {
-        return (string) container()->get(IdGeneratorInterface::class)->generate();
+        return container()->get(\Mine\Snowflake\SnowflakeIdGenerator::class)->generate();
+    }
+}
+
+if (! function_exists('uuid')) {
+    /**
+     * 生成UUID
+     * @return String
+     */
+    function uuid(): string
+    {
+        return \Ramsey\Uuid\Uuid::uuid4()->toString();
     }
 }
 
