@@ -44,7 +44,7 @@ abstract class Mapper
         if (! empty(CrudModelCollector::list()[static::class])) {
             $modelClass = CrudModelCollector::list()[static::class];
         }
-        if (! class_exists($modelClass) || ! ($modelClass instanceof Model)) {
+        if (! class_exists($modelClass) || ! is_subclass_of($modelClass, Model::class)) {
             throw new ServiceException('The class to which the ' . static::class . ' class belongs was not found');
         }
         /* @var class-string<Model> $modelClass */
