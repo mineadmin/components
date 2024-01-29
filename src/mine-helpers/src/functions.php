@@ -15,15 +15,16 @@ use Hyperf\Contract\StdoutLoggerInterface;
 use Hyperf\HttpServer\Contract\RequestInterface;
 use Hyperf\Logger\LoggerFactory;
 use Hyperf\Redis\Redis;
-use Hyperf\Snowflake\IdGeneratorInterface;
 use Mine\Helper\AppVerify;
 use Mine\Helper\LoginUser;
 use Mine\MineCollection;
+use Mine\Snowflake\SnowflakeIdGenerator;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\ContainerInterface;
 use Psr\Container\NotFoundExceptionInterface;
 use Psr\EventDispatcher\EventDispatcherInterface;
 use Psr\Log\LoggerInterface;
+use Ramsey\Uuid\Uuid;
 
 if (! function_exists('container')) {
     /**
@@ -167,23 +168,21 @@ if (! function_exists('app_verify')) {
 
 if (! function_exists('snowflake_id')) {
     /**
-     * 生成雪花ID
-     * @return String
+     * 生成雪花ID.
      */
     function snowflake_id(): string
     {
-        return container()->get(\Mine\Snowflake\SnowflakeIdGenerator::class)->generate();
+        return container()->get(SnowflakeIdGenerator::class)->generate();
     }
 }
 
 if (! function_exists('uuid')) {
     /**
-     * 生成UUID
-     * @return String
+     * 生成UUID.
      */
     function uuid(): string
     {
-        return \Ramsey\Uuid\Uuid::uuid4()->toString();
+        return Uuid::uuid4()->toString();
     }
 }
 
