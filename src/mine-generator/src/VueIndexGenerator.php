@@ -220,7 +220,7 @@ class VueIndexGenerator extends MineGenerator implements CodeGenerator
         $options['operationColumn'] = false;
         $options['operationColumnWidth'] = 160;
         $options['formOption'] = [
-            'viewType' => "'{$this->tablesContract->getComponentType()}'",
+            'viewType' => "'{$this->tablesContract->getComponentType()->value}'",
             'width' => 600,
         ];
         if ($this->tablesContract->getComponentType() === ComponentTypeEnum::TAG) {
