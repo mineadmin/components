@@ -10,14 +10,8 @@ declare(strict_types=1);
  * @license  https://github.com/mineadmin/MineAdmin/blob/master/LICENSE
  */
 
-namespace Mine\Tests\Helpers;
+namespace Tests;
 
-use Mine\Helper\Ip2region;
+use PHPUnit\Framework\TestCase as BaseTestCase;
 
-beforeEach(function () {
-    $this->mock = new Ip2region();
-});
-test('search', function () {
-    $result = $this->mock->search('114.114.114.114');
-    expect($result)->toBeString();
-});
+abstract class TestCase extends BaseTestCase {}

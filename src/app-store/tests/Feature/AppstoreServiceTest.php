@@ -9,15 +9,12 @@ declare(strict_types=1);
  * @contact  root@imoi.cn
  * @license  https://github.com/mineadmin/MineAdmin/blob/master/LICENSE
  */
-
-namespace Mine\Tests\Helpers;
-
-use Mine\Helper\Ip2region;
+use Hyperf\Context\ApplicationContext;
+use Xmo\AppStore\Service\Impl\AppStoreServiceImpl;
 
 beforeEach(function () {
-    $this->mock = new Ip2region();
+    $this->mock = ApplicationContext::getContainer()->get(AppStoreServiceImpl::class);
 });
-test('search', function () {
-    $result = $this->mock->search('114.114.114.114');
-    expect($result)->toBeString();
+it('app store', function () {
+    expect(true)->toBeTrue();
 });

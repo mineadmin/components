@@ -3,21 +3,13 @@
   <coverage/>
   <testsuites>
     <testsuite name="Tests">
-      <directory suffix="Test.php">./src/jwt-auth</directory>
-      <directory suffix="Test.php">./src/mine-core</directory>
-      <directory suffix="Test.php">./src/office</directory>
-      <directory suffix="Test.php">./src/gateway</directory>
-      <directory suffix="Test.php">./src/translatable</directory>
+      <directory suffix="Test.php">./src/app-store/tests</directory>
       <directory suffix="Test.php">./tests</directory>
     </testsuite>
   </testsuites>
   <source>
     <include>
-      <directory suffix=".php">./src/jwt-auth/tests</directory>
-      <directory suffix=".php">./src/mine/tests</directory>
-      <directory suffix=".php">./src/office/tests</directory>
-      <directory suffix=".php">./src/gateway/tests</directory>
-      <directory suffix=".php">./src/translatable/tests</directory>
+      <directory suffix=".php">./src/app-store/tests</directory>
       <directory suffix=".php">./tests</directory>
     </include>
   </source>

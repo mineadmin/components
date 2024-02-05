@@ -10,14 +10,6 @@ declare(strict_types=1);
  * @license  https://github.com/mineadmin/MineAdmin/blob/master/LICENSE
  */
 
-namespace Mine\Tests\Helpers;
+namespace Xmo\AppStore\Service;
 
-use Mine\Helper\Ip2region;
-
-beforeEach(function () {
-    $this->mock = new Ip2region();
-});
-test('search', function () {
-    $result = $this->mock->search('114.114.114.114');
-    expect($result)->toBeString();
-});
+interface AppStoreService {}

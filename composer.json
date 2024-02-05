@@ -17,7 +17,8 @@
       "Mine\\Office\\": "src/office/src",
       "Mine\\Translatable\\": "src/translatable/src",
       "Mine\\Helper\\": "src/mine-helpers/src",
-      "Mine\\Generator\\": "src/mine-generator/src"
+      "Mine\\Generator\\": "src/mine-generator/src",
+      "Xmo\\AppStore\\": "src/app-store/src"
     },
     "files": [
       "src/mine-helpers/src/functions.php"
@@ -25,7 +26,8 @@
   },
   "autoload-dev": {
     "psr-4": {
-      "Mine\\Tests\\": "tests"
+      "Mine\\Tests\\": "tests",
+      "Xmo\\AppStore\\Tests\\": "src/app-store/tests"
     }
   },
   "authors": [
@@ -47,7 +49,8 @@
     "xmo/mine-office": "*",
     "xmo/mine-translatable": "*",
     "xmo/mine-helpers": "*",
-    "xmo/mine-genertor": "*"
+    "xmo/mine-genertor": "*",
+    "xmo/app-store": "*"
   },
   "require": {
     "php": ">=8.1",
@@ -108,17 +111,21 @@
     "hyperf/testing": "3.1.*",
     "mockery/mockery": "^1.0",
     "nette/php-generator": "^4.1@dev",
+    "pestphp/pest": "2.x-dev",
     "phpstan/phpstan": "^1.0",
     "swoole/ide-helper": "dev-master"
   },
   "minimum-stability": "dev",
   "config": {
     "optimize-autoloader": true,
-    "sort-packages": true
+    "sort-packages": true,
+    "allow-plugins": {
+      "pestphp/pest-plugin": true
+    }
   },
   "scripts": {
     "cs-fix": "php-cs-fixer fix $1",
-    "test": "co-phpunit --prepend test/bootstrap.php -c phpunit.xml --colors=always",
+    "test": "pest",
     "analyse": "phpstan analyse --memory-limit 1000M -l 0 -c phpstan.neon ./src"
   }
 }

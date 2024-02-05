@@ -1,0 +1,34 @@
+{
+    "name": "xmo/app-store",
+    "description": "Mineadmin 2.0 AppStore Extension",
+    "type": "library",
+    "require": {
+        "xmo/mine-core": "v2.0.x-dev",
+        "xmo/mine-service": "v2.0.x-dev"
+    },
+    "require-dev": {
+        "pestphp/pest": "^2.33"
+    },
+    "license": "MIT",
+    "autoload": {
+        "psr-4": {
+            "Xmo\\AppStore\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "Death-Satan",
+            "email": "49744633+Death-Satan@users.noreply.github.com"
+        }
+    ],
+    "config": {
+        "allow-plugins": {
+            "pestphp/pest-plugin": true
+        }
+    },
+    "extra": {
+        "hyperf": {
+            "config": "Xmo\\AppStore\\ConfigProvider"
+        }
+    }
+}
