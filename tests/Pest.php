@@ -13,14 +13,6 @@ use Hyperf\Context\ApplicationContext;
 use Hyperf\Contract\ConfigInterface;
 use Mine\Tests\TestCase;
 
-/**
- * This file is part of MineAdmin.
- *
- * @see     https://www.mineadmin.com
- * @document https://doc.mineadmin.com
- * @contact  root@imoi.cn
- * @license  https://github.com/mineadmin/MineAdmin/blob/master/LICENSE
- */
 uses(TestCase::class)
     ->beforeEach(function () {
         $mockConfig = Mockery::mock(ConfigInterface::class);
