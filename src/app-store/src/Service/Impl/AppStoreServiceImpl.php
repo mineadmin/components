@@ -13,6 +13,7 @@ declare(strict_types=1);
 namespace Xmo\AppStore\Service\Impl;
 
 use GuzzleHttp\Client;
+use GuzzleHttp\Exception\GuzzleException;
 use Hyperf\Guzzle\ClientFactory;
 use Xmo\AppStore\Service\AppStoreService;
 
@@ -35,7 +36,11 @@ final class AppStoreServiceImpl implements AppStoreService
         ]);
     }
 
-    public function request(string $uri, array $data = [])
+    /**
+     * @throws GuzzleException
+     * @throws \JsonException
+     */
+    public function request(string $uri, array $data = []): array
     {
         $response = $this->client->post($uri, [
             'json' => $data,
@@ -47,7 +52,10 @@ final class AppStoreServiceImpl implements AppStoreService
             throw new \RuntimeException(trans('app-store.store.response_fail'));
         }
         $result = json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
-        return $response;
+        if (json_last_error() !== JSON_ERROR_NONE) {
+            throw new \RuntimeException(json_last_error_msg());
+        }
+        return $result;
     }
 
     private function getAccessToken(): string

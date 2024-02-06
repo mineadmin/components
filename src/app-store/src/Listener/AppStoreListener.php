@@ -12,9 +12,14 @@ declare(strict_types=1);
 
 namespace Xmo\AppStore\Listener;
 
+use Hyperf\Di\Annotation\AnnotationCollector;
 use Hyperf\Event\Annotation\Listener;
 use Hyperf\Event\Contract\ListenerInterface;
 use Hyperf\Framework\Event\BootApplication;
+use Hyperf\Framework\Event\MainWorkerStart;
+use Hyperf\Server\Event\MainCoroutineServerStart;
+use Xmo\AppStore\Abstracts\AbstractExtension;
+use Xmo\AppStore\Annotation\MineExtension;
 
 #[Listener]
 class AppStoreListener implements ListenerInterface
@@ -23,8 +28,22 @@ class AppStoreListener implements ListenerInterface
     {
         return [
             BootApplication::class,
+            MainWorkerStart::class,
+            MainCoroutineServerStart::class,
         ];
     }
 
-    public function process(object $event): void {}
+    public function process(object $event): void
+    {
+        $isBoot = $event instanceof BootApplication;
+        $isCoroutine = $event instanceof MainCoroutineServerStart;
+        $extensions = AnnotationCollector::getClassesByAnnotation(MineExtension::class);
+        foreach ($extensions as $extension) {
+            if (! $extension instanceof AbstractExtension) {
+                throw new \RuntimeException(sprintf('%s Class does not inherit correctly from the plugin base class', $extension));
+            }
+            $isBoot && $extension::boot();
+            ! $isBoot && $extension::register($isCoroutine);
+        }
+    }
 }
