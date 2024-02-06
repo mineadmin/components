@@ -34,7 +34,6 @@ abstract class AbstractExtension
      */
     public string $homePage;
 
-
     public function __construct(
         public ContainerInterface $container
     ) {}
