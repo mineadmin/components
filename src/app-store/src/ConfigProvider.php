@@ -12,6 +12,9 @@ declare(strict_types=1);
 
 namespace Xmo\AppStore;
 
+use Xmo\AppStore\Service\AppStoreService;
+use Xmo\AppStore\Service\Impl\AppStoreServiceImpl;
+
 class ConfigProvider
 {
     public function __invoke()
@@ -24,6 +27,9 @@ class ConfigProvider
                         __DIR__,
                     ],
                 ],
+            ],
+            'dependencies' => [
+                AppStoreService::class => AppStoreServiceImpl::class,
             ],
         ];
     }

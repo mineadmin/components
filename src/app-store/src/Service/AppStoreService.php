@@ -12,4 +12,19 @@ declare(strict_types=1);
 
 namespace Xmo\AppStore\Service;
 
-interface AppStoreService {}
+use GuzzleHttp\Exception\GuzzleException;
+
+interface AppStoreService
+{
+    /**
+     * Get all locally installed extensions.
+     * @throws \JsonException
+     */
+    public function getLocalExtensions(): array;
+
+    /**
+     * @throws GuzzleException
+     * @throws \JsonException
+     */
+    public function request(string $uri, array $data = []): array;
+}
