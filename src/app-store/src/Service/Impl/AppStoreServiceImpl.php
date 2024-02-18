@@ -14,7 +14,12 @@ namespace Xmo\AppStore\Service\Impl;
 
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\GuzzleException;
+use Hyperf\Context\ApplicationContext;
 use Hyperf\Contract\ConfigInterface;
+use Hyperf\Database\Migrations\Migrator;
+use Hyperf\Database\Seeders\Seed;
+use Hyperf\Database\Seeders\Seeder;
+use Hyperf\DbConnection\Db;
 use Hyperf\Guzzle\ClientFactory;
 use Symfony\Component\Finder\Finder;
 use Xmo\AppStore\Service\AppStoreService;
@@ -30,7 +35,9 @@ final class AppStoreServiceImpl implements AppStoreService
 
     public function __construct(
         ClientFactory $clientFactory,
-        ConfigInterface $config
+        ConfigInterface $config,
+        private readonly Migrator $migrator,
+        private readonly Seed $seed
     ) {
         $this->client = $clientFactory->create([
             'base_uri' => 'https://www.mineadmin.com/server/store/',
@@ -125,22 +132,10 @@ final class AppStoreServiceImpl implements AppStoreService
     }
 
     /**
-     * Get MineAdmin developer credentials.
-     */
-    private function getAccessToken(): string
-    {
-        $accessToken = $this->config['access_token'] ?? env('MINE_ACCESS_TOKEN');
-        if (empty($accessToken)) {
-            throw new \RuntimeException(trans('app-store.access_token_null'));
-        }
-        return (string) $accessToken;
-    }
-
-    /**
      * Read the specified directory to get the extension details.
      * @throws \JsonException
      */
-    private function readExtensionInfo(string $path): array
+    public function readExtensionInfo(string $path): array
     {
         $extensionJson = $path . DIRECTORY_SEPARATOR . 'mine.json';
         if (! file_exists($extensionJson)) {
@@ -152,6 +147,52 @@ final class AppStoreServiceImpl implements AppStoreService
         }
         $this->checkPlugin($info);
         return $info;
+    }
+
+    /**
+     * Installation of local plug-ins.
+     * @return string
+     * @throws \JsonException
+     */
+    public function installExtension(string $path): void
+    {
+        Db::transaction(function () use ($path) {
+            $info = $this->readExtensionInfo($path);
+            if ($info['status']) {
+                throw new \RuntimeException(sprintf('The given directory %s is the directory where the plugin has already been installed.', $path));
+            }
+            $installScript = $info['installScript'];
+            $installScriptInstance = ApplicationContext::getContainer()->make($installScript);
+            // 执行数据库迁移 seeder
+            $this->migrator->run([
+                $path,
+            ]);
+            $this->seed->run([
+                $path,
+            ]);
+            if (method_exists($installScriptInstance, 'handle')) {
+                $installScriptInstance->handle();
+                return;
+            }
+            if (method_exists($installScriptInstance, '__invoke')) {
+                $installScriptInstance();
+                return;
+            }
+
+            // todo 前端文件迁移
+        });
+    }
+
+    /**
+     * Get MineAdmin developer credentials.
+     */
+    private function getAccessToken(): string
+    {
+        $accessToken = $this->config['access_token'] ?? env('MINE_ACCESS_TOKEN');
+        if (empty($accessToken)) {
+            throw new \RuntimeException(trans('app-store.access_token_null'));
+        }
+        return (string) $accessToken;
     }
 
     private function throwCheckExtension(string $path): void
