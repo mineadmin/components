@@ -27,4 +27,20 @@ interface AppStoreService
      * @throws \JsonException
      */
     public function request(string $uri, array $data = []): array;
+
+    /**
+     * Read the specified directory to get the extension details.
+     * @throws \JsonException
+     */
+    public function readExtensionInfo(string $path): array;
+
+    /**
+     * Installation of local plug-ins.
+     */
+    public function installExtension(string $path): void;
+
+    /**
+     * Uninstall locally installed plug-ins.
+     */
+    public function uninstallExtension(string $path): void;
 }

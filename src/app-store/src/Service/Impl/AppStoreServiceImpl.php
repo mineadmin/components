@@ -19,11 +19,11 @@ use Hyperf\Contract\ConfigInterface;
 use Hyperf\Database\Migrations\Migrator;
 use Hyperf\Database\Seeders\Seed;
 use Hyperf\Database\Seeders\Seeder;
-use Hyperf\DbConnection\Db;
 use Hyperf\Guzzle\ClientFactory;
 use Nette\Utils\FileSystem;
 use Symfony\Component\Finder\Finder;
 use Xmo\AppStore\Service\AppStoreService;
+use Xmo\AppStore\Utils\FileSystemUtils;
 
 use function Hyperf\Support\env;
 use function Hyperf\Translation\trans;
@@ -152,39 +152,74 @@ final class AppStoreServiceImpl implements AppStoreService
 
     /**
      * Installation of local plug-ins.
-     * @return string
-     * @throws \JsonException
      */
     public function installExtension(string $path): void
     {
-        Db::transaction(function () use ($path) {
-            $info = $this->readExtensionInfo($path);
-            if ($info['status']) {
-                throw new \RuntimeException(sprintf('The given directory %s is the directory where the plugin has already been installed.', $path));
+        $info = $this->readExtensionInfo($path);
+        if (file_exists($path . '/install.lock')) {
+            throw new \RuntimeException(sprintf('The given directory %s is the directory where the plugin has already been installed.', $path));
+        }
+        $installScript = $info['installScript'];
+        $installScriptInstance = ApplicationContext::getContainer()->make($installScript);
+
+        /*
+         * The seeder and databases of the directory where the plugin is located are the data migration directories.
+         * The . /web directory directly into the specified front-end source code directory.
+         * and execute the plugin's installation script afterwards
+         */
+        $this->migrator->run([$path . '/Database/Migrations']);
+        $this->seed->run([$path . '/Database/Seeders']);
+        if (method_exists($installScriptInstance, '__invoke')) {
+            $installScriptInstance();
+        }
+        /*
+         * If the plugin has a front-end file, copy it.
+         */
+        if (file_exists($path . '/web')) {
+            $front_directory = $this->config['front_directory'];
+            if (! file_exists($front_directory)) {
+                throw new \RuntimeException('The front-end source code directory does not exist or does not have permission to write to it');
             }
-            $installScript = $info['installScript'];
-            $installScriptInstance = ApplicationContext::getContainer()->make($installScript);
-            /**
-             * The seeder and databases of the directory where the plugin is located are the data migration directories.
-             * The . /web directory directly into the specified front-end source code directory.
-             * and execute the plugin's installation script afterwards
-             */
-            $this->migrator->run([$path]);
-            $this->seed->run([$path]);
-            if (method_exists($installScriptInstance, '__invoke')) {
-                $installScriptInstance();
+            // todo 整个web 目录移植。目前这个方法不行。因为卸载的时候恢复不了源文件
+            FileSystemUtils::copyDirectory($path . '/web', $front_directory);
+        }
+
+        file_put_contents($path . '/install.lock', 1);
+    }
+
+    /**
+     * Uninstall locally installed plug-ins.
+     */
+    public function uninstallExtension(string $path): void
+    {
+        $info = $this->readExtensionInfo($path);
+        if (! file_exists($path . '/install.lock')) {
+            throw new \RuntimeException(sprintf('Plugin %s not installed, cannot be uninstalled', $path));
+        }
+        $uninstallScript = $info['uninstallScript'];
+        $uninstallScriptInstance = ApplicationContext::getContainer()->make($uninstallScript);
+        $this->migrator->rollback([$path . '/Database/Migrations']);
+
+        if (method_exists($uninstallScriptInstance, '__invoke')) {
+            $uninstallScriptInstance();
+        }
+        if (file_exists($path . '/web')) {
+            $front_directory = $this->config['front_directory'];
+            if (! file_exists($front_directory)) {
+                throw new \RuntimeException('The front-end source code directory does not exist or does not have permission to write to it');
             }
-            /**
-             * If the plugin has a front-end file, copy it.
-             */
-            if (file_exists($path.'/web')){
-                $front_directory = $this->config['front_directory'];
-                if (!file_exists($front_directory)){
-                    throw new \RuntimeException('The front-end source code directory does not exist or does not have permission to write to it');
-                }
-                FileSystem::copy($path.'/web',$front_directory);
+            $finder = Finder::create()
+                ->files()
+                ->in($path . '/web');
+            foreach ($finder as $file) {
+                /**
+                 * @var \SplFileInfo $file
+                 */
+                $path = substr($file->getPath(), $path);
+                var_dump($path);
             }
-        });
+        }
+        FileSystem::delete($path . '/install.lock');
     }
 
     /**

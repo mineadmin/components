@@ -19,11 +19,11 @@ use Symfony\Component\Console\Input\InputOption;
 use Xmo\AppStore\Service\AppStoreService;
 
 #[Command]
-class ExtensionInstallCommand extends Base
+class ExtensionUninstallCommand extends Base
 {
-    protected ?string $name = 'mine-extension:install';
+    protected ?string $name = 'mine-extension:uninstall';
 
-    protected string $description = 'Installing Plugin Commands';
+    protected string $description = 'Uninstalling Plugin Commands';
 
     public function __construct(
         private readonly AppStoreService $appStoreService
@@ -55,8 +55,8 @@ class ExtensionInstallCommand extends Base
             $this->output->success('Installation has been successfully canceled');
             return;
         }
-        $this->appStoreService->installExtension($pluginPath);
-        $this->output->success(sprintf('Plugin %s installed successfully', $pluginPath));
+        $this->appStoreService->uninstallExtension($pluginPath);
+        $this->output->success(sprintf('Plugin %s uninstalled successfully', $pluginPath));
     }
 
     protected function configure()
