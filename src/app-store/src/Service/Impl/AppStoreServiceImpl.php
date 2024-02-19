@@ -21,6 +21,7 @@ use Hyperf\Database\Seeders\Seed;
 use Hyperf\Database\Seeders\Seeder;
 use Hyperf\DbConnection\Db;
 use Hyperf\Guzzle\ClientFactory;
+use Nette\Utils\FileSystem;
 use Symfony\Component\Finder\Finder;
 use Xmo\AppStore\Service\AppStoreService;
 
@@ -163,23 +164,26 @@ final class AppStoreServiceImpl implements AppStoreService
             }
             $installScript = $info['installScript'];
             $installScriptInstance = ApplicationContext::getContainer()->make($installScript);
-            // 执行数据库迁移 seeder
-            $this->migrator->run([
-                $path,
-            ]);
-            $this->seed->run([
-                $path,
-            ]);
-            if (method_exists($installScriptInstance, 'handle')) {
-                $installScriptInstance->handle();
-                return;
-            }
+            /**
+             * The seeder and databases of the directory where the plugin is located are the data migration directories.
+             * The . /web directory directly into the specified front-end source code directory.
+             * and execute the plugin's installation script afterwards
+             */
+            $this->migrator->run([$path]);
+            $this->seed->run([$path]);
             if (method_exists($installScriptInstance, '__invoke')) {
                 $installScriptInstance();
-                return;
             }
-
-            // todo 前端文件迁移
+            /**
+             * If the plugin has a front-end file, copy it.
+             */
+            if (file_exists($path.'/web')){
+                $front_directory = $this->config['front_directory'];
+                if (!file_exists($front_directory)){
+                    throw new \RuntimeException('The front-end source code directory does not exist or does not have permission to write to it');
+                }
+                FileSystem::copy($path.'/web',$front_directory);
+            }
         });
     }
 
