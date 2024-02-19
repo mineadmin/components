@@ -180,6 +180,15 @@ final class AppStoreServiceImpl implements AppStoreService
             if (! file_exists($front_directory)) {
                 throw new \RuntimeException('The front-end source code directory does not exist or does not have permission to write to it');
             }
+            $finder = Finder::create()
+                ->files()
+                ->in($path.'/web');
+            foreach ($finder as $file){
+                /**
+                 * @var \SplFileInfo $file
+                 */
+                $filepath = $file->getPath();
+            }
             // todo 整个web 目录移植。目前这个方法不行。因为卸载的时候恢复不了源文件
             FileSystemUtils::copyDirectory($path . '/web', $front_directory);
         }
