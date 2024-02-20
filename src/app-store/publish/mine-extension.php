@@ -19,11 +19,12 @@ return [
      *
      * 是否开启扩展商店功能，生产环境建议禁用。默认随着 APP_DEBUG 环境开启关闭
      */
-    'enable' => env('APP_DEBUG'),
+    'enable' => env('APP_DEBUG',false),
     /*
      * MineAdmin
      */
     'access_token' => env('MINE_ACCESS_TOKEN'),
+
     /*
      * The root directory where the front-end code resides.
      *
@@ -41,7 +42,7 @@ return [
          */
         'bin' => 'composer',
     ],
-    'npm' => [
+    'front-tool' => [
         /*
          * Front-end package management execution tools Optional npm yarn pnpm, default npm is used
          *

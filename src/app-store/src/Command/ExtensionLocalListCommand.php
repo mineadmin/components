@@ -16,6 +16,7 @@ use Hyperf\Command\Annotation\Command;
 use Hyperf\Command\Command as Base;
 use Hyperf\Context\ApplicationContext;
 use Xmo\AppStore\Service\AppStoreService;
+use Xmo\AppStore\Service\PluginService;
 
 #[Command]
 class ExtensionLocalListCommand extends Base
@@ -26,7 +27,7 @@ class ExtensionLocalListCommand extends Base
 
     public function __invoke()
     {
-        $service = ApplicationContext::getContainer()->get(AppStoreService::class);
+        $service = ApplicationContext::getContainer()->get(PluginService::class);
         $list = $service->getLocalExtensions();
         $headers = [
             'extensionName', 'description', 'author', 'homePage', 'status',

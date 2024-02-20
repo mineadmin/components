@@ -36,9 +36,7 @@ final class AppStoreServiceImpl implements AppStoreService
 
     public function __construct(
         ClientFactory $clientFactory,
-        ConfigInterface $config,
-        private readonly Migrator $migrator,
-        private readonly Seed $seed
+        ConfigInterface $config
     ) {
         $this->client = $clientFactory->create([
             'base_uri' => 'https://www.mineadmin.com/server/store/',
@@ -69,167 +67,6 @@ final class AppStoreServiceImpl implements AppStoreService
         return $result;
     }
 
-    /**
-     * Get all locally extensions.
-     * @throws \JsonException
-     */
-    public function getLocalExtensions(): array
-    {
-        $extensionPath = $this->getLocalExtensionsPath();
-        if (! is_dir($extensionPath)) {
-            return [];
-        }
-        $finder = Finder::create()
-            ->files()
-            ->name('mine.json')
-            ->in($extensionPath);
-        if (! $finder->hasResults()) {
-            return [];
-        }
-        $result = [];
-        foreach ($finder as $file) {
-            $path = $file->getPath();
-            /*
-             * @var \SplFileInfo $file
-             */
-            $info = $this->readExtensionInfo($path);
-            $info['status'] = file_exists($path . '/install.lock');
-            $result[] = $info;
-        }
-        return $result;
-    }
-
-    /**
-     * Check if the given parameter is a valid configuration item.
-     */
-    public function checkPlugin(array $info): bool
-    {
-        $checkOption = [
-            'name', 'description', 'author', 'require', 'description', 'dependencies',
-            'installScript', 'uninstallScript',
-        ];
-        foreach ($checkOption as $option) {
-            // Checking mine.json configuration
-            if (! array_key_exists($option, $info)) {
-                $this->throwCheckExtension($info['name'] ?? '--');
-            }
-            $installScript = $info['installScript'];
-            $uninstallScript = $info['uninstallScript'];
-            if (! class_exists($installScript) || ! class_exists($uninstallScript)) {
-                throw new \RuntimeException(
-                    sprintf('Installation and uninstallation scripts configured with the extension %s do not take effect and are not valid classes.', $info['name'] ?? '--')
-                );
-            }
-        }
-        return true;
-    }
-
-    /**
-     * Get local plugin directory.
-     */
-    public function getLocalExtensionsPath(): string
-    {
-        return $this->getBasePath() . DIRECTORY_SEPARATOR . $this->getExtensionDirectory();
-    }
-
-    /**
-     * Read the specified directory to get the extension details.
-     * @throws \JsonException
-     */
-    public function readExtensionInfo(string $path): array
-    {
-        $extensionJson = $path . DIRECTORY_SEPARATOR . 'mine.json';
-        if (! file_exists($extensionJson)) {
-            throw new \RuntimeException(sprintf('The catalog %s is not a valid mine extension,because it\'s missing the necessary mine.json file.', $path));
-        }
-        $info = json_decode(file_get_contents($extensionJson), true);
-        if (json_last_error() !== JSON_ERROR_NONE) {
-            throw new \RuntimeException(sprintf('Error reading mine.json file in %s,' . json_last_error_msg(), $path));
-        }
-        $this->checkPlugin($info);
-        return $info;
-    }
-
-    /**
-     * Installation of local plug-ins.
-     */
-    public function installExtension(string $path): void
-    {
-        $info = $this->readExtensionInfo($path);
-        if (file_exists($path . '/install.lock')) {
-            throw new \RuntimeException(sprintf('The given directory %s is the directory where the plugin has already been installed.', $path));
-        }
-        $installScript = $info['installScript'];
-        $installScriptInstance = ApplicationContext::getContainer()->make($installScript);
-
-        /*
-         * The seeder and databases of the directory where the plugin is located are the data migration directories.
-         * The . /web directory directly into the specified front-end source code directory.
-         * and execute the plugin's installation script afterwards
-         */
-        $this->migrator->run([$path . '/Database/Migrations']);
-        $this->seed->run([$path . '/Database/Seeders']);
-        if (method_exists($installScriptInstance, '__invoke')) {
-            $installScriptInstance();
-        }
-        /*
-         * If the plugin has a front-end file, copy it.
-         */
-        if (file_exists($path . '/web')) {
-            $front_directory = $this->config['front_directory'];
-            if (! file_exists($front_directory)) {
-                throw new \RuntimeException('The front-end source code directory does not exist or does not have permission to write to it');
-            }
-            $finder = Finder::create()
-                ->files()
-                ->in($path.'/web');
-            foreach ($finder as $file){
-                /**
-                 * @var \SplFileInfo $file
-                 */
-                $filepath = $file->getPath();
-            }
-            // todo 整个web 目录移植。目前这个方法不行。因为卸载的时候恢复不了源文件
-            FileSystemUtils::copyDirectory($path . '/web', $front_directory);
-        }
-
-        file_put_contents($path . '/install.lock', 1);
-    }
-
-    /**
-     * Uninstall locally installed plug-ins.
-     */
-    public function uninstallExtension(string $path): void
-    {
-        $info = $this->readExtensionInfo($path);
-        if (! file_exists($path . '/install.lock')) {
-            throw new \RuntimeException(sprintf('Plugin %s not installed, cannot be uninstalled', $path));
-        }
-        $uninstallScript = $info['uninstallScript'];
-        $uninstallScriptInstance = ApplicationContext::getContainer()->make($uninstallScript);
-        $this->migrator->rollback([$path . '/Database/Migrations']);
-
-        if (method_exists($uninstallScriptInstance, '__invoke')) {
-            $uninstallScriptInstance();
-        }
-        if (file_exists($path . '/web')) {
-            $front_directory = $this->config['front_directory'];
-            if (! file_exists($front_directory)) {
-                throw new \RuntimeException('The front-end source code directory does not exist or does not have permission to write to it');
-            }
-            $finder = Finder::create()
-                ->files()
-                ->in($path . '/web');
-            foreach ($finder as $file) {
-                /**
-                 * @var \SplFileInfo $file
-                 */
-                $path = substr($file->getPath(), $path);
-                var_dump($path);
-            }
-        }
-        FileSystem::delete($path . '/install.lock');
-    }
 
     /**
      * Get MineAdmin developer credentials.
@@ -241,20 +78,5 @@ final class AppStoreServiceImpl implements AppStoreService
             throw new \RuntimeException(trans('app-store.access_token_null'));
         }
         return (string) $accessToken;
-    }
-
-    private function throwCheckExtension(string $path): void
-    {
-        throw new \RuntimeException(sprintf('The catalog %s is not a valid mine extension package because the mine.json file it belongs to is missing key configurations such as `name` `author` `dependencies` `description` `require` `installScript` `uninstallScript` and so on.', $path));
-    }
-
-    private function getBasePath(): string
-    {
-        return BASE_PATH;
-    }
-
-    private function getExtensionDirectory(): string
-    {
-        return 'plugin';
     }
 }
