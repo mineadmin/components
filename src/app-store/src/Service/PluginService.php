@@ -1,42 +1,15 @@
 <?php
 
+declare(strict_types=1);
+/**
+ * This file is part of MineAdmin.
+ *
+ * @link     https://www.mineadmin.com
+ * @document https://doc.mineadmin.com
+ * @contact  root@imoi.cn
+ * @license  https://github.com/mineadmin/MineAdmin/blob/master/LICENSE
+ */
+
 namespace Xmo\AppStore\Service;
 
-interface PluginService
-{
-    /**
-     * 插件安装后文件识别
-     */
-    public const INSTALL_LOCK_FILE = 'install.lock';
-
-    /**
-     * Reads the Mine plugin information through the given directory.
-     * And check the legitimacy of the plugin
-     * @param string $path
-     * @return array
-     */
-    public function read(string $path): array;
-
-    /**
-     * @param string $path
-     * @return void
-     */
-    public function register(string $path): void;
-
-
-    /**
-     * Installation of local plug-ins.
-     */
-    public function installExtension(string $path): void;
-
-    /**
-     * Uninstall locally installed plug-ins.
-     */
-    public function uninstallExtension(string $path): void;
-
-    /**
-     * Get all locally installed extensions.
-     * @throws \JsonException
-     */
-    public function getLocalExtensions(): array;
-}
+interface PluginService {}

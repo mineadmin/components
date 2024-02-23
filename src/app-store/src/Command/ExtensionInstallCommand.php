@@ -16,7 +16,7 @@ use Hyperf\Command\Annotation\Command;
 use Hyperf\Command\Command as Base;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputOption;
-use Xmo\AppStore\Service\AppStoreService;
+use Xmo\AppStore\Plugin;
 use Xmo\AppStore\Service\PluginService;
 
 #[Command]
@@ -36,12 +36,7 @@ class ExtensionInstallCommand extends Base
     {
         $path = $this->input->getArgument('path');
         $yes = $this->input->getOption('yes');
-        $pluginPath = BASE_PATH . '/plugin/' . $path;
-        if (! file_exists($pluginPath)) {
-            $this->output->error(sprintf('Plugin directory %s does not exist', $pluginPath));
-            return;
-        }
-        $info = $this->pluginService->read($pluginPath);
+        $info = Plugin::read($path);
 
         $headers = ['Extension name', 'author', 'description', 'homepage'];
         $rows[] = [
@@ -56,8 +51,8 @@ class ExtensionInstallCommand extends Base
             $this->output->success('Installation has been successfully canceled');
             return;
         }
-        $this->pluginService->installExtension($pluginPath);
-        $this->output->success(sprintf('Plugin %s installed successfully', $pluginPath));
+        Plugin::install($path);
+        $this->output->success(sprintf('Plugin %s installed successfully', $path));
     }
 
     protected function configure()

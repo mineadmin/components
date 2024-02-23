@@ -16,7 +16,7 @@ use Hyperf\Command\Annotation\Command;
 use Hyperf\Command\Command as Base;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputOption;
-use Xmo\AppStore\Service\AppStoreService;
+use Xmo\AppStore\Plugin;
 use Xmo\AppStore\Service\PluginService;
 
 #[Command]
@@ -41,7 +41,7 @@ class ExtensionUninstallCommand extends Base
             $this->output->error(sprintf('Plugin directory %s does not exist', $pluginPath));
             return;
         }
-        $info = $this->pluginService->read($pluginPath);
+        $info = Plugin::read($path);
 
         $headers = ['Extension name', 'author', 'description', 'homepage'];
         $rows[] = [
@@ -56,7 +56,7 @@ class ExtensionUninstallCommand extends Base
             $this->output->success('Installation has been successfully canceled');
             return;
         }
-        $this->pluginService->uninstallExtension($pluginPath);
+        Plugin::uninstall($path);
         $this->output->success(sprintf('Plugin %s uninstalled successfully', $pluginPath));
     }
 

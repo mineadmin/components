@@ -12,9 +12,6 @@ declare(strict_types=1);
 
 namespace Xmo\AppStore;
 
-use Hyperf\Context\ApplicationContext;
-use Hyperf\Contract\ConfigInterface;
-use Symfony\Component\Finder\Finder;
 use Xmo\AppStore\Service\AppStoreService;
 use Xmo\AppStore\Service\Impl\AppStoreServiceImpl;
 use Xmo\AppStore\Service\Impl\PluginServiceImpl;
@@ -25,7 +22,7 @@ class ConfigProvider
     public function __invoke()
     {
         // Initial configuration
-        $initialConfig =  [
+        $initialConfig = [
             // 合并到  config/autoload/annotations.php 文件
             'annotations' => [
                 'scan' => [
@@ -36,17 +33,17 @@ class ConfigProvider
             ],
             'dependencies' => [
                 AppStoreService::class => AppStoreServiceImpl::class,
-                PluginService::class    =>  PluginServiceImpl::class
+                PluginService::class => PluginServiceImpl::class,
             ],
         ];
 
         $mineJsonPaths = Plugin::getPluginJsonPaths();
-        foreach ($mineJsonPaths as $jsonPath){
-            if (file_exists($jsonPath->getPath().'/'.Plugin::INSTALL_LOCK_FILE)){
-                $info = json_decode(file_get_contents($jsonPath->getRealPath()),true);
-                if (!empty($info['composer']['config'])){
+        foreach ($mineJsonPaths as $jsonPath) {
+            if (file_exists($jsonPath->getPath() . '/' . Plugin::INSTALL_LOCK_FILE)) {
+                $info = json_decode(file_get_contents($jsonPath->getRealPath()), true);
+                if (! empty($info['composer']['config'])) {
                     $provider = (new ($info['composer']['config']))();
-                    $initialConfig = array_merge_recursive($provider,$initialConfig);
+                    $initialConfig = array_merge_recursive($provider, $initialConfig);
                 }
             }
         }

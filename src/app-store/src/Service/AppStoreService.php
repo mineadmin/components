@@ -21,6 +21,4 @@ interface AppStoreService
      * @throws \JsonException
      */
     public function request(string $uri, array $data = []): array;
-
-
 }

@@ -12,37 +12,36 @@ declare(strict_types=1);
 
 namespace Xmo\AppStore\Utils;
 
-class FileSystemUtils
+use Nette\Utils\FileSystem;
+
+final class FileSystemUtils
 {
-    public static function copyDirectory($source, $destination): void
+    public const BACK = '.back';
+
+    /**
+     * Copies the file to the specified path.
+     * If the third parameter is specified,
+     * it will determine if the target file exists.
+     * If it exists, it will be renamed to .back.
+     * and then copied again.
+     */
+    public static function copy(string $source, string $dist, bool $back = true): void
     {
-        if (! file_exists($destination)) {
-            if (! mkdir($destination, 0777, true) && ! is_dir($destination)) {
-                throw new \RuntimeException(sprintf('Directory "%s" was not created', $destination));
-            }
+        if (! file_exists($source)) {
+            throw new \RuntimeException(sprintf('%s file does not exist', $source));
         }
+        if (file_exists($dist) && $back) {
+            FileSystem::copy($dist, $dist . self::BACK);
+        }
+        FileSystem::copy($source, $dist);
+    }
 
-        if (is_dir($source)) {
-            $handle = opendir($source);
-
-            if ($handle) {
-                while (($entry = readdir($handle)) !== false) {
-                    if ($entry !== '.' && $entry !== '..') {
-                        $src = $source . '/' . $entry;
-                        $dst = $destination . '/' . $entry;
-
-                        if (is_dir($src)) {
-                            self::copyDirectory($src, $dst);
-                        } else {
-                            copy($src, $dst);
-                        }
-                    }
-                }
-
-                closedir($handle);
-            }
-        } elseif (is_file($source)) {
-            copy($source, $destination);
+    public static function recovery(string $relationFilePath, string $dist): void
+    {
+        $targetFile = $dist . '/' . $relationFilePath;
+        $backFile = $targetFile . self::BACK;
+        if (file_exists($backFile)) {
+            FileSystem::copy($backFile, $targetFile);
         }
     }
 }

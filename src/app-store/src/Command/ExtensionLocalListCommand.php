@@ -14,9 +14,7 @@ namespace Xmo\AppStore\Command;
 
 use Hyperf\Command\Annotation\Command;
 use Hyperf\Command\Command as Base;
-use Hyperf\Context\ApplicationContext;
-use Xmo\AppStore\Service\AppStoreService;
-use Xmo\AppStore\Service\PluginService;
+use Xmo\AppStore\Plugin;
 
 #[Command]
 class ExtensionLocalListCommand extends Base
@@ -27,13 +25,14 @@ class ExtensionLocalListCommand extends Base
 
     public function __invoke()
     {
-        $service = ApplicationContext::getContainer()->get(PluginService::class);
-        $list = $service->getLocalExtensions();
+        $list = Plugin::getPluginJsonPaths();
+
         $headers = [
             'extensionName', 'description', 'author', 'homePage', 'status',
         ];
         $rows = [];
-        foreach ($list as $info) {
+        foreach ($list as $splFileInfo) {
+            $info = Plugin::read($splFileInfo->getPath());
             $current = [];
             $current[] = $info['name'];
             $current[] = $info['description'];
