@@ -3,7 +3,8 @@
     "description": "Mineadmin 2.0 AppStore Extension",
     "type": "library",
     "require": {
-        "hyperf/translation": "~3.1.0"
+        "hyperf/translation": "~3.1.0",
+        "ext-zip": "*"
     },
     "require-dev": {
         "pestphp/pest": "^2.33"

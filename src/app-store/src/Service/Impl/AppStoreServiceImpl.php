@@ -14,8 +14,10 @@ namespace Xmo\AppStore\Service\Impl;
 
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\GuzzleException;
+use GuzzleHttp\RequestOptions;
 use Hyperf\Contract\ConfigInterface;
 use Hyperf\Guzzle\ClientFactory;
+use Xmo\AppStore\Plugin;
 use Xmo\AppStore\Service\AppStoreService;
 
 use function Hyperf\Support\env;
@@ -47,7 +49,7 @@ final class AppStoreServiceImpl implements AppStoreService
         $response = $this->client->post($uri, [
             'json' => $data,
             'headers' => [
-                'access-token' => $this->getAccessToken(),
+                'Access-Token' => $this->getAccessToken(),
             ],
         ]);
         if ($response->getStatusCode() !== 200) {
@@ -58,6 +60,45 @@ final class AppStoreServiceImpl implements AppStoreService
             throw new \RuntimeException(json_last_error_msg());
         }
         return $result;
+    }
+
+    /**
+     * Get the list of remote plugins.
+     */
+    public function list(array $params): array
+    {
+        return $this->request(__FUNCTION__, $params);
+    }
+
+    /**
+     * Get the details of the specified plugin.
+     */
+    public function view(string $plugin): array
+    {
+        return $this->request(__FUNCTION__, compact('plugin'));
+    }
+
+    /**
+     * Download the specified plug-in to a local directory.
+     */
+    public function download(string $plugin): bool
+    {
+        $downloadToken = $this->request(__FUNCTION__, compact('plugin'))[0] ?? '';
+        $tmpFile = sys_get_temp_dir() . '/' . uniqid('mine', true) . '.zip';
+        $tmpFileResource = fopen(sys_get_temp_dir() . '/' . uniqid('mine', true) . '.zip', 'wb+');
+        $response = $this->client->get('download_file?token=' . $downloadToken, [
+            RequestOptions::SINK => $tmpFileResource,
+        ]);
+        if ($response->getStatusCode() !== 200) {
+            throw new \RuntimeException('Failed to download plugin');
+        }
+        $zip = new \ZipArchive();
+        if ($zip->open($tmpFile) !== true) {
+            throw new \RuntimeException('Failed to open the zip file');
+        }
+        $zip->extractTo(Plugin::PLUGIN_PATH);
+        $zip->close();
+        return true;
     }
 
     /**
