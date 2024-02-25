@@ -9,35 +9,17 @@ declare(strict_types=1);
  * @contact  root@imoi.cn
  * @license  https://github.com/mineadmin/MineAdmin/blob/master/LICENSE
  */
-// uses(Tests\TestCase::class)->in('Feature');
+use Hyperf\Context\ApplicationContext;
+use Hyperf\Contract\ConfigInterface;
+use Mine\Tests\TestCase;
 
-/*
-|--------------------------------------------------------------------------
-| Expectations
-|--------------------------------------------------------------------------
-|
-| When you're writing tests, you often need to check that values meet certain conditions. The
-| "expect()" function gives you access to a set of "expectations" methods that you can use
-| to assert different things. Of course, you may extend the Expectation API at any time.
-|
-*/
-
-expect()->extend('toBeOne', function () {
-    return $this->toBe(1);
-});
-
-/*
-|--------------------------------------------------------------------------
-| Functions
-|--------------------------------------------------------------------------
-|
-| While Pest is very powerful out-of-the-box, you may have some testing code specific to your
-| project that you don't want to repeat in every file. Here you can also expose helpers as
-| global functions to help you to reduce the number of lines of code in your test files.
-|
-*/
-
-function something()
-{
-    // ..
-}
+uses(TestCase::class)
+    ->beforeEach(function () {
+        $mockConfig = Mockery::mock(ConfigInterface::class);
+        $mockConfig->allows('has')->andReturn(true);
+        $mockConfig->allows('get')->andReturn([]);
+        $mockConfig->allows('set')->andReturn(true);
+        ApplicationContext::getContainer()
+            ->set(ConfigInterface::class, $mockConfig);
+    })
+    ->in('Feature');

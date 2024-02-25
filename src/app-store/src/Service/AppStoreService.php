@@ -12,4 +12,28 @@ declare(strict_types=1);
 
 namespace Xmo\AppStore\Service;
 
-interface AppStoreService {}
+use GuzzleHttp\Exception\GuzzleException;
+
+interface AppStoreService
+{
+    /**
+     * @throws GuzzleException
+     * @throws \JsonException
+     */
+    public function request(string $uri, array $data = []): array;
+
+    /**
+     * Download the specified plug-in to a local directory.
+     */
+    public function download(string $plugin): bool;
+
+    /**
+     * Get the details of the specified plugin.
+     */
+    public function view(string $plugin): array;
+
+    /**
+     * Get the list of remote plugins.
+     */
+    public function list(array $params): array;
+}

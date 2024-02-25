@@ -10,8 +10,6 @@ declare(strict_types=1);
  * @license  https://github.com/mineadmin/MineAdmin/blob/master/LICENSE
  */
 
-namespace Mine\Tests;
+namespace Xmo\AppStore\Service;
 
-use PHPUnit\Framework\TestCase as BaseTestCase;
-
-abstract class TestCase extends BaseTestCase {}
+interface PluginService {}

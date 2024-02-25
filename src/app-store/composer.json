@@ -3,8 +3,8 @@
     "description": "Mineadmin 2.0 AppStore Extension",
     "type": "library",
     "require": {
-        "xmo/mine-core": "v2.0.x-dev",
-        "xmo/mine-service": "v2.0.x-dev"
+        "hyperf/translation": "~3.1.0",
+        "ext-zip": "*"
     },
     "require-dev": {
         "pestphp/pest": "^2.33"
