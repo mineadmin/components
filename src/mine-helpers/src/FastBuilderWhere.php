@@ -30,27 +30,27 @@ final class FastBuilderWhere
         return $this->buildOperator('=', $column, $key);
     }
 
-    public function lt(string $column, null|string $key= null): self
+    public function lt(string $column, null|string $key = null): self
     {
         return $this->buildOperator('>', $column, $key);
     }
 
-    public function ne(string $column, null|string $key= null): self
+    public function ne(string $column, null|string $key = null): self
     {
         return $this->buildOperator('<>', $column, $key);
     }
 
-    public function le(string $column, null|string $key= null): self
+    public function le(string $column, null|string $key = null): self
     {
         return $this->buildOperator('<=', $column, $key);
     }
 
-    public function ge(string $column, null|string $key= null): self
+    public function ge(string $column, null|string $key = null): self
     {
         return $this->buildOperator('>=', $column, $key);
     }
 
-    public function gt(string $column, null|string $key= null): self
+    public function gt(string $column, null|string $key = null): self
     {
         return $this->buildOperator('>', $column, $key);
     }
@@ -82,8 +82,8 @@ final class FastBuilderWhere
                 return $builder->whereBetween(
                     $column,
                     [
-                        $start instanceof CarbonInterface ? $start : Carbon::createFromFormat(CarbonInterface::DEFAULT_TO_STRING_FORMAT,$start),
-                        $end instanceof CarbonInterface ? $end : Carbon::createFromFormat(CarbonInterface::DEFAULT_TO_STRING_FORMAT,$end),
+                        $start instanceof CarbonInterface ? $start : Carbon::createFromFormat(CarbonInterface::DEFAULT_TO_STRING_FORMAT, $start),
+                        $end instanceof CarbonInterface ? $end : Carbon::createFromFormat(CarbonInterface::DEFAULT_TO_STRING_FORMAT, $end),
                     ]
                 );
             },
@@ -100,13 +100,18 @@ final class FastBuilderWhere
                 return $builder->whereBetween(
                     $column,
                     [
-                        $start instanceof CarbonInterface ? $start->startOfDay() : Carbon::createFromFormat('Y-m-d',$start)->startOfDay(),
-                        $end instanceof CarbonInterface ? $end->endOfDay() : Carbon::createFromFormat('Y-m-d',$end)->endOfDay(),
+                        $start instanceof CarbonInterface ? $start->startOfDay() : Carbon::createFromFormat('Y-m-d', $start)->startOfDay(),
+                        $end instanceof CarbonInterface ? $end->endOfDay() : Carbon::createFromFormat('Y-m-d', $end)->endOfDay(),
                     ]
                 );
             },
             ''
         );
+    }
+
+    public function getBuilder(): Builder|ModelBuilder
+    {
+        return $this->builder;
     }
 
     private function buildOperator(string $operator, string $column, null|string $key): self
@@ -131,17 +136,11 @@ final class FastBuilderWhere
         return $key ?: $column;
     }
 
-    private function getRangeValues(string|array $keys): array|null
+    private function getRangeValues(array|string $keys): null|array
     {
-        if (is_string($keys)){
-            return Arr::get($this->params,$keys);
+        if (is_string($keys)) {
+            return Arr::get($this->params, $keys);
         }
-        return [Arr::get($this->params,$keys[0]),Arr::get($this->params,$keys[1])];
-
-    }
-    
-    public function getBuilder(): Builder|ModelBuilder
-    {
-        return $this->builder;
+        return [Arr::get($this->params, $keys[0]), Arr::get($this->params, $keys[1])];
     }
 }
