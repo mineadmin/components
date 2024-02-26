@@ -61,7 +61,7 @@ beforeEach(function () {
     ApplicationContext::getContainer()->set(ConfigInterface::class, new class() implements ConfigInterface {
         public function get(string $key, mixed $default = null): mixed
         {
-            return null;
+            return [];
         }
 
         public function has(string $keys): bool
