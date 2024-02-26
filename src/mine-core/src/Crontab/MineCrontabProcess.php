@@ -1,15 +1,5 @@
 <?php
 
-/**
- * MineAdmin is committed to providing solutions for quickly building web applications
- * Please view the LICENSE file that was distributed with this source code,
- * For the full copyright and license information.
- * Thank you very much for using MineAdmin.
- *
- * @Author X.Mo<root@imoi.cn>
- * @Link   https://gitee.com/xmo/MineAdmin
- */
-
 declare(strict_types=1);
 /**
  * This file is part of MineAdmin.
@@ -81,7 +71,7 @@ class MineCrontabProcess extends AbstractProcess
 
     /**
      * 是否自启进程.
-     * @param \Swoole\Coroutine\Server|\Swoole\Server $server
+     * @param Coroutine\Server|Server $server
      */
     public function isEnable($server): bool
     {
