@@ -105,7 +105,8 @@
     "symfony/var-exporter": "*",
     "tangwei/apidocs": "^3.0",
     "yurunsoft/phpmailer-swoole": "^1.0",
-    "zoujingli/ip2region": "2.0.*"
+    "zoujingli/ip2region": "2.0.*",
+    "nette/utils": "dev-master"
   },
   "require-dev": {
     "friendsofphp/php-cs-fixer": "^3.0",
