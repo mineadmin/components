@@ -165,6 +165,11 @@ class Plugin
 
         $frontDirectory = self::getConfig('front_directory', BASE_PATH . '/web');
 
+        if (! empty($info['installScript']) && class_exists($info['installScript'])) {
+            $installScript = ApplicationContext::getContainer()->make($info['installScript']);
+            $installScript();
+        }
+
         // Handling front-end dependency information
         if (! empty($info['package']['dependencies'])) {
             $frontBin = self::getConfig('front-tool');
@@ -232,6 +237,10 @@ class Plugin
             throw new \RuntimeException(
                 'No installation behavior was detected for this plugin, and uninstallation could not be performed'
             );
+        }
+        if (! empty($info['uninstallScript']) && class_exists($info['uninstallScript'])) {
+            $uninstallScript = ApplicationContext::getContainer()->make($info['uninstallScript']);
+            $uninstallScript();
         }
         if (! empty($info['composer']['require'])) {
             $requires = $info['composer']['require'];
