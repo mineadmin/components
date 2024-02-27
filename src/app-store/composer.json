@@ -4,6 +4,7 @@
     "type": "library",
     "require": {
         "hyperf/translation": "~3.1.0",
+        "nette/utils": "dev-master",
         "ext-zip": "*"
     },
     "require-dev": {

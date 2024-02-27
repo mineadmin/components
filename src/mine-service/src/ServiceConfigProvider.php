@@ -13,9 +13,7 @@ declare(strict_types=1);
 namespace Mine;
 
 use Mine\Annotation\ComponentCollector;
-use Mine\Annotation\CrudModelCollector;
 use Mine\Annotation\DependProxyCollector;
-use Mine\Command\MineGenServiceCommand;
 use Mine\Listener\DependProxyListener;
 
 class ServiceConfigProvider
@@ -26,7 +24,6 @@ class ServiceConfigProvider
             'dependencies' => [
             ],
             'commands' => [
-                MineGenServiceCommand::class,
             ],
             'listeners' => [
                 DependProxyListener::class => PHP_INT_MAX,
@@ -39,7 +36,6 @@ class ServiceConfigProvider
                     ],
                     'collectors' => [
                         DependProxyCollector::class,
-                        CrudModelCollector::class,
                         ComponentCollector::class,
                     ],
                 ],

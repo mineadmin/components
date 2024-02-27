@@ -14,14 +14,14 @@ namespace Mine\Traits;
 
 use Hyperf\DbConnection\Db;
 use Hyperf\DbConnection\Model\Model;
-use Mine\Abstracts\Mapper;
-use Mine\Contract\DeleteMapperContract;
+use Mine\Abstracts\BaseDao;
+use Mine\Contract\DeleteDaoContract;
 
 /**
- * @mixin Mapper
- * @implements DeleteMapperContract
+ * @mixin BaseDao
+ * @implements DeleteDaoContract
  */
-trait DeleteMapperTrait
+trait DeleteDaoTrait
 {
     public function remove(mixed $idOrWhere, bool $force = false): bool
     {

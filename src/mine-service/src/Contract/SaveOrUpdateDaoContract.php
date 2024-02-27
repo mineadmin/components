@@ -20,7 +20,7 @@ use Mine\ServiceException;
  * 更新|插入 Service.
  * @template T
  */
-interface SaveOrUpdateMapperContract
+interface SaveOrUpdateDaoContract
 {
     /**
      * 单条记录插入或更新,

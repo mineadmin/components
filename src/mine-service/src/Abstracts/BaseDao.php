@@ -14,13 +14,12 @@ namespace Mine\Abstracts;
 
 use Hyperf\Database\Model\Builder;
 use Hyperf\DbConnection\Model\Model;
-use Mine\Annotation\CrudModelCollector;
 use Mine\ServiceException;
 
 /**
  * @template ModelClass
  */
-abstract class Mapper
+abstract class BaseDao
 {
     /**
      * @var class-string<ModelClass>|string
@@ -40,9 +39,6 @@ abstract class Mapper
         }
         if (property_exists($this, 'mapper')) {
             $modelClass = $this->mapper;
-        }
-        if (! empty(CrudModelCollector::list()[static::class])) {
-            $modelClass = CrudModelCollector::list()[static::class];
         }
         if (! class_exists($modelClass) || ! is_subclass_of($modelClass, Model::class)) {
             throw new ServiceException('The class to which the ' . static::class . ' class belongs was not found');
