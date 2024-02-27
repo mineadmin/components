@@ -29,7 +29,7 @@ use Psr\Container\NotFoundExceptionInterface;
 abstract class AbstractCurdService
 {
     /**
-     * @return DeleteDaoContract|BaseDao|PageDaoContract|SaveOrUpdateDaoContract|UpdateDaoContract
+     * @return BaseDao|DeleteDaoContract|PageDaoContract|SaveOrUpdateDaoContract|UpdateDaoContract
      * @throws ServiceException
      * @throws ContainerExceptionInterface
      * @throws NotFoundExceptionInterface
