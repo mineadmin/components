@@ -15,15 +15,15 @@ namespace Mine\Traits;
 use Hyperf\Collection\Collection;
 use Hyperf\Contract\LengthAwarePaginatorInterface;
 use Hyperf\Database\Model\Builder;
-use Mine\Abstracts\Mapper;
-use Mine\Contract\PageMapperContract;
+use Mine\Abstracts\BaseDao;
+use Mine\Contract\PageDaoContract;
 use Mine\ServiceException;
 
 /**
- * @mixin Mapper
- * @mixin PageMapperContract
+ * @mixin BaseDao
+ * @mixin PageDaoContract
  */
-trait SelectMapperTrait
+trait SelectDaoTrait
 {
     public function page(mixed $params = null, int $page = 1, int $size = 10): LengthAwarePaginatorInterface
     {

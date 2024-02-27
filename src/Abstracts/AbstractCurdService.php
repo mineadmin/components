@@ -14,10 +14,10 @@ namespace Mine\Abstracts;
 
 use Hyperf\Context\ApplicationContext;
 use Mine\Annotation\CrudModelCollector;
-use Mine\Contract\DeleteMapperContract;
-use Mine\Contract\PageMapperContract;
-use Mine\Contract\SaveOrUpdateMapperContract;
-use Mine\Contract\UpdateMapperContract;
+use Mine\Contract\DeleteDaoContract;
+use Mine\Contract\PageDaoContract;
+use Mine\Contract\SaveOrUpdateDaoContract;
+use Mine\Contract\UpdateDaoContract;
 use Mine\ServiceException;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\NotFoundExceptionInterface;
@@ -29,12 +29,12 @@ use Psr\Container\NotFoundExceptionInterface;
 abstract class AbstractCurdService
 {
     /**
-     * @return DeleteMapperContract|Mapper|PageMapperContract|SaveOrUpdateMapperContract|UpdateMapperContract
+     * @return DeleteDaoContract|BaseDao|PageDaoContract|SaveOrUpdateDaoContract|UpdateDaoContract
      * @throws ServiceException
      * @throws ContainerExceptionInterface
      * @throws NotFoundExceptionInterface
      */
-    public function getMapper(): DeleteMapperContract|PageMapperContract|SaveOrUpdateMapperContract|UpdateMapperContract
+    public function getMapper(): DeleteDaoContract|PageDaoContract|SaveOrUpdateDaoContract|UpdateDaoContract
     {
         $mapper = null;
         if (property_exists($this, 'mapper')) {

@@ -21,7 +21,7 @@ use Hyperf\Database\Model\Builder;
  * @template T for model
  * @template Param for dto
  */
-interface PageMapperContract
+interface PageDaoContract
 {
     /**
      * 列表查询.

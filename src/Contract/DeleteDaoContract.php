@@ -15,7 +15,7 @@ namespace Mine\Contract;
 /**
  * 删除.
  */
-interface DeleteMapperContract
+interface DeleteDaoContract
 {
     /**
      * 删除单条记录 触发 model 事件.

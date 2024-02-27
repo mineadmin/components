@@ -20,7 +20,7 @@ use Mine\ServiceException;
  * 更新 Service 契约.
  * @template T
  */
-interface UpdateMapperContract
+interface UpdateDaoContract
 {
     /**
      * 使用模型插入单挑记录,
