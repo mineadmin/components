@@ -16,14 +16,14 @@ use Hyperf\Collection\Arr;
 use Hyperf\Collection\Collection;
 use Hyperf\Database\Model\Model;
 use Hyperf\DbConnection\Db;
-use Mine\Abstracts\Mapper;
-use Mine\Contract\SaveOrUpdateMapperContract;
+use Mine\Abstracts\BaseDao;
+use Mine\Contract\SaveOrUpdateDaoContract;
 
 /**
- * @mixin Mapper
- * @implements SaveOrUpdateMapperContract
+ * @mixin BaseDao
+ * @implements SaveOrUpdateDaoContract
  */
-trait SaveOrUpdateMapperTrait
+trait SaveOrUpdateDaoTrait
 {
     public function saveOrUpdate(array $data, null|array $where = null): Model
     {

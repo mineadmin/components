@@ -111,7 +111,6 @@
     "friendsofphp/php-cs-fixer": "^3.0",
     "hyperf/testing": "3.1.*",
     "mockery/mockery": "^1.0",
-    "nette/php-generator": "^4.1@dev",
     "pestphp/pest": "2.x-dev",
     "phpstan/phpstan": "^1.0",
     "swoole/ide-helper": "dev-master"

@@ -18,13 +18,13 @@ use Hyperf\Database\Model\Model;
 use Hyperf\Database\Model\Relations\HasMany;
 use Hyperf\Database\Model\Relations\HasOne;
 use Hyperf\DbConnection\Db;
-use Mine\Contract\UpdateMapperContract;
+use Mine\Contract\UpdateDaoContract;
 use Mine\ServiceException;
 
 /**
- * @implements UpdateMapperContract<Model>
+ * @implements UpdateDaoContract<Model>
  */
-trait UpdateMapperTrait
+trait UpdateDaoTrait
 {
     public function save(array $data, null|array $withs = null): Model
     {
