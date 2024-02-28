@@ -32,7 +32,7 @@ final class FastBuilderWhere
 
     public function lt(string $column, null|string $key = null): self
     {
-        return $this->buildOperator('>', $column, $key);
+        return $this->buildOperator('<', $column, $key);
     }
 
     public function ne(string $column, null|string $key = null): self
