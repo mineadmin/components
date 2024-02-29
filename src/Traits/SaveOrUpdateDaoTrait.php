@@ -25,7 +25,7 @@ use Mine\Contract\SaveOrUpdateDaoContract;
  */
 trait SaveOrUpdateDaoTrait
 {
-    public function saveOrUpdate(array $data, null|array $where = null): Model
+    public function saveOrUpdate(array $data, ?array $where = null): Model
     {
         $keyName = $this->getModelInstance()->getKeyName();
         if ($where === null) {
@@ -39,7 +39,7 @@ trait SaveOrUpdateDaoTrait
 
     public function batchSaveOrUpdate(
         array $data,
-        null|array $whereKeys = null,
+        ?array $whereKeys = null,
         int $batchSize = 0
     ): Collection {
         return Db::transaction(function () use ($data, $whereKeys) {

@@ -26,7 +26,7 @@ use Mine\ServiceException;
  */
 trait UpdateDaoTrait
 {
-    public function save(array $data, null|array $withs = null): Model
+    public function save(array $data, ?array $withs = null): Model
     {
         return Db::transaction(function () use ($data, $withs) {
             $modelClass = $this->getModel();

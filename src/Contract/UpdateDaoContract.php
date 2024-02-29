@@ -28,7 +28,7 @@ interface UpdateDaoContract
      * @return T
      * @throws ServiceException
      */
-    public function save(array $data, null|array $withs = null): Model;
+    public function save(array $data, ?array $withs = null): Model;
 
     /**
      * 批量插入
