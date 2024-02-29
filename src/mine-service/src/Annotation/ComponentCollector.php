@@ -37,7 +37,7 @@ class ComponentCollector extends MetadataCollector
         static::$container['override'][$class] = $override;
     }
 
-    public static function getComponent(null|string $component = null): null|array|string
+    public static function getComponent(?string $component = null): null|array|string
     {
         if ($component) {
             return static::$container['component'][$component] ?? null;
@@ -45,7 +45,7 @@ class ComponentCollector extends MetadataCollector
         return static::$container['component'];
     }
 
-    public static function getPostConstruct(null|string $component = null): null|array|string
+    public static function getPostConstruct(?string $component = null): null|array|string
     {
         if ($component) {
             return static::$container['postConstruct'][$component] ?? null;
@@ -53,7 +53,7 @@ class ComponentCollector extends MetadataCollector
         return static::$container['postConstruct'];
     }
 
-    public static function getOverride(null|string $component = null): null|array|string
+    public static function getOverride(?string $component = null): null|array|string
     {
         if ($component) {
             return static::$container['override'][$component] ?? null;

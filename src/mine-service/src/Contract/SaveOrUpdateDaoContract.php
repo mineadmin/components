@@ -29,7 +29,7 @@ interface SaveOrUpdateDaoContract
      * @return T
      * @throws ServiceException
      */
-    public function saveOrUpdate(array $data, null|array $where = null): Model;
+    public function saveOrUpdate(array $data, ?array $where = null): Model;
 
     /**
      * 批量插入更新.
@@ -40,7 +40,7 @@ interface SaveOrUpdateDaoContract
      */
     public function batchSaveOrUpdate(
         array $data,
-        null|array $whereKeys = null,
+        ?array $whereKeys = null,
         int $batchSize = 0
     ): Collection;
 }
