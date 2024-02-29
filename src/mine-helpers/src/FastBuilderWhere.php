@@ -25,32 +25,32 @@ final class FastBuilderWhere
         private readonly array $params,
     ) {}
 
-    public function eq(string $column, null|string $key = null): self
+    public function eq(string $column, ?string $key = null): self
     {
         return $this->buildOperator('=', $column, $key);
     }
 
-    public function lt(string $column, null|string $key = null): self
+    public function lt(string $column, ?string $key = null): self
     {
         return $this->buildOperator('>', $column, $key);
     }
 
-    public function ne(string $column, null|string $key = null): self
+    public function ne(string $column, ?string $key = null): self
     {
         return $this->buildOperator('<>', $column, $key);
     }
 
-    public function le(string $column, null|string $key = null): self
+    public function le(string $column, ?string $key = null): self
     {
         return $this->buildOperator('<=', $column, $key);
     }
 
-    public function ge(string $column, null|string $key = null): self
+    public function ge(string $column, ?string $key = null): self
     {
         return $this->buildOperator('>=', $column, $key);
     }
 
-    public function gt(string $column, null|string $key = null): self
+    public function gt(string $column, ?string $key = null): self
     {
         return $this->buildOperator('>', $column, $key);
     }
@@ -114,7 +114,7 @@ final class FastBuilderWhere
         return $this->builder;
     }
 
-    private function buildOperator(string $operator, string $column, null|string $key): self
+    private function buildOperator(string $operator, string $column, ?string $key): self
     {
         return $this->where(
             $column,
@@ -125,18 +125,18 @@ final class FastBuilderWhere
         );
     }
 
-    private function where(string $column, \Closure $closure, null|string $key): self
+    private function where(string $column, \Closure $closure, ?string $key): self
     {
         $this->builder->when(Arr::get($this->params, $this->getKey($column, $key)), $closure);
         return $this;
     }
 
-    private function getKey(string $column, null|string $key): string
+    private function getKey(string $column, ?string $key): string
     {
         return $key ?: $column;
     }
 
-    private function getRangeValues(array|string $keys): null|array
+    private function getRangeValues(array|string $keys): ?array
     {
         if (is_string($keys)) {
             return Arr::get($this->params, $keys);

@@ -119,12 +119,12 @@ class XlsWriter extends MineExcel implements ExcelPropertyInterface
                 sprintf('%s1:%s1', $this->getColumnIndex($i), $this->getColumnIndex($i)),
                 $this->property[$index]['width'] ?? mb_strlen($columnName[$i]) * 5,
                 $columnFormat->align($this->property[$index]['align'] ? $aligns[$this->property[$index]['align']] : $aligns['left'])
-                             ->background($this->property[$index]['bgColor'] ?? Format::COLOR_WHITE)
-                             ->border(Format::BORDER_THIN)
-                             ->fontColor($this->property[$index]['color'] ?? Format::COLOR_BLACK)
-                             ->toResource()
+                    ->background($this->property[$index]['bgColor'] ?? Format::COLOR_WHITE)
+                    ->border(Format::BORDER_THIN)
+                    ->fontColor($this->property[$index]['color'] ?? Format::COLOR_BLACK)
+                    ->toResource()
             );
-            $i++;
+            ++$i;
         }
 
         // 表头加样式
