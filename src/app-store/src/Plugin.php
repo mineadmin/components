@@ -120,7 +120,7 @@ class Plugin
         foreach ($jsonPaths as $jsonPath) {
             if ($jsonPath->getRelativePath() === $path) {
                 $info = json_decode(file_get_contents($jsonPath->getRealPath()), true);
-                $info['status'] = file_exists($jsonPath->getRealPath() . '/' . self::INSTALL_LOCK_FILE);
+                $info['status'] = file_exists(dirname($jsonPath->getRealPath()) . '/' . self::INSTALL_LOCK_FILE);
                 return $info;
             }
         }
