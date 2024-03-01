@@ -227,6 +227,8 @@ class Plugin
                 FileSystemUtils::copy($pluginPath . $relativeFilePath, $frontDirectory . $relativeFilePath);
             }
         }
+
+        file_put_contents($pluginPath . '/' . self::INSTALL_LOCK_FILE, 1);
     }
 
     public static function uninstall(string $path): void
@@ -320,6 +322,8 @@ class Plugin
                 FileSystemUtils::recovery($relativeFilePath, $frontDirectory);
             }
         }
+
+        unlink($pluginPath . '/' . self::INSTALL_LOCK_FILE);
     }
 
     public static function getConfig(string $key, mixed $default = null): mixed
