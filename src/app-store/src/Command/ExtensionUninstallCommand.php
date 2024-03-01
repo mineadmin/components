@@ -51,9 +51,9 @@ class ExtensionUninstallCommand extends Base
             $info['homepage'] ?? '--',
         ];
         $this->table($headers, $rows);
-        $confirm = $yes ?: $this->confirm('Enter to start the installation', true);
+        $confirm = $yes ?: $this->confirm('Is the uninstallation cancelled?', true);
         if (! $confirm) {
-            $this->output->success('Installation has been successfully canceled');
+            $this->output->success('Plugin uninstallation operation cancelled successfully');
             return;
         }
         Plugin::uninstall($path);
