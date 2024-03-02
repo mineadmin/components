@@ -12,13 +12,13 @@ declare(strict_types=1);
 
 namespace Xmo\AppStore;
 
-use Co\System;
 use Composer\InstalledVersions;
 use Hyperf\Context\ApplicationContext;
 use Hyperf\Contract\ConfigInterface;
 use Hyperf\Database\Migrations\Migrator;
 use Hyperf\Database\Seeders\Seed;
 use Hyperf\Support\Composer;
+use Swoole\Coroutine\System;
 use Symfony\Component\Finder\Finder;
 use Symfony\Component\Finder\SplFileInfo;
 use Xmo\AppStore\Utils\FileSystemUtils;
