@@ -12,7 +12,7 @@ declare(strict_types=1);
 
 namespace Xmo\AppStore;
 
-use Co\System;
+use Swoole\Coroutine\System;
 use Composer\InstalledVersions;
 use Hyperf\Context\ApplicationContext;
 use Hyperf\Contract\ConfigInterface;
