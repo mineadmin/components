@@ -19,7 +19,7 @@ use Symfony\Component\Console\Input\InputOption;
 use Xmo\AppStore\Service\AppStoreService;
 
 #[Command]
-class ExtensionListCommand extends Base
+class ListCommand extends Base
 {
     protected ?string $name = 'mine-extension:list';
 

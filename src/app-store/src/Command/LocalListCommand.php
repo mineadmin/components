@@ -17,7 +17,7 @@ use Hyperf\Command\Command as Base;
 use Xmo\AppStore\Plugin;
 
 #[Command]
-class ExtensionLocalListCommand extends Base
+class LocalListCommand extends Base
 {
     protected ?string $name = 'mine-extension:local-list';
 

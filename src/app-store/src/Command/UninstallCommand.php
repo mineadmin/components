@@ -20,7 +20,7 @@ use Xmo\AppStore\Plugin;
 use Xmo\AppStore\Service\PluginService;
 
 #[Command]
-class ExtensionUninstallCommand extends Base
+class UninstallCommand extends Base
 {
     protected ?string $name = 'mine-extension:uninstall';
 
