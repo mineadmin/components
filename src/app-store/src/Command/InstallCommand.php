@@ -20,7 +20,7 @@ use Xmo\AppStore\Plugin;
 use Xmo\AppStore\Service\PluginService;
 
 #[Command]
-class ExtensionInstallCommand extends Base
+class InstallCommand extends Base
 {
     protected ?string $name = 'mine-extension:install';
 

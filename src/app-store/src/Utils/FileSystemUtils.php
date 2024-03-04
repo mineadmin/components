@@ -44,4 +44,12 @@ final class FileSystemUtils
             FileSystem::copy($backFile, $targetFile);
         }
     }
+
+    /**
+     * Checks if the given name is a valid directory path.
+     */
+    public static function checkDirectory(string $name): bool
+    {
+        return (bool) preg_match('/^\/(?:[^\/\0]+\/)*[^\/\0]+$/', $name);
+    }
 }

@@ -18,7 +18,7 @@ use Nette\Utils\FileSystem;
 use Symfony\Component\Console\Input\InputOption;
 
 #[Command]
-class ExtensionInitialCommand extends Base
+class InitialCommand extends Base
 {
     protected ?string $name = 'mine-extension:initial';
 
