@@ -110,7 +110,10 @@ trait MapperTrait
             }
         }
 
-        if (isset($params['dataScope']) && $params['dataScope']) {
+        // 数据权限，handleDataScope 方法优先级高于 $params['dataScope'] 参数
+        if (method_exists($this, 'handleDataScope')) {
+            $query = $this->handleDataScope($query, $params);
+        } else if (isset($params['dataScope']) && $params['dataScope']) {
             $query->userDataScope();
         }
 
@@ -169,7 +172,16 @@ trait MapperTrait
 
         $query = $this->handleOrder($query, $params);
 
-        $isScope && $query->userDataScope();
+        // 数据权限，handleDataScope 方法优先级高于 $isScope 参数
+        if (method_exists($this, 'handleDataScope')) {
+            $query = $this->handleDataScope($query, $params);
+        } else if ($isScope) {
+            $query->userDataScope();
+        }
+
+        if (method_exists($this, 'handleWith')) {
+            $query = $this->handleWith($query, $params);
+        }
 
         return $this->handleSearch($query, $params);
     }
@@ -544,7 +556,13 @@ trait MapperTrait
             private function arrayWhere($field, $value): void
             {
                 [$value[0], $value[1]] = $this->optionHandler($field, $value[0], $value[1]);
-                $this->query->where($field, $value[0], $value[1]);
+                if ($value[0] == 'in') {
+                    $this->query->whereIn($field, $value[1]);
+                } else if ($value[0] == 'between') {
+                    $this->query->whereBetween($field, $value[1]);
+                } else {
+                    $this->query->where($field, $value[0], $value[1]);
+                }
             }
 
             public function optionHandler($field, $operator, $value): array
