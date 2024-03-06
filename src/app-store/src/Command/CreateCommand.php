@@ -144,6 +144,6 @@ class CreateCommand extends AbstractCommand
         $this->addOption('name', 'n', InputOption::VALUE_REQUIRED, 'Plug-in Name');
         $this->addOption('type', 't', InputOption::VALUE_OPTIONAL, 'Plugin type, default mix optional mix,frond,backend');
         $this->addOption('description', 'desc', InputOption::VALUE_OPTIONAL, 'Plug-in Introduction');
-        $this->addOption('author', 'desc', InputOption::VALUE_OPTIONAL, 'Plugin Author Information');
+        $this->addOption('author', 'author', InputOption::VALUE_OPTIONAL, 'Plugin Author Information');
     }
 }
