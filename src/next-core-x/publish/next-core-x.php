@@ -9,12 +9,5 @@ declare(strict_types=1);
  * @contact  root@imoi.cn
  * @license  https://github.com/mineadmin/MineAdmin/blob/master/LICENSE
  */
-use Mine\NextCoreX\Default\Client;
-use Mine\NextCoreX\Default\LocalStore;
-
 return [
-    'contracts' => [
-        'clientContract' => Client::class,
-        'localStoreContract' => LocalStore::class,
-    ],
 ];

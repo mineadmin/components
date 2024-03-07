@@ -16,6 +16,9 @@ jobs:
         php-version: ['8.1','8.2','8.3' ]
         engine: [  'swoole' ]
       max-parallel: 5
+    services:
+      redis:
+        image: redis
     steps:
       - name: Checkout
         uses: actions/checkout@v2
