@@ -29,6 +29,7 @@
     "psr-4": {
       "Mine\\Tests\\": "tests",
       "Xmo\\AppStore\\Tests\\": "src/app-store/tests",
+      "Xmo\\MineCore\\Tests\\": "src/mine-core/tests",
       "Mine\\NextCoreX\\Tests\\": "src/next-core-x/tests"
     }
   },
