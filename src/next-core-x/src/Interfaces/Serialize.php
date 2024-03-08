@@ -10,12 +10,11 @@ declare(strict_types=1);
  * @license  https://github.com/mineadmin/MineAdmin/blob/master/LICENSE
  */
 
-namespace Mine\NextCoreX\Contracts;
+namespace Mine\NextCoreX\Interfaces;
 
-interface ClientContract
+interface Serialize
 {
-    /**
-     * 生产全局不唯一的 fd.
-     */
-    public function generatorId(): string;
+    public function decode(string $data): mixed;
+
+    public function encode(mixed $data): string;
 }

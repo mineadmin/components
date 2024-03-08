@@ -10,13 +10,6 @@ declare(strict_types=1);
  * @license  https://github.com/mineadmin/MineAdmin/blob/master/LICENSE
  */
 
-namespace Mine\NextCoreX\Contracts;
+namespace Mine\NextCoreX\Exception;
 
-interface LocalStoreContract
-{
-    public function get(string $key, mixed $default = null): mixed;
-
-    public function set(string $key, mixed $value): bool;
-
-    public function delete(string $key): bool;
-}
+class ModelNotFoundException extends \RuntimeException {}
