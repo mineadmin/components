@@ -86,7 +86,7 @@ class {CLASS_NAME} extends AbstractService
      * @param array $data
      * @return bool
      */
-    public function update(int $id, array $data): bool
+    public function update(mixed $id, array $data): bool
     {
         return $this->mapper->update($id, $this->handleData($data));
     }
