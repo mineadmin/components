@@ -10,11 +10,6 @@ declare(strict_types=1);
  * @license  https://github.com/mineadmin/MineAdmin/blob/master/LICENSE
  */
 
-namespace Mine\NextCoreX\Interfaces;
+namespace Mine\NextCoreX\Exception;
 
-interface Serialize
-{
-    public function decode(string $data): mixed;
-
-    public function encode(mixed $data): string;
-}
+class ModelNotFoundException extends \RuntimeException {}
