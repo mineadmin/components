@@ -1,6 +1,6 @@
 {
   "name": "mineadmin/next-core-x",
-  "description": "Hyperf for websocket,tcp,udp Server Im Library",
+  "description": "hyperf im basic services, providing the most basic channels and the subscribe publish module.",
   "keywords": [
     "Hyperf","Library","components","im-server"
   ],
