@@ -101,7 +101,7 @@ class SqlGenerator extends MineGenerator implements CodeGenerator
         return Str::camel(str_replace(
             Str::lower($this->tablesContract->getModuleName()),
             '',
-            str_replace(env('DB_PREFIX',''), '', $this->tablesContract->table_name)
+            str_replace(env('DB_PREFIX', ''), '', $this->tablesContract->table_name)
         ));
     }
 
@@ -222,7 +222,7 @@ class SqlGenerator extends MineGenerator implements CodeGenerator
      */
     protected function getTableName(): string
     {
-        return env('DB_PREFIX','') . 'system_menu';
+        return env('DB_PREFIX', '') . 'system_menu';
     }
 
     /**

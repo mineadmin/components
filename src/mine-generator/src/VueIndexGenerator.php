@@ -102,7 +102,7 @@ class VueIndexGenerator extends MineGenerator implements CodeGenerator
         return Str::camel(str_replace(
             Str::lower($this->tablesContract->getModuleName()),
             '',
-            str_replace(env('DB_PREFIX',''), '', $this->tablesContract->getTableName())
+            str_replace(env('DB_PREFIX', ''), '', $this->tablesContract->getTableName())
         ));
     }
 
@@ -369,7 +369,7 @@ class VueIndexGenerator extends MineGenerator implements CodeGenerator
      */
     protected function getBusinessEnName(): string
     {
-        return Str::camel(str_replace(env('DB_PREFIX',''), '', $this->tablesContract->getTableName()));
+        return Str::camel(str_replace(env('DB_PREFIX', ''), '', $this->tablesContract->getTableName()));
     }
 
     protected function getModuleName(): string

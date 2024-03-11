@@ -22,7 +22,7 @@
       "Mine\\NextCoreX\\": "src/next-core-x/src"
     },
     "files": [
-      "src/mine-helpers/src/functions.php"
+      "./src/mine-helpers/src/functions.php"
     ]
   },
   "autoload-dev": {

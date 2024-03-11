@@ -84,7 +84,7 @@ class ModelGenerator extends MineGenerator implements CodeGenerator
         $command = [
             'command' => 'mine:model-gen',
             '--module' => $this->tablesContract->getModuleName(),
-            '--table' => str_replace(env('DB_PREFIX',''), '', $this->tablesContract->getTableName()),
+            '--table' => str_replace(env('DB_PREFIX', ''), '', $this->tablesContract->getTableName()),
         ];
 
         if (! Str::contains($this->tablesContract->getTableName(), Str::lower($this->tablesContract->getModuleName()))) {
@@ -102,7 +102,7 @@ class ModelGenerator extends MineGenerator implements CodeGenerator
         $application = $this->container->get(ApplicationInterface::class);
         $application->setAutoExit(false);
 
-        $modelName = Str::studly(str_replace(env('DB_PREFIX',''), '', $this->tablesContract->getTableName()));
+        $modelName = Str::studly(str_replace(env('DB_PREFIX', ''), '', $this->tablesContract->getTableName()));
 
         if ($application->run($input, $output) === 0) {
             // 对模型文件处理
@@ -156,7 +156,7 @@ class ModelGenerator extends MineGenerator implements CodeGenerator
      */
     public function getBusinessName(): string
     {
-        return Str::studly(str_replace(env('DB_PREFIX',''), '', $this->tablesContract->getTableName()));
+        return Str::studly(str_replace(env('DB_PREFIX', ''), '', $this->tablesContract->getTableName()));
     }
 
     /**
@@ -276,7 +276,7 @@ class ModelGenerator extends MineGenerator implements CodeGenerator
 
     protected function getRelations(): string
     {
-        $prefix = env('DB_PREFIX','');
+        $prefix = env('DB_PREFIX', '');
         if (! empty($this->tablesContract->getOptions()['relations'])) {
             $path = $this->getStubDir() . 'ModelRelation/';
             $phpCode = '';
