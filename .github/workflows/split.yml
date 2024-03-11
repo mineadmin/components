@@ -22,6 +22,6 @@ jobs:
       - name: Split And Push
         run: |
           git config pull.rebase true
-          git config --global user.email "49744633+Death-Satan@users.noreply.github.com"
+          git config --global user.email "49744633+zds-s@users.noreply.github.com"
           git config --global user.name "Zds"
           ./bin/split-linux.sh
