@@ -50,7 +50,6 @@ class CreateCommand extends AbstractCommand
         $this->createMineJson($pluginPath, $name, $type);
     }
 
-    #[\Override]
     public function commandName(): string
     {
         return 'create';
