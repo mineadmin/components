@@ -172,7 +172,7 @@ if (! function_exists('snowflake_id')) {
      */
     function snowflake_id(): string
     {
-        return container()->get(SnowflakeIdGenerator::class)->generate();
+        return (string) container()->get(SnowflakeIdGenerator::class)->generate();
     }
 }
 

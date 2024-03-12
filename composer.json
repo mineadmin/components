@@ -18,7 +18,8 @@
       "Mine\\Translatable\\": "src/translatable/src",
       "Mine\\Helper\\": "src/mine-helpers/src",
       "Mine\\Generator\\": "src/mine-generator/src",
-      "Xmo\\AppStore\\": "src/app-store/src"
+      "Xmo\\AppStore\\": "src/app-store/src",
+      "Mine\\NextCoreX\\": "src/next-core-x/src"
     },
     "files": [
       "src/mine-helpers/src/functions.php"
@@ -27,7 +28,9 @@
   "autoload-dev": {
     "psr-4": {
       "Mine\\Tests\\": "tests",
-      "Xmo\\AppStore\\Tests\\": "src/app-store/tests"
+      "Xmo\\AppStore\\Tests\\": "src/app-store/tests",
+      "Xmo\\MineCore\\Tests\\": "src/mine-core/tests",
+      "Mine\\NextCoreX\\Tests\\": "src/next-core-x/tests"
     }
   },
   "authors": [
@@ -50,7 +53,8 @@
     "xmo/mine-translatable": "*",
     "xmo/mine-helpers": "*",
     "xmo/mine-genertor": "*",
-    "xmo/app-store": "*"
+    "xmo/app-store": "*",
+    "mine/next-core-x": "*"
   },
   "require": {
     "php": ">=8.1",
@@ -106,7 +110,8 @@
     "tangwei/apidocs": "^3.0",
     "yurunsoft/phpmailer-swoole": "^1.0",
     "zoujingli/ip2region": "2.0.*",
-    "nette/utils": "dev-master"
+    "nette/utils": "dev-master",
+    "mine/next-core-x": "dev-2.0-dev"
   },
   "require-dev": {
     "friendsofphp/php-cs-fixer": "^3.0",

@@ -13,6 +13,8 @@ parameters:
           - src/mine/src/Helper/Str.php
           - src/mine/src/Helper/Ip2region.php
           - src/gateway/*
+          - src/next-core-x/tests/*
+          - src/mine-core/tests/*
           - src/tests/
           - src/app-store/test/
   ignoreErrors:

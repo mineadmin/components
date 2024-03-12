@@ -27,6 +27,7 @@ namespace Mine\Generator;
 use Hyperf\Support\Filesystem\Filesystem;
 use Mine\Exception\NormalStatusException;
 use Mine\Generator\Contracts\GeneratorTablesContract;
+use Mine\Generator\Enums\GenerateTypeEnum;
 use Mine\Helper\Str;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\NotFoundExceptionInterface;
@@ -68,7 +69,7 @@ class ControllerGenerator extends MineGenerator implements CodeGenerator
     public function generator(): void
     {
         $module = Str::title($this->tablesContract->getModuleName()[0]) . mb_substr($this->tablesContract->getModuleName(), 1);
-        if ($this->tablesContract->getGenerateType() === 1) {
+        if ($this->tablesContract->getGenerateType() === GenerateTypeEnum::ZIP) {
             $path = BASE_PATH . "/runtime/generate/php/app/{$module}/Controller/";
         } else {
             $path = BASE_PATH . "/app/{$module}/Controller/";
@@ -101,7 +102,7 @@ class ControllerGenerator extends MineGenerator implements CodeGenerator
      */
     public function getBusinessName(): string
     {
-        return Str::studly(str_replace(env('DB_PREFIX'), '', $this->tablesContract->getTableName()));
+        return Str::studly(str_replace(env('DB_PREFIX', ''), '', $this->tablesContract->getTableName()));
     }
 
     /**
@@ -112,7 +113,7 @@ class ControllerGenerator extends MineGenerator implements CodeGenerator
         return Str::camel(str_replace(
             Str::lower($this->tablesContract->getModuleName()),
             '',
-            str_replace(env('DB_PREFIX'), '', $this->tablesContract->getTableName())
+            str_replace(env('DB_PREFIX', ''), '', $this->tablesContract->getTableName())
         ));
     }
 

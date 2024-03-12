@@ -11,6 +11,7 @@ declare(strict_types=1);
  */
 use Hyperf\Context\ApplicationContext;
 use Hyperf\Contract\ConfigInterface;
+use Hyperf\Testing\Concerns\RunTestsInCoroutine;
 use Mine\Tests\TestCase;
 
 uses(TestCase::class)
@@ -23,3 +24,5 @@ uses(TestCase::class)
             ->set(ConfigInterface::class, $mockConfig);
     })
     ->in('Feature');
+uses(RunTestsInCoroutine::class)
+    ->in(dirname(__DIR__) . '/src/next-core-x/tests');
