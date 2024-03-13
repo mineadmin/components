@@ -128,6 +128,21 @@ class Plugin
     }
 
     /**
+     * Detects if the given plugin exists and is installed.
+     */
+    public static function exists(string $name): bool
+    {
+        $jsonPaths = self::getPluginJsonPaths();
+        foreach ($jsonPaths as $jsonPath) {
+            $info = self::read($jsonPath->getRelativePath());
+            if ($info['name'] === $name) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /**
      * Install the plugin according to the given directory.
      */
     public static function install(string $path): void
@@ -139,6 +154,24 @@ class Plugin
                 'The given directory is not a valid plugin,
                  probably because it is already installed or the directory is not standardized'
             );
+        }
+        // Performs a check on plugin dependencies. Determine if the plugin also depends on other plugins
+        if (! empty($info['require'])) {
+            if (! is_array($info['require'])) {
+                throw new \RuntimeException('Plugin dependency format error');
+            }
+            $pluginRequires = $info['require'];
+            foreach ($pluginRequires as $require) {
+                if (! self::exists($require)) {
+                    throw new \RuntimeException(
+                        sprintf(
+                            'Plugin %s depends on plugin %s, but the dependency is not installed',
+                            $info['name'],
+                            $require
+                        )
+                    );
+                }
+            }
         }
         // Handling composer dependencies
         if (! empty($info['composer']['require'])) {
