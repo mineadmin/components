@@ -55,6 +55,27 @@ final class FastBuilderWhere
         return $this->buildOperator('>', $column, $key);
     }
 
+    public function like(string $column, ?string $key = null): self
+    {
+        return $this->buildOperator('like', $column, $key, function (Builder|ModelBuilder $builder, string $column, mixed $value) {
+            return $builder->where($column, 'like', '%' . $value . '%');
+        });
+    }
+
+    public function likeRight(string $column, ?string $key = null): self
+    {
+        return $this->buildOperator('like', $column, $key, function (Builder|ModelBuilder $builder, string $column, mixed $value) {
+            return $builder->where($column, 'like', $value . '%');
+        });
+    }
+
+    public function likeLeft(string $column, ?string $key = null): self
+    {
+        return $this->buildOperator('like', $column, $key, function (Builder|ModelBuilder $builder, string $column, mixed $value) {
+            return $builder->where($column, 'like', '%' . $value);
+        });
+    }
+
     public function timestampsRange(string $column, array|string $keys): self
     {
         return $this->where(
@@ -114,11 +135,14 @@ final class FastBuilderWhere
         return $this->builder;
     }
 
-    private function buildOperator(string $operator, string $column, ?string $key): self
+    private function buildOperator(string $operator, string $column, ?string $key, ?\Closure $next = null): self
     {
         return $this->where(
             $column,
-            function (Builder|ModelBuilder $builder, mixed $value) use ($operator, $column) {
+            function (Builder|ModelBuilder $builder, mixed $value) use ($operator, $column, $next) {
+                if ($next) {
+                    return $next($builder, $column, $value);
+                }
                 return $builder->where($column, $operator, $value);
             },
             $key
