@@ -32,7 +32,11 @@ class LocalListCommand extends Base
         ];
         $rows = [];
         foreach ($list as $splFileInfo) {
-            $info = Plugin::read($splFileInfo->getPath());
+            $info = Plugin::read($splFileInfo->getRelativePath());
+            if (empty($info)) {
+                $this->error('read plugin.json error.' . $splFileInfo->getPath());
+                return;
+            }
             $current = [];
             $current[] = $info['name'];
             $current[] = $info['description'];
