@@ -41,7 +41,7 @@ class Plugin
 
     public static function getPacker(): PackerInterface
     {
-        return (new PackerFactory)->get();
+        return (new PackerFactory())->get();
     }
 
     public static function init(): void

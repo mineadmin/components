@@ -18,7 +18,7 @@ final class PackerFactory
     {
         switch ($type) {
             case 'json':
-                return (new JsonPacker);
+                return new JsonPacker();
             default:
                 throw new \RuntimeException(sprintf('%s Packer type not found', $type));
         }
