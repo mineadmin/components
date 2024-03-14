@@ -373,7 +373,7 @@ class Plugin
             ->get('mine-extension.' . $key, $default);
     }
 
-    private static function loadPlugin(array $mineJson, SplFileInfo $mine): void
+    private static function loadPlugin(array $mineInfo, SplFileInfo $mine): void
     {
         $loader = Composer::getLoader();
         // psr-4
