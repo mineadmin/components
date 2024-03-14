@@ -67,6 +67,21 @@ test('mock', function () {
         ->toBeTrue()
         ->and(count($query->getBindings()))
         ->toEqual(5);
+    $this->mock->like('username');
+    expect(in_array('%123456%', $query->getBindings(), true))
+        ->toBeTrue()
+        ->and(count($query->getBindings()))
+        ->toEqual(6);
+    $this->mock->likeRight('username');
+    expect(in_array('123456%', $query->getBindings(), true))
+        ->toBeTrue()
+        ->and(count($query->getBindings()))
+        ->toEqual(7);
+    $this->mock->likeLeft('username');
+    expect(in_array('%123456', $query->getBindings(), true))
+        ->toBeTrue()
+        ->and(count($query->getBindings()))
+        ->toEqual(8);
     $this->mock
         ->lt('username')
         ->eq('username')
@@ -76,7 +91,7 @@ test('mock', function () {
     expect(in_array('123456', $query->getBindings(), true))
         ->toBeTrue()
         ->and(count($query->getBindings()))
-        ->toEqual(10);
+        ->toEqual(13);
     $this->mock->timestampsRange('timestamps', 'timestamps')
         ->dateRange('date', 'date')
         ->datetimeRange('datetime', 'datetime');
@@ -84,5 +99,5 @@ test('mock', function () {
     expect(in_array('123456', $query->getBindings(), true))
         ->toBeTrue()
         ->and(count($query->getBindings()))
-        ->toEqual(16);
+        ->toEqual(19);
 });
