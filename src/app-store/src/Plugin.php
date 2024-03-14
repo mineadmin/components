@@ -21,6 +21,8 @@ use Hyperf\Support\Composer;
 use Swoole\Coroutine\System;
 use Symfony\Component\Finder\Finder;
 use Symfony\Component\Finder\SplFileInfo;
+use Xmo\AppStore\Packer\PackerFactory;
+use Xmo\AppStore\Packer\PackerInterface;
 use Xmo\AppStore\Utils\FileSystemUtils;
 
 class Plugin
@@ -37,6 +39,11 @@ class Plugin
 
     private static array $mineJsonPaths = [];
 
+    public static function getPacker(): PackerInterface
+    {
+        return ApplicationContext::getContainer()->get(PackerFactory::class)->get();
+    }
+
     public static function init(): void
     {
         // Initialize to load all plugin information into memory
@@ -44,31 +51,10 @@ class Plugin
 
         foreach ($mineJsons as $mine) {
             // If the plugin identifies itself as installed, load the psr4 psr0 classMap in memory
-            $mineInfo = json_decode(file_get_contents($mine->getRealPath()), true, 512, JSON_THROW_ON_ERROR);
+            $mineInfo = self::read($mine->getRelativePath());
 
             if (file_exists($mine->getPath() . '/' . self::INSTALL_LOCK_FILE)) {
-                $loader = Composer::getLoader();
-                // psr-4
-                if (! empty($mineInfo['composer']['psr-4'])) {
-                    foreach ($mineInfo['composer']['psr-4'] as $namespace => $src) {
-                        $src = realpath($mine->getPath() . '/' . $src);
-                        $loader->addPsr4($namespace, $src);
-                    }
-                }
-
-                // files
-                if (! empty($mineInfo['composer']['files'])) {
-                    foreach ($mineInfo['composer']['files'] as $file) {
-                        require_once $mine->getPath() . '/' . $file;
-                    }
-                }
-
-                // classMap
-                if (! empty($mineInfo['composer']['classMap'])) {
-                    $loader->addClassMap($mineInfo['composer']['classMap']);
-                }
-
-                self::checkPlugin($mine);
+                self::loadPlugin($mineInfo, $mine);
             }
         }
     }
@@ -79,7 +65,7 @@ class Plugin
     public static function checkPlugin(\SplFileInfo $mineJson): bool
     {
         $path = $mineJson->getRealPath();
-        $info = json_decode(file_get_contents($path), true);
+        $info = self::read($path);
         $rules = [
             'name' => 'required|string',
             'description' => 'required|string',
@@ -112,16 +98,26 @@ class Plugin
 
     /**
      * Query plugin information based on a given catalog.
-     * @return null|mixed
      */
     public static function read(string $path)
     {
         $jsonPaths = self::getPluginJsonPaths();
         foreach ($jsonPaths as $jsonPath) {
             if ($jsonPath->getRelativePath() === $path) {
-                $info = json_decode(file_get_contents($jsonPath->getRealPath()), true);
+                $info = self::getPacker()->unpack(file_get_contents($jsonPath->getRealPath()));
                 $info['status'] = file_exists($jsonPath->getPath() . '/' . self::INSTALL_LOCK_FILE);
                 return $info;
+            }
+        }
+        return null;
+    }
+
+    public static function getSplFile(string $path): ?SplFileInfo
+    {
+        $jsonPaths = self::getPluginJsonPaths();
+        foreach ($jsonPaths as $jsonPath) {
+            if ($jsonPath->getRelativePath() === $path) {
+                return $jsonPath;
             }
         }
         return null;
@@ -148,11 +144,22 @@ class Plugin
     public static function install(string $path): void
     {
         $info = self::read($path);
-        $pluginPath = self::PLUGIN_PATH . '/' . $path;
-        if ($info === null || $info['status']) {
+        $splFile = self::getSplFile($path);
+        /*
+         * Checks if info and splFile are empty and throws a runtimeException if they are empty,
+         * indicating that the given path is not the plugin directory.
+         */
+        if ($info === null || $splFile === null) {
             throw new \RuntimeException(
                 'The given directory is not a valid plugin,
-                 probably because it is already installed or the directory is not standardized'
+                 probably because it is already installed or the directory is not standardized.' . $path
+            );
+        }
+        self::loadPlugin($info, $splFile);
+        $pluginPath = self::PLUGIN_PATH . '/' . $path;
+        if ($info['status']) {
+            throw new \RuntimeException(
+                'The given directory detects an installation and terminates the installation operation'
             );
         }
         // Performs a check on plugin dependencies. Determine if the plugin also depends on other plugins
@@ -210,7 +217,7 @@ class Plugin
             if (! file_exists($frontDirectory . '/package.json')) {
                 throw new \RuntimeException(sprintf('Specified frontend directory %s package.json not found', $frontDirectory));
             }
-            $packageJson = json_decode(file_get_contents($frontDirectory . '/package.json'), true);
+            $packageJson = self::getPacker()->unpack(file_get_contents($frontDirectory . '/package.json'));
             $frontDependencies = array_keys($packageJson['dependencies'] ?? []);
             $type = $frontBin['type'] ?? 'npm';
             $front = $frontBin['bin'] ?? 'npm';
@@ -308,7 +315,7 @@ class Plugin
             if (! file_exists($frontDirectory . '/package.json')) {
                 throw new \RuntimeException(sprintf('Specified frontend directory %s package.json not found', $frontDirectory));
             }
-            $packageJson = json_decode(file_get_contents($frontDirectory . '/package.json'), true);
+            $packageJson = self::getPacker()->unpack(file_get_contents($frontDirectory . '/package.json'));
             $frontDependencies = array_keys($packageJson['dependencies'] ?? []);
             $type = $frontBin['type'] ?? 'npm';
             $front = $frontBin['bin'] ?? 'npm';
@@ -364,5 +371,31 @@ class Plugin
         return ApplicationContext::getContainer()
             ->get(ConfigInterface::class)
             ->get('mine-extension.' . $key, $default);
+    }
+
+    private static function loadPlugin(array $mineInfo, SplFileInfo $mine): void
+    {
+        $loader = Composer::getLoader();
+        // psr-4
+        if (! empty($mineInfo['composer']['psr-4'])) {
+            foreach ($mineInfo['composer']['psr-4'] as $namespace => $src) {
+                $src = realpath($mine->getPath() . '/' . $src);
+                $loader->addPsr4($namespace, $src);
+            }
+        }
+
+        // files
+        if (! empty($mineInfo['composer']['files'])) {
+            foreach ($mineInfo['composer']['files'] as $file) {
+                require_once $mine->getPath() . '/' . $file;
+            }
+        }
+
+        // classMap
+        if (! empty($mineInfo['composer']['classMap'])) {
+            $loader->addClassMap($mineInfo['composer']['classMap']);
+        }
+
+        self::checkPlugin($mine);
     }
 }

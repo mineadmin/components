@@ -18,7 +18,6 @@ use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputOption;
 use Xmo\AppStore\Enums\PluginTypeEnum;
 use Xmo\AppStore\Plugin;
-use Xmo\AppStore\Utils\FileSystemUtils;
 
 #[Command]
 class CreateCommand extends AbstractCommand
@@ -35,16 +34,19 @@ class CreateCommand extends AbstractCommand
             $this->output->error('Plugin type is empty');
             return;
         }
-        if (! FileSystemUtils::checkDirectory($name)) {
-            $this->output->error(sprintf('The given directory name %s is not a valid directory', $path));
-        }
+
         $pluginPath = Plugin::PLUGIN_PATH . '/' . $path;
         if (file_exists($pluginPath)) {
             $this->output->error(sprintf('Plugin directory %s already exists', $path));
             return;
         }
-        if (! mkdir($pluginPath, 0755, true) && ! is_dir($pluginPath)) {
-            throw new \RuntimeException(sprintf('Directory "%s" was not created', $pluginPath));
+        $createDirectors = [
+            $pluginPath, $pluginPath . '/src', $pluginPath . '/Database',
+        ];
+        foreach ($createDirectors as $directory) {
+            if (! mkdir($directory, 0755, true) && ! is_dir($directory)) {
+                throw new \RuntimeException(sprintf('Directory "%s" was not created', $directory));
+            }
         }
 
         $this->createMineJson($pluginPath, $name, $type);
@@ -67,7 +69,7 @@ class CreateCommand extends AbstractCommand
             ],
         ];
         if ($pluginType === PluginTypeEnum::Backend || $pluginType === PluginTypeEnum::Mix) {
-            $namespace = 'Mine\\' . Str::snake($author) . '\\Example';
+            $namespace = 'Mine\\' . Str::snake($author) . '\\' . Str::snake($name);
 
             $this->createInstallScript($namespace, $path);
             $this->createUninstallScript($namespace, $path);
@@ -140,8 +142,8 @@ class CreateCommand extends AbstractCommand
     protected function configure()
     {
         $this->addArgument('path', InputArgument::REQUIRED, 'Plugin Path');
-        $this->addOption('name', 'n', InputOption::VALUE_REQUIRED, 'Plug-in Name');
-        $this->addOption('type', 't', InputOption::VALUE_OPTIONAL, 'Plugin type, default mix optional mix,frond,backend');
+        $this->addOption('name', 'name', InputOption::VALUE_REQUIRED, 'Plug-in Name');
+        $this->addOption('type', 'type', InputOption::VALUE_OPTIONAL, 'Plugin type, default mix optional mix,frond,backend');
         $this->addOption('description', 'desc', InputOption::VALUE_OPTIONAL, 'Plug-in Introduction');
         $this->addOption('author', 'author', InputOption::VALUE_OPTIONAL, 'Plugin Author Information');
     }
