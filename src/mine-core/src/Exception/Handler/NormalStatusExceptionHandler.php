@@ -30,7 +30,7 @@ use Mine\MineRequest;
 use Psr\Http\Message\ResponseInterface;
 
 /**
- * Class DataNotFoundExceptionHandler.
+ * Class NormalStatusExceptionHandler.
  */
 class NormalStatusExceptionHandler extends ExceptionHandler
 {
@@ -46,7 +46,8 @@ class NormalStatusExceptionHandler extends ExceptionHandler
         if ($throwable->getCode() != 200 && $throwable->getCode() != 0) {
             $format['code'] = $throwable->getCode();
         }
-        //        logger('Exception log')->debug($throwable->getMessage());
+        // 这里日志 还是需要打开吧，
+        logger('Exception log')->debug($throwable->getMessage());
         return $response->withHeader('Server', 'MineAdmin')
             ->withHeader('Access-Control-Allow-Origin', '*')
             ->withHeader('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,OPTIONS')

@@ -22,6 +22,9 @@ use Mine\Log\RequestIdHolder;
 use Mine\MineRequest;
 use Psr\Http\Message\ResponseInterface;
 
+/**
+ * Class AppExceptionHandler.
+ */
 class AppExceptionHandler extends ExceptionHandler
 {
     protected Logger $logger;

@@ -31,7 +31,7 @@ use Mine\MineRequest;
 use Psr\Http\Message\ResponseInterface;
 
 /**
- * Class TokenExceptionHandler.
+ * Class NoPermissionExceptionHandler.
  */
 class NoPermissionExceptionHandler extends ExceptionHandler
 {

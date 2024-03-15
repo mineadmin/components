@@ -30,6 +30,9 @@ use Mine\Log\RequestIdHolder;
 use Mine\MineRequest;
 use Psr\Http\Message\ResponseInterface;
 
+/**
+ * Class ValidationExceptionHandler.
+ */
 class ValidationExceptionHandler extends ExceptionHandler
 {
     public function handle(\Throwable $throwable, ResponseInterface $response): ResponseInterface
