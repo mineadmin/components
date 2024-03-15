@@ -26,6 +26,7 @@ use Hyperf\ExceptionHandler\ExceptionHandler;
 use Hyperf\HttpMessage\Stream\SwooleStream;
 use Mine\Exception\NormalStatusException;
 use Mine\Log\RequestIdHolder;
+use Mine\MineRequest;
 use Psr\Http\Message\ResponseInterface;
 
 /**
@@ -38,6 +39,7 @@ class NormalStatusExceptionHandler extends ExceptionHandler
         $this->stopPropagation();
         $format = [
             'requestId' => RequestIdHolder::getId(),
+            'path' => container()->get(MineRequest::class)->getUri()->getPath(),
             'success' => false,
             'message' => $throwable->getMessage(),
         ];
