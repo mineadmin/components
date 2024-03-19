@@ -86,7 +86,7 @@ class PhpOffice extends MineExcel implements ExcelPropertyInterface
      * @throws ContainerExceptionInterface
      * @throws NotFoundExceptionInterface
      */
-    public function export(string $filename, array|\Closure $closure, \Closure $callbackData = null): ResponseInterface
+    public function export(string $filename, array|\Closure $closure, ?\Closure $callbackData = null): ResponseInterface
     {
         $spread = new Spreadsheet();
         $sheet = $spread->getActiveSheet();

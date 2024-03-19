@@ -14,7 +14,7 @@ namespace Mine\Translatable\Exception;
 
 class LocalesNotDefinedException extends \Exception
 {
-    public function __construct($message = '', $code = 0, \Throwable $previous = null)
+    public function __construct($message = '', $code = 0, ?\Throwable $previous = null)
     {
         $message = empty($message)
             ? 'Please make sure you have run `php bin/hyperf.php vendor:publish xmo/mine-translatable` and that the locales configuration is defined.'

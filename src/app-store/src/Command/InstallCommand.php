@@ -17,7 +17,6 @@ use Hyperf\Command\Command as Base;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputOption;
 use Xmo\AppStore\Plugin;
-use Xmo\AppStore\Service\PluginService;
 
 #[Command]
 class InstallCommand extends Base
@@ -27,7 +26,6 @@ class InstallCommand extends Base
     protected string $description = 'Installing Plugin Commands';
 
     public function __construct(
-        private readonly PluginService $pluginService
     ) {
         parent::__construct();
     }

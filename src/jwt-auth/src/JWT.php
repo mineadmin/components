@@ -105,7 +105,7 @@ class JWT extends AbstractJWT
      * @throws InvalidArgumentException
      * @throws \Throwable
      */
-    public function checkToken(string $token = null, string $scene = null, $validate = true, $verify = true, $independentTokenVerify = false)
+    public function checkToken(?string $token = null, ?string $scene = null, $validate = true, $verify = true, $independentTokenVerify = false)
     {
         try {
             $token = $token ?? $this->getHeaderToken();
@@ -143,7 +143,7 @@ class JWT extends AbstractJWT
      * 刷新token.
      * @return Token
      */
-    public function refreshToken(string $token = null)
+    public function refreshToken(?string $token = null)
     {
         try {
             $claims = $this->getTokenObj($token ?? $this->getHeaderToken())->claims()->all();
@@ -159,7 +159,7 @@ class JWT extends AbstractJWT
      * @return bool
      * @throws InvalidArgumentException
      */
-    public function logout(string $token = null, string $scene = null)
+    public function logout(?string $token = null, ?string $scene = null)
     {
         $config = $this->getSceneConfig($scene ?? $this->getScene());
         $this->blackList->addTokenBlack($this->getTokenObj($token), $config);
@@ -170,7 +170,7 @@ class JWT extends AbstractJWT
      * 获取token动态有效时间.
      * @return int|mixed
      */
-    public function getTokenDynamicCacheTime(string $token = null)
+    public function getTokenDynamicCacheTime(?string $token = null)
     {
         if (empty($token)) {
             $token = $this->getHeaderToken();
@@ -186,7 +186,7 @@ class JWT extends AbstractJWT
     /**
      * 获取jwt token解析的data.
      */
-    public function getParserData(string $token = null): array
+    public function getParserData(?string $token = null): array
     {
         return $this->getTokenObj($token ?? $this->getHeaderToken())->claims()->all();
     }
@@ -195,7 +195,7 @@ class JWT extends AbstractJWT
      * 获取缓存时间.
      * @return mixed
      */
-    public function getTTL(string $scene = null)
+    public function getTTL(?string $scene = null)
     {
         return $this->getSceneConfig($scene ?? $this->getScene())['ttl'];
     }
@@ -224,7 +224,7 @@ class JWT extends AbstractJWT
      * 获取Token对象
      * @return Token
      */
-    private function getTokenObj(string $token = null)
+    private function getTokenObj(?string $token = null)
     {
         $config = $this->getSceneConfig($this->getScene());
         $signer = new $config['supported_algs'][$config['alg']]();
