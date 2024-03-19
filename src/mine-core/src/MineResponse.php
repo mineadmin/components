@@ -40,7 +40,7 @@ class MineResponse extends Response
      * @throws ContainerExceptionInterface
      * @throws NotFoundExceptionInterface
      */
-    public function success(string $message = null, array|object $data = [], int $code = 200): ResponseInterface
+    public function success(?string $message = null, array|object $data = [], int $code = 200): ResponseInterface
     {
         $format = [
             'requestId' => RequestIdHolder::getId(),

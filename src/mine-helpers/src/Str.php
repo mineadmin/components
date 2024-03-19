@@ -145,7 +145,7 @@ class Str
     /**
      * 截取字符串.
      */
-    public static function substr(string $string, int $start, int $length = null): string
+    public static function substr(string $string, int $start, ?int $length = null): string
     {
         return mb_substr($string, $start, $length, 'UTF-8');
     }

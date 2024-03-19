@@ -28,7 +28,7 @@ class SensitiveWordFilter
      * @throws NotFoundExceptionInterface
      * @throws \RedisException
      */
-    public function loadDictData(\Closure $closure = null): self
+    public function loadDictData(?\Closure $closure = null): self
     {
         $key = config('cache.default.prefix') . ':sensitiveWords';
         $redis = redis();

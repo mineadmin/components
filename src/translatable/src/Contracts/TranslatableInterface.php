@@ -34,7 +34,7 @@ interface TranslatableInterface
 
     public function getNewTranslation(string $locale): Model;
 
-    public function getTranslation(?string $locale = null, bool $withFallback = null): ?Model;
+    public function getTranslation(?string $locale = null, ?bool $withFallback = null): ?Model;
 
     public function getTranslationOrNew(?string $locale = null): Model;
 
@@ -44,7 +44,7 @@ interface TranslatableInterface
 
     public function isTranslationAttribute(string $key): bool;
 
-    public function replicateWithTranslations(array $except = null): Model;
+    public function replicateWithTranslations(?array $except = null): Model;
 
     public function setDefaultLocale(?string $locale);
 

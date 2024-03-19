@@ -88,7 +88,7 @@ class XlsWriter extends MineExcel implements ExcelPropertyInterface
      * @throws ContainerExceptionInterface
      * @throws NotFoundExceptionInterface
      */
-    public function export(string $filename, array|\Closure $closure, \Closure $callbackData = null): ResponseInterface
+    public function export(string $filename, array|\Closure $closure, ?\Closure $callbackData = null): ResponseInterface
     {
         $filename .= '.xlsx';
         is_array($closure) ? $data = &$closure : $data = $closure();

@@ -16,7 +16,7 @@ use Hyperf\Command\Command;
 
 abstract class AbstractCommand extends Command
 {
-    public function __construct(string $name = null)
+    public function __construct(?string $name = null)
     {
         parent::__construct('mine-extension:' . $this->commandName());
     }
