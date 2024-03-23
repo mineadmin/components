@@ -20,7 +20,7 @@ enum PluginTypeEnum: string
     /**
      * Mix and match, front and back end source code included.
      */
-    case Mix = 'mix';
+    case Mix = 'mixed';
 
     /**
      * 只包含前端源码

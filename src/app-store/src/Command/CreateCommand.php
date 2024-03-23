@@ -61,6 +61,8 @@ class CreateCommand extends AbstractCommand
     {
         $output = new \stdClass();
         $output->name = $name;
+        $output->version = '1.0.0';
+        $output->type = $pluginType->value;
         $output->description = $this->input->getOption('description') ?: 'This is a sample plugin';
         $author = $this->input->getOption('author') ?: 'demo';
         $output->author = [
