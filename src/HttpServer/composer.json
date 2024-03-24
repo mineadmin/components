@@ -1,0 +1,27 @@
+{
+  "name": "mineadmin/http-server",
+  "description": "加强 Hyperf 原生 HttpServer",
+  "type": "library",
+  "require": {
+    "php": ">=8.1",
+    "hyperf/http-server": "^3.1",
+    "hyperf/validation": "^3.1",
+    "hyperf/http-message": "^3.1",
+    "ramsey/uuid": "^4.7"
+  },
+  "autoload": {
+    "psr-4": {
+      "Mine\\HttpServer\\": "src/"
+    }
+  },
+  "autoload-dev": {
+    "psr-4": {
+      "Mine\\HttpServer\\Tests\\": "tests/"
+    }
+  },
+  "extra": {
+    "hyperf": {
+      "config": "Mine\\HttpServer\\ConfigProvider"
+    }
+  }
+}
