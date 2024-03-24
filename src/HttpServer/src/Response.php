@@ -13,6 +13,7 @@ declare(strict_types=1);
 namespace Mine\HttpServer;
 
 use Hyperf\HttpServer\Response as HyperfResponse;
+use Psr\Http\Message\ResponseInterface;
 
 use function Hyperf\Config\config;
 
@@ -21,7 +22,7 @@ use function Hyperf\Config\config;
  */
 class Response
 {
-    public function success(?string $message = null, array|object $data = [], int $code = 200): \Psr\Http\Message\ResponseInterface
+    public function success(?string $message = null, array|object $data = [], int $code = 200): ResponseInterface
     {
         $format = [
             'requestId' => RequestIdHolder::getId(),
@@ -34,7 +35,7 @@ class Response
         return $this->json($format);
     }
 
-    public function error(string $message = '', int $code = 500, array $data = []): \Psr\Http\Message\ResponseInterface
+    public function error(string $message = '', int $code = 500, array $data = []): ResponseInterface
     {
         $format = [
             'requestId' => RequestIdHolder::getId(),
