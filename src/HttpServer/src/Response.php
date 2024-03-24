@@ -17,10 +17,7 @@ use Psr\Http\Message\ResponseInterface;
 
 use function Hyperf\Config\config;
 
-/**
- * @mixin HyperfResponse
- */
-class Response
+class Response extends HyperfResponse
 {
     public function success(?string $message = null, array|object $data = [], int $code = 200): ResponseInterface
     {
@@ -55,7 +52,7 @@ class Response
     {
         $headers = config('mineadmin.http.headers', []);
         foreach ($headers as $key => $value) {
-            $this->getresponse()->addHeader($key, $value);
+            $this->getResponse()->addHeader($key, $value);
         }
     }
 }

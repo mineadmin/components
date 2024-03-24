@@ -29,6 +29,6 @@ uses(TestCase::class)
         ApplicationContext::getContainer()
             ->set(ConfigInterface::class, $mockConfig);
     })
-    ->in('Feature');
+    ->in('Feature', dirname(__DIR__) . '/src/HttpServer/tests');
 uses(RunTestsInCoroutine::class)
     ->in(dirname(__DIR__) . '/src/next-core-x/tests');

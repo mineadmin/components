@@ -12,18 +12,16 @@ declare(strict_types=1);
 
 namespace Mine\HttpServer\Listener;
 
+use Hyperf\Context\ApplicationContext;
 use Hyperf\Event\Contract\ListenerInterface;
 use Hyperf\Framework\Event\BootApplication;
 use Hyperf\HttpServer\Request;
 use Hyperf\HttpServer\Response;
+use Hyperf\HttpServer\Router\Dispatched;
 use Mine\HttpServer\Response as MineResponse;
 
 class BootApplicationListener implements ListenerInterface
 {
-    public function __construct(
-        private readonly MineResponse $response
-    ) {}
-
     public function listen(): array
     {
         return [
@@ -39,7 +37,7 @@ class BootApplicationListener implements ListenerInterface
 
     private function registerResponseMacro(): void
     {
-        Response::mixin($this->response);
+        ApplicationContext::getContainer()->set(Response::class, MineResponse::class);
     }
 
     private function registerRequestMacro(): void
@@ -60,6 +58,27 @@ class BootApplicationListener implements ListenerInterface
                 $ip = $headers['remote_host'][0];
             }
             return $ip;
+        });
+
+        Request::macro('getAction', function () {
+            /**
+             * @var Dispatched $dispatch
+             * @var Request $this
+             */
+            $dispatch = $this->getAttribute(Dispatched::class);
+            $callback = $dispatch?->handler?->callback;
+            if (is_array($callback) && count($callback) === 2) {
+                return $callback[1];
+            }
+            if (is_string($callback)) {
+                if (str_contains($callback, '@')) {
+                    return explode('@', $callback)[1] ?? null;
+                }
+                if (str_contains($callback, '::')) {
+                    return explode('::', $callback)[1] ?? null;
+                }
+            }
+            return null;
         });
     }
 }

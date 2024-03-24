@@ -14,13 +14,18 @@ namespace Mines\HttpServer\IdeHelpers;
 
 use Mine\HttpServer\Listener\BootApplicationListener;
 
+/**
+ * @see BootApplicationListener
+ */
 class Request extends \Hyperf\HttpMessage\Server\Request
 {
-    /**
-     * @see BootApplicationListener
-     */
     public function ip(): string
     {
         return 'xxx';
+    }
+
+    public function getAction(): ?string
+    {
+        return '';
     }
 }
