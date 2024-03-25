@@ -20,7 +20,8 @@
       "Mine\\Generator\\": "src/mine-generator/src",
       "Xmo\\AppStore\\": "src/app-store/src",
       "Mine\\NextCoreX\\": "src/next-core-x/src",
-      "Mine\\HttpServer\\": "src/HttpServer/src"
+      "Mine\\HttpServer\\": "src/HttpServer/src",
+      "Mine\\Crontab\\": "src/Crontab/src"
     },
     "files": [
       "src/mine-helpers/src/functions.php"
@@ -32,7 +33,8 @@
       "Xmo\\AppStore\\Tests\\": "src/app-store/tests",
       "Xmo\\MineCore\\Tests\\": "src/mine-core/tests",
       "Mine\\NextCoreX\\Tests\\": "src/next-core-x/tests",
-      "Mine\\HttpServer\\Tests\\": "src/HttpServer/tests"
+      "Mine\\HttpServer\\Tests\\": "src/HttpServer/tests",
+      "Mine\\Crontab\\Tests\\": "src/Crontab/tests"
     }
   },
   "authors": [
