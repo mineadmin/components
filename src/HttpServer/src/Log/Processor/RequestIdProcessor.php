@@ -12,7 +12,7 @@ declare(strict_types=1);
 
 namespace Mine\HttpServer\Log\Processor;
 
-use Mine\Log\RequestIdHolder;
+use Mine\HttpServer\RequestIdHolder;
 use Monolog\LogRecord;
 use Monolog\Processor\ProcessorInterface;
 

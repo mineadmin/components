@@ -10,11 +10,9 @@ declare(strict_types=1);
  * @license  https://github.com/mineadmin/MineAdmin/blob/master/LICENSE
  */
 
-namespace Mine\HttpServer\Contract\Log;
+namespace Mine\HttpServer\Exception;
 
-interface RequestIdGeneratorInterface
+abstract class HttpException extends \Exception
 {
-    public const REQUEST_ID = 'log.requestId';
-
-    public function generate(): string;
+    abstract public function result(): array;
 }

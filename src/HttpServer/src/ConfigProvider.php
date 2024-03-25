@@ -39,6 +39,8 @@ class ConfigProvider
             'dependencies' => [
                 RequestIdGeneratorInterface::class => RequestIdGenerator::class,
             ],
+            'publish' => [
+            ],
         ];
     }
 }

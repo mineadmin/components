@@ -20,8 +20,6 @@ use Ramsey\Uuid\Uuid;
 
 class RequestIdGenerator implements RequestIdGeneratorInterface
 {
-    public const REQUEST_ID = 'log.requestId';
-
     public function __construct(
         private readonly ContainerInterface $container
     ) {}

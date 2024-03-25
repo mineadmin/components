@@ -12,17 +12,15 @@ declare(strict_types=1);
 
 namespace Mine\HttpServer\Middleware;
 
-use Mine\HttpServer\RequestIdHolder;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\MiddlewareInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 
-class RequestIdMiddleware implements MiddlewareInterface
+class JsonMiddleware implements MiddlewareInterface
 {
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {
-        RequestIdHolder::getId();
-        return $handler->handle($request);
+        return $handler->handle($request)->withHeader('content-type', 'application/json; charset=utf-8');
     }
 }
