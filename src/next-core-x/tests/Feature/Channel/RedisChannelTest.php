@@ -29,7 +29,7 @@ beforeEach(function () {
         'serialize' => PhpSerialize::class,
         'redis' => [
             'default' => [
-                'host' => env('REDIS_HOST', 'localhost'),
+                'host' => env('REDIS_HOST', '127.0.0.1'),
                 'auth' => env('REDIS_AUTH', null),
                 'port' => (int) env('REDIS_PORT', 6379),
                 'db' => (int) env('REDIS_DB', 0),
