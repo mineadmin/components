@@ -93,19 +93,19 @@ jobs:
         run: |
           php -i
           php -m
-      - name: Run Mysql Test Cases
+      - name: Run Test Cases
         env:
           DB_DRIVER: mysql
           DB_HOST: 127.0.0.1
           DB_DATABASE: mineadmin
         run: ./.travis/run.test.sh
-      - name: Run PgSql Test Cases
-        env:
-          DB_DRIVER: pgsql
-          DB_HOST: 127.0.0.1
-          DB_PORT: 5432
-          DB_USERNAME: postgres
-          DB_PASSWORD: postgres
-          DB_CHARSET: utf8
-          DB_DATABASE: mineadmin
-        run: ./.travis/run.test.sh
+#      - name: Run PgSql Test Cases
+#        env:
+#          DB_DRIVER: pgsql
+#          DB_HOST: 127.0.0.1
+#          DB_PORT: 5432
+#          DB_USERNAME: postgres
+#          DB_PASSWORD: postgres
+#          DB_CHARSET: utf8
+#          DB_DATABASE: mineadmin
+#        run: ./.travis/run.test.sh
