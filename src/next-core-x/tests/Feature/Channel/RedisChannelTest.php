@@ -15,6 +15,7 @@ use Hyperf\Redis\Redis;
 use Mine\NextCoreX\Channel\RedisChannel;
 use Mine\NextCoreX\Protocols\PhpSerialize;
 use Mine\NextCoreX\ReadConfig;
+
 use function Hyperf\Support\env;
 
 beforeEach(function () {
@@ -25,7 +26,7 @@ beforeEach(function () {
             ],
         ],
         'serialize' => PhpSerialize::class,
-        'redis' =>  [
+        'redis' => [
             'default' => [
                 'host' => env('REDIS_HOST', 'localhost'),
                 'auth' => env('REDIS_AUTH', null),
@@ -40,7 +41,7 @@ beforeEach(function () {
                     'max_idle_time' => (float) env('REDIS_MAX_IDLE_TIME', 60),
                 ],
             ],
-        ]
+        ],
     ]);
     $this->config = new ReadConfig($configInterface);
     $redis = ApplicationContext::getContainer()->get(Redis::class);
