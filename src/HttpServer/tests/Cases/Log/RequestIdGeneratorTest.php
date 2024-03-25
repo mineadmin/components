@@ -17,8 +17,6 @@ use Hyperf\Coroutine\Coroutine;
 use Mine\HttpServer\Log\RequestIdGenerator;
 use PHPUnit\Framework\TestCase;
 
-use function Co\run;
-
 /**
  * @internal
  * @coversNothing
@@ -27,7 +25,7 @@ class RequestIdGeneratorTest extends TestCase
 {
     public function testIdGenerator(): void
     {
-        run(function () {
+        \Swoole\Coroutine\run(function () {
             $generator = ApplicationContext::getContainer()->get(RequestIdGenerator::class);
             $id = $generator->generate();
             self::assertIsString($id);
