@@ -17,6 +17,7 @@ parameters:
           - src/mine-core/tests/*
           - src/tests/
           - src/app-store/test/
+          - src/httpServer/tests/
   ignoreErrors:
     - '#Unsafe usage of new static\(\)#'
     - '#Call to static method find\(\) on an unknown class#'

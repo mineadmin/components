@@ -19,7 +19,8 @@
       "Mine\\Helper\\": "src/mine-helpers/src",
       "Mine\\Generator\\": "src/mine-generator/src",
       "Xmo\\AppStore\\": "src/app-store/src",
-      "Mine\\NextCoreX\\": "src/next-core-x/src"
+      "Mine\\NextCoreX\\": "src/next-core-x/src",
+      "Mine\\HttpServer\\": "src/HttpServer/src"
     },
     "files": [
       "src/mine-helpers/src/functions.php"
@@ -30,7 +31,8 @@
       "Mine\\Tests\\": "tests",
       "Xmo\\AppStore\\Tests\\": "src/app-store/tests",
       "Xmo\\MineCore\\Tests\\": "src/mine-core/tests",
-      "Mine\\NextCoreX\\Tests\\": "src/next-core-x/tests"
+      "Mine\\NextCoreX\\Tests\\": "src/next-core-x/tests",
+      "Mine\\HttpServer\\Tests\\": "src/HttpServer/tests"
     }
   },
   "authors": [
@@ -54,7 +56,8 @@
     "xmo/mine-helpers": "*",
     "xmo/mine-genertor": "*",
     "xmo/app-store": "*",
-    "mine/next-core-x": "*"
+    "mine/next-core-x": "*",
+    "mineadmin/http-server": "*"
   },
   "require": {
     "php": ">=8.1",
