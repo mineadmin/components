@@ -11,6 +11,7 @@ declare(strict_types=1);
  */
 use Hyperf\Config\Config;
 use Hyperf\Context\ApplicationContext;
+use Hyperf\Contract\ConfigInterface;
 use Hyperf\Redis\Redis;
 use Mine\NextCoreX\Channel\RedisChannel;
 use Mine\NextCoreX\Protocols\PhpSerialize;
@@ -44,6 +45,7 @@ beforeEach(function () {
         ],
     ]);
     $this->config = new ReadConfig($configInterface);
+    ApplicationContext::getContainer()->set(ConfigInterface::class, $configInterface);
     $redis = ApplicationContext::getContainer()->get(Redis::class);
     $this->channel = new RedisChannel($this->config, $redis);
 });
