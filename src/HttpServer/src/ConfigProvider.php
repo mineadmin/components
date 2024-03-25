@@ -40,6 +40,18 @@ class ConfigProvider
                 RequestIdGeneratorInterface::class => RequestIdGenerator::class,
             ],
             'publish' => [
+                [
+                    'id' => 'MineAdmin-HttpServer-Trans',
+                    'description' => 'MineAdmin Response Code Translation File',
+                    'source' => __DIR__ . '/../publish/languages/en/result.php',
+                    'destination' => BASE_PATH . '/storage/languages/en/result.php',
+                ],
+                [
+                    'id' => 'MineAdmin-HttpServer-Trans zh_CN',
+                    'description' => 'MineAdmin Response Code Translation File',
+                    'source' => __DIR__ . '/../publish/languages/zh_CN/result.php',
+                    'destination' => BASE_PATH . '/storage/languages/zh_CN/result.php',
+                ],
             ],
         ];
     }
