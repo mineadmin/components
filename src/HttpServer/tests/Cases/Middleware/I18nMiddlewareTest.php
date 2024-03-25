@@ -56,7 +56,6 @@ class I18nMiddlewareTest extends TestCase
         );
     }
 
-
     public function testProcess(): void
     {
         $instance = ApplicationContext::getContainer()->get(I18nMiddleware::class);
