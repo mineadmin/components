@@ -7,7 +7,8 @@
     "hyperf/http-server": "^3.1",
     "hyperf/validation": "^3.1",
     "hyperf/http-message": "^3.1",
-    "ramsey/uuid": "^4.7"
+    "ramsey/uuid": "^4.7",
+    "hyperf/translation": "^3.1"
   },
   "autoload": {
     "psr-4": {
