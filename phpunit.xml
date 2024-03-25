@@ -10,13 +10,4 @@
       <directory suffix="Test.php">./tests</directory>
     </testsuite>
   </testsuites>
-  <source>
-    <include>
-      <directory suffix=".php">./src/HttpServer/tests</directory>
-      <directory suffix=".php">./src/app-store/tests</directory>
-      <directory suffix=".php">./src/mine-core/tests</directory>
-      <directory suffix=".php">./src/next-core-x/tests</directory>
-      <directory suffix=".php">./tests</directory>
-    </include>
-  </source>
 </phpunit>

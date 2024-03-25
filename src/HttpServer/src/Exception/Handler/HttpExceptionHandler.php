@@ -30,7 +30,6 @@ class HttpExceptionHandler extends ExceptionHandler
          */
         $result = Result::error(
             message: $throwable->getMessage(),
-            data: $throwable->result(),
             code: $throwable->getCode()
         );
         return $response

@@ -12,7 +12,4 @@ declare(strict_types=1);
 
 namespace Mine\HttpServer\Exception;
 
-abstract class HttpException extends \Exception
-{
-    abstract public function result(): array;
-}
+abstract class HttpException extends \Exception {}

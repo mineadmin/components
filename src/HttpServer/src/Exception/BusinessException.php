@@ -13,7 +13,6 @@ declare(strict_types=1);
 namespace Mine\HttpServer\Exception;
 
 use Mine\HttpServer\Constant\HttpResultCode;
-use Mine\HttpServer\RequestIdHolder;
 
 class BusinessException extends HttpException
 {
@@ -23,16 +22,9 @@ class BusinessException extends HttpException
         ?\Throwable $previous = null
     ) {
         if ($code instanceof HttpResultCode) {
-            $message = $code->getTrans();
+            $message = empty($code->getTrans()) ? $message : $code->getTrans();
+            $code = $code->value;
         }
         parent::__construct($message, $code, $previous);
-    }
-
-    public function result(): array
-    {
-        return [
-            'request_id' => RequestIdHolder::getId(),
-            '',
-        ];
     }
 }
