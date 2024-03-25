@@ -14,6 +14,7 @@ namespace Mine\HttpServer\Tests\Cases\Log;
 
 use Hyperf\Context\ApplicationContext;
 use Hyperf\Coroutine\Coroutine;
+use Hyperf\Testing\Concerns\RunTestsInCoroutine;
 use Mine\HttpServer\Log\RequestIdGenerator;
 use PHPUnit\Framework\TestCase;
 
@@ -23,17 +24,17 @@ use PHPUnit\Framework\TestCase;
  */
 class RequestIdGeneratorTest extends TestCase
 {
+    use RunTestsInCoroutine;
+
     public function testIdGenerator(): void
     {
-        \Swoole\Coroutine\run(function () {
+        $generator = ApplicationContext::getContainer()->get(RequestIdGenerator::class);
+        $id = $generator->generate();
+        self::assertIsString($id);
+        self::assertEquals($id, $generator->generate());
+        Coroutine::create(function () use ($id) {
             $generator = ApplicationContext::getContainer()->get(RequestIdGenerator::class);
-            $id = $generator->generate();
-            self::assertIsString($id);
-            self::assertEquals($id, $generator->generate());
-            Coroutine::create(function () use ($id) {
-                $generator = ApplicationContext::getContainer()->get(RequestIdGenerator::class);
-                self::assertNotEquals($id, $generator->generate());
-            });
+            self::assertNotEquals($id, $generator->generate());
         });
     }
 }
