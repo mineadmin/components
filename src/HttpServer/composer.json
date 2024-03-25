@@ -2,6 +2,16 @@
   "name": "mineadmin/http-server",
   "description": "加强 Hyperf 原生 HttpServer",
   "type": "library",
+  "authors": [
+    {
+      "name": "X.mo",
+      "role": "Developer"
+    },
+    {
+      "name": "Zds",
+      "role": "Developer"
+    }
+  ],
   "require": {
     "php": ">=8.1",
     "hyperf/http-server": "^3.1",
