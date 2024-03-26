@@ -17,6 +17,9 @@ use Hyperf\Context\ApplicationContext;
 use Hyperf\Contract\ConfigInterface;
 use Hyperf\Contract\StdoutLoggerInterface;
 use Hyperf\Contract\TranslatorInterface;
+use Hyperf\Di\Container;
+use Hyperf\Di\Definition\DefinitionSourceFactory;
+use Hyperf\Di\Exception\Exception;
 use Mine\HttpServer\Contract\Log\RequestIdGeneratorInterface;
 use Mine\HttpServer\Log\RequestIdGenerator;
 use Mine\HttpServer\Middleware\I18nMiddleware;
@@ -32,8 +35,12 @@ use Psr\Log\LogLevel;
  */
 class I18nMiddlewareTest extends TestCase
 {
+    /**
+     * @throws Exception
+     */
     protected function setUp(): void
     {
+        ApplicationContext::setContainer(new Container((new DefinitionSourceFactory())()));
         $config = new Config([
             StdoutLoggerInterface::class => [
                 LogLevel::DEBUG,
@@ -58,9 +65,9 @@ class I18nMiddlewareTest extends TestCase
 
     public function testProcess(): void
     {
+        $translator = ApplicationContext::getContainer()->get(TranslatorInterface::class);
         $instance = ApplicationContext::getContainer()->get(I18nMiddleware::class);
         $request = \Mockery::mock(ServerRequestInterface::class);
-        $translator = ApplicationContext::getContainer()->get(TranslatorInterface::class);
         $request->allows('hasHeader')
             ->andReturn(false, true, true, true, true);
         $request->allows('getHeaderLine')

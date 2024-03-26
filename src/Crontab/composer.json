@@ -1,0 +1,35 @@
+{
+  "name": "mineadmin/crontab",
+  "description": "加强 Hyperf Crontab",
+  "type": "library",
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "x.mo",
+      "role": "Developer"
+    },
+    {
+      "name": "zds",
+      "role": "Developer"
+    }
+  ],
+  "require": {
+    "hyperf/crontab": "^3.1",
+    "Hyperf/database": "^3.1"
+  },
+  "autoload": {
+    "psr-4": {
+      "Mine\\Crontab\\": "src/"
+    }
+  },
+  "autoload-dev": {
+    "psr-4": {
+      "Mine\\Crontab\\Tests\\": "tests/"
+    }
+  },
+  "extra": {
+    "hyperf": {
+      "config": "\\Mine\\Crontab\\ConfigProvider"
+    }
+  }
+}

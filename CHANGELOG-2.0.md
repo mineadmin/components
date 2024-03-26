@@ -5,3 +5,4 @@
 ## Added
 
 - [#53](https://github.com/mineadmin/components/pull/53) Splitting components http-server
+- [#55](https://github.com/mineadmin/components/pull/55) Splitting the crontab component
