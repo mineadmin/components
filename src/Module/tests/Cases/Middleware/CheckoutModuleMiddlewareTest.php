@@ -16,6 +16,7 @@ use Mine\Module\Middleware\CheckoutModuleMiddleware;
 use PHPUnit\Framework\TestCase;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
+use Psr\Http\Message\UriInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 
 /**
@@ -29,8 +30,12 @@ class CheckoutModuleMiddlewareTest extends TestCase
         $middleware = new CheckoutModuleMiddleware();
         $request = \Mockery::mock(ServerRequestInterface::class);
         $handler = \Mockery::mock(RequestHandlerInterface::class);
+        $uri = \Mockery::mock(UriInterface::class);
+        $uri->allows('getPath')->andReturn('/favicon.ico', '/test/index');
+        $request->allows('getUri')->andReturn($uri);
         $response = \Mockery::mock(ResponseInterface::class);
         $handler->allows('handle')->andReturn($response);
+        $middleware->process($request, $handler);
         $middleware->process($request, $handler);
         $this->assertTrue(true);
     }

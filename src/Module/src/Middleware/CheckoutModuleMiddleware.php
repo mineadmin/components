@@ -21,6 +21,12 @@ class CheckoutModuleMiddleware implements MiddlewareInterface
 {
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {
+        $uri = $request->getUri();
+        if ($uri->getPath() !== '/favicon.ico') {
+            return $handler->handle($request);
+        }
+        // todo 模块检测
+
         return $handler->handle($request);
     }
 }
