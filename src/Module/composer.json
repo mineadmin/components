@@ -1,0 +1,33 @@
+{
+  "name": "mineadmin/module",
+  "description": "基于 MineAdmin 的模块化开发组件",
+  "type": "library",
+  "keywords": ["Hyperf","Module"],
+  "authors": [
+    {
+      "name": "xmo",
+      "email": "root@imoi.cn",
+      "role": "Developer"
+    },
+    {
+      "name": "zds",
+      "email": "2771717608@qq.com",
+      "role": "Developer"
+    }
+  ],
+  "require": {
+    "php": ">=8.1",
+    "mineadmin/http-server": "2.0.x-dev",
+    "hyperf/migration-generator": "^3.1"
+  },
+  "autoload": {
+    "psr-4": {
+      "Mine\\Module\\": "src"
+    }
+  },
+  "autoload-dev": {
+    "psr-4": {
+      "Mine\\Module\\Tests": "tests"
+    }
+  }
+}
