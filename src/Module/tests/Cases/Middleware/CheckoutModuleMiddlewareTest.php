@@ -12,6 +12,9 @@ declare(strict_types=1);
 
 namespace Mine\Module\Tests\Cases\Middleware;
 
+use Hyperf\Di\Annotation\AnnotationCollector;
+use Hyperf\HttpServer\Annotation\Controller;
+use Mine\HttpServer\Exception\BusinessException;
 use Mine\Module\Middleware\CheckoutModuleMiddleware;
 use PHPUnit\Framework\TestCase;
 use Psr\Http\Message\ResponseInterface;
@@ -28,6 +31,14 @@ class CheckoutModuleMiddlewareTest extends TestCase
     public function testProcess(): void
     {
         $middleware = new CheckoutModuleMiddleware();
+        $stdClass = new \stdClass();
+        $stdClass->server = 'http';
+        $stdClass->prefix = 'test/index';
+        AnnotationCollector::collectClass(
+            Test::class,
+            Controller::class,
+            $stdClass
+        );
         $request = \Mockery::mock(ServerRequestInterface::class);
         $handler = \Mockery::mock(RequestHandlerInterface::class);
         $uri = \Mockery::mock(UriInterface::class);
@@ -36,7 +47,12 @@ class CheckoutModuleMiddlewareTest extends TestCase
         $response = \Mockery::mock(ResponseInterface::class);
         $handler->allows('handle')->andReturn($response);
         $middleware->process($request, $handler);
-        $middleware->process($request, $handler);
+        try {
+            $middleware->process($request, $handler);
+        } catch (\Exception $e) {
+            $this->assertInstanceOf(BusinessException::class, $e);
+            $this->assertSame($e->getMessage(), '模块被禁用');
+        }
         $this->assertTrue(true);
     }
 }
