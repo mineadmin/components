@@ -23,8 +23,10 @@ class CreateCrontabExecuteLog extends Migration
         Schema::create('crontab_execute_log', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->bigInteger('crontab_id');
+            $table->string('name', 100);
             $table->tinyInteger('status')->default(0);
-            $table->string('output')->default(0);
+            $table->string('target', 200);
+            $table->text('exception_info');
             $table->datetimes();
         });
     }

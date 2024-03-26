@@ -17,4 +17,6 @@ use Hyperf\Support\Traits\Container;
 final class CrontabContainer
 {
     use Container;
+
+    public static string $connectionName = 'default';
 }

@@ -12,6 +12,8 @@ declare(strict_types=1);
 
 namespace Mine\Crontab;
 
+use Mine\Crontab\Aspect\CrontabExecutorAspect;
+use Mine\Crontab\Command\CrontabMigrateCommand;
 use Mine\Crontab\Listener\CrontabProcessStarredListener;
 
 class ConfigProvider
@@ -21,6 +23,12 @@ class ConfigProvider
         return [
             'listener' => [
                 CrontabProcessStarredListener::class,
+            ],
+            'aspects' => [
+                CrontabExecutorAspect::class,
+            ],
+            'commands' => [
+                CrontabMigrateCommand::class,
             ],
         ];
     }

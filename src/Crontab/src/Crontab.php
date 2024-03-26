@@ -38,8 +38,6 @@ class Crontab extends Base
 
     public const IS_SINGLETON = 'is_singleton';
 
-    public static string $connectionName = 'default';
-
     public function __construct(
         private readonly int $cronId,
     ) {}
@@ -70,7 +68,7 @@ class Crontab extends Base
 
     public function getBuilder(): Builder
     {
-        return Db::connection(self::$connectionName)->table(self::TABLE)->where(self::TABLE_KEY, $this->cronId);
+        return Db::connection(CrontabContainer::$connectionName)->table(self::TABLE)->where(self::TABLE_KEY, $this->cronId);
     }
 
     /**
