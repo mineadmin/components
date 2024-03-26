@@ -15,11 +15,9 @@ namespace Mine\Crontab;
 use Hyperf\Crontab\Crontab;
 use Hyperf\DbConnection\Db;
 
-final class Schedule
+class Schedule
 {
     public const CRONTAB_TABLE = 'crontab';
-
-    public function __construct() {}
 
     /**
      * @return Crontab[]

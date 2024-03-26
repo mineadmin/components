@@ -32,13 +32,21 @@ class Crontab extends Base
 
     public const RULE_COLUMN = 'rule';
 
+    public const NAME_COLUMN = 'name';
+
+    public const IS_ON_ONE_SERVER_COLUMN = 'is_on_one_server';
+
+    public const IS_SINGLETON = 'is_singleton';
+
+    public static string $connectionName = 'default';
+
     public function __construct(
         private readonly int $cronId,
     ) {}
 
     public function getName(): ?string
     {
-        return $this->getBuilder()->value('name');
+        return $this->getBuilder()->value(self::NAME_COLUMN);
     }
 
     public function isEnable(): bool
@@ -62,7 +70,7 @@ class Crontab extends Base
 
     public function getBuilder(): Builder
     {
-        return Db::table(self::TABLE)->where(self::TABLE_KEY, $this->cronId);
+        return Db::connection(self::$connectionName)->table(self::TABLE)->where(self::TABLE_KEY, $this->cronId);
     }
 
     /**
@@ -79,11 +87,12 @@ class Crontab extends Base
                 return [
                     CrontabUrl::class,
                     'execute',
-                    explode($value, ','),
+                    explode(',', $value),
                 ];
             case 'class':
                 return [$value, 'execute'];
             case 'command':
+            case 'callback':
                 return json_decode($value, true, 512, JSON_THROW_ON_ERROR);
         }
         return $value;
@@ -92,5 +101,20 @@ class Crontab extends Base
     public function getRule(): ?string
     {
         return $this->getBuilder()->value(self::RULE_COLUMN);
+    }
+
+    public function getCronId(): int
+    {
+        return $this->cronId;
+    }
+
+    public function isOnOneServer(): bool
+    {
+        return (bool) $this->getBuilder()->value(self::IS_ON_ONE_SERVER_COLUMN);
+    }
+
+    public function isSingleton(): bool
+    {
+        return (bool) $this->getBuilder()->value(self::IS_SINGLETON);
     }
 }

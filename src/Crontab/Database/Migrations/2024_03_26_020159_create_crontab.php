@@ -31,6 +31,8 @@ class CreateCrontab extends Migration
              */
             $table->string('name', 30);
             $table->tinyInteger('status')->default(0);
+            $table->tinyInteger('is_on_one_server')->default(0);
+            $table->tinyInteger('is_singleton')->default(0);
             $table->string('memo', 60)->default(null);
             $table->string('type', 10);
             $table->string('rule', 10);
