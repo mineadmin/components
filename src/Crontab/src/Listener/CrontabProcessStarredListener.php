@@ -16,11 +16,14 @@ use Hyperf\Crontab\CrontabManager;
 use Hyperf\Crontab\Event\CrontabDispatcherStarted;
 use Hyperf\Engine\Coroutine;
 use Hyperf\Event\Contract\ListenerInterface;
+use Hyperf\Process\ProcessManager;
 use Mine\Crontab\CrontabContainer;
 use Mine\Crontab\Schedule;
 
 class CrontabProcessStarredListener implements ListenerInterface
 {
+    public static int $sleep = 30;
+
     public function __construct(
         private readonly CrontabManager $crontabManager,
         private readonly Schedule $schedule
@@ -36,9 +39,9 @@ class CrontabProcessStarredListener implements ListenerInterface
     public function process(object $event): void
     {
         Coroutine::create(function () {
-            while (true) {
+            while (ProcessManager::isRunning()) {
                 $this->registerCrontab();
-                sleep(30);
+                sleep(self::$sleep);
             }
         });
     }

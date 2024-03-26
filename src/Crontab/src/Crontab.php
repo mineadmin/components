@@ -12,11 +12,9 @@ declare(strict_types=1);
 
 namespace Mine\Crontab;
 
-use Hyperf\Context\ApplicationContext;
 use Hyperf\Crontab\Crontab as Base;
 use Hyperf\Database\Query\Builder;
 use Hyperf\DbConnection\Db;
-use Hyperf\Guzzle\ClientFactory;
 
 class Crontab extends Base
 {
@@ -31,6 +29,8 @@ class Crontab extends Base
     public const TYPE_COLUMN = 'type';
 
     public const VALUE_COLUMN = 'value';
+
+    public const RULE_COLUMN = 'rule';
 
     public function __construct(
         private readonly int $cronId,
@@ -76,19 +76,21 @@ class Crontab extends Base
             case 'eval':
                 return $value;
             case 'url':
-                return function () use ($value) {
-                    [$method,$url,$data] = explode(',', $value);
-                    $clientFactory = ApplicationContext::getContainer()->get(ClientFactory::class);
-                    $client = $clientFactory->create();
-                    return $client->request($method, $url, compact('data'))->getBody()->getContents();
-                };
+                return [
+                    CrontabUrl::class,
+                    'execute',
+                    explode($value, ','),
+                ];
             case 'class':
-                return function () use ($value) {
-                    return [$value, 'execute'];
-                };
+                return [$value, 'execute'];
             case 'command':
                 return json_decode($value, true, 512, JSON_THROW_ON_ERROR);
         }
         return $value;
+    }
+
+    public function getRule(): ?string
+    {
+        return $this->getBuilder()->value(self::RULE_COLUMN);
     }
 }
