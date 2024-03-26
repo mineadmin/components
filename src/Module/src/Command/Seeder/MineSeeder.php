@@ -71,7 +71,7 @@ class MineSeeder extends BaseCommand
     protected function ensureSeederDirectoryAlreadyExist(string $path): string
     {
         if (! file_exists($path)) {
-            if (!mkdir($path, 0755, true) && !is_dir($path)) {
+            if (! mkdir($path, 0755, true) && ! is_dir($path)) {
                 throw new \RuntimeException(sprintf('Directory "%s" was not created', $path));
             }
         }
