@@ -16,6 +16,8 @@ use Hyperf\Config\Config;
 use Hyperf\Context\ApplicationContext;
 use Hyperf\Contract\ConfigInterface;
 use Hyperf\Contract\StdoutLoggerInterface;
+use Hyperf\Di\Container;
+use Hyperf\Di\Definition\DefinitionSourceFactory;
 use Mine\HttpServer\Constant\HttpResultCode;
 use Mine\HttpServer\Contract\Log\RequestIdGeneratorInterface;
 use Mine\HttpServer\Log\RequestIdGenerator;
@@ -32,6 +34,7 @@ class ResultTest extends TestCase
 {
     protected function setUp(): void
     {
+        ApplicationContext::setContainer(new Container((new DefinitionSourceFactory(true))()));
         $config = new Config([
             StdoutLoggerInterface::class => [
                 LogLevel::DEBUG,
