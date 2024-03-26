@@ -36,7 +36,7 @@
       "Mine\\NextCoreX\\Tests\\": "src/next-core-x/tests",
       "Mine\\HttpServer\\Tests\\": "src/HttpServer/tests",
       "Mine\\Crontab\\Tests\\": "src/Crontab/tests",
-      "Mine\\Module\\Tests": "src/Module/tests"
+      "Mine\\Module\\Tests\\": "src/Module/tests"
     }
   },
   "authors": [
