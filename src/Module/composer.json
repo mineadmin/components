@@ -31,5 +31,10 @@
     "psr-4": {
       "Mine\\Module\\Tests": "tests"
     }
+  },
+  "config": {
+    "hyperf": {
+      "config": "Mine\\Module\\ConfigProvider"
+    }
   }
 }
