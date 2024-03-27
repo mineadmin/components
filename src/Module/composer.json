@@ -2,6 +2,7 @@
   "name": "mineadmin/module",
   "description": "基于 MineAdmin 的模块化开发组件",
   "type": "library",
+  "license": "MIT",
   "keywords": ["Hyperf","Module"],
   "authors": [
     {
