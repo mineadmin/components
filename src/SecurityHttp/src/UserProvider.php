@@ -57,11 +57,14 @@ class UserProvider extends AbstractUserProvider
         $attribute = $user->getAttributes();
         $clams = [];
         foreach ($attribute as $key => $value) {
+            if ($value === $user->getPassword()) {
+                continue;
+            }
             $clams['__attribute__' . $key] = $value;
         }
         $tokenInstance = new TokenObject();
         $tokenInstance->setClaims($clams);
-        $tokenInstance->setIssuedBy($user->getKey());
+        $tokenInstance->setIssuedBy($user->getIdentifier());
         return $this->jwt->generator($tokenInstance, Context::get(static::class . 'scene', 'default'));
     }
 }

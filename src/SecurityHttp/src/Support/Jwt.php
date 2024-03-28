@@ -29,7 +29,7 @@ use Mine\Security\Http\TokenObject;
 use Mine\SecurityBundle\Config;
 use Psr\Container\ContainerInterface;
 
-final class Jwt
+class Jwt
 {
     public function __construct(
         private readonly Config $config,
