@@ -38,9 +38,10 @@ class UserProviderTest extends TestCase
 
     public function testSetScene()
     {
-      UserProvider::setScene('admin');
-      $this->assertEquals('admin', UserProvider::getScene());
+        UserProvider::setScene('admin');
+        $this->assertEquals('admin', UserProvider::getScene());
     }
+
     public function testRetrieveByCredentials(): void
     {
         $event = \Mockery::mock(EventDispatcherInterface::class);
@@ -108,7 +109,7 @@ class UserProviderTest extends TestCase
 
         $user = new UserModel();
         $user2 = clone $user;
-        $builder->allows('first')->andReturn(null,$user, $user2);
+        $builder->allows('first')->andReturn(null, $user, $user2);
         $builder->allows('where')->andReturn($builder);
         $jwt->allows('generator')->andReturnUsing(function (TokenObject $token) {
             $this->assertEquals('xxx@qq.com', $token->getIssuedBy());
@@ -119,7 +120,7 @@ class UserProviderTest extends TestCase
             return \Mockery::mock(UnencryptedToken::class);
         });
         $this->assertNull($userProvider->retrieveById('123@qq.com'));
-        $this->assertInstanceOf(UnencryptedToken::class,$userProvider->retrieveById('123@qq.com'));
+        $this->assertInstanceOf(UnencryptedToken::class, $userProvider->retrieveById('123@qq.com'));
     }
 
     public function testUpdateRememberToken()
@@ -129,7 +130,7 @@ class UserProviderTest extends TestCase
         $instance = \Mockery::mock(UserProvider::class);
         try {
             $method->invokeArgs($instance, [\Mockery::mock(UserInterface::class), '133213123']);
-        }catch (\Exception $e){
+        } catch (\Exception $e) {
             $this->assertEquals('Method not implemented', $e->getMessage());
         }
     }
