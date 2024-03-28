@@ -1,0 +1,38 @@
+{
+  "name": "mineadmin/security-bundle",
+  "description": "MineAdmin Security bundle,类似 Symfony/Security 组件，提供用户认证、授权、安全上下文等功能。",
+  "license": "MIT",
+  "type": "library",
+  "authors": [
+    {
+      "name": "xmo",
+      "email": "root@imoi.cn",
+      "role": "Developer"
+    },
+    {
+      "name": "zds",
+      "email": "2771717608@qq.com",
+      "role": "Developer"
+    }
+  ],
+  "require": {
+    "php": ">=8.1",
+    "hyperf/framework": "^3.1",
+    "friendsofhyperf/encryption": "^3.1"
+  },
+  "autoload": {
+    "psr-4": {
+      "Mine\\SecurityBundle\\": "src"
+    }
+  },
+  "autoload-dev": {
+    "psr-4": {
+      "Mine\\SecurityBundle\\Tests\\": "tests"
+    }
+  },
+  "extra": {
+    "hyperf": {
+      "config": "Mine\\SecurityBundle\\ConfigProvider"
+    }
+  }
+}
