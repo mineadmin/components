@@ -10,9 +10,9 @@ declare(strict_types=1);
  * @license  https://github.com/mineadmin/MineAdmin/blob/master/LICENSE
  */
 
-namespace Mine\SecurityBundle\Contract;
+namespace Mine\Security\Http\Attribute;
 
-interface TokenInterface
-{
-    public function user(...$params): ?UserInterface;
-}
+use Hyperf\Di\Annotation\AbstractAnnotation;
+
+#[\Attribute(\Attribute::TARGET_PARAMETER)]
+class CurrentUser extends AbstractAnnotation {}

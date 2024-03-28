@@ -14,7 +14,8 @@ namespace Mine\SecurityBundle\Event;
 
 use Mine\SecurityBundle\Contract\UserInterface;
 
-class Failed {
+class Failed
+{
     public function __construct(
         private readonly UserInterface $user
     ) {}

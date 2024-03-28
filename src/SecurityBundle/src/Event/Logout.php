@@ -14,7 +14,8 @@ namespace Mine\SecurityBundle\Event;
 
 use Mine\SecurityBundle\Contract\UserInterface;
 
-class Logout {
+class Logout
+{
     public function __construct(
         private readonly UserInterface $user
     ) {}

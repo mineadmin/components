@@ -33,7 +33,7 @@
   },
   "extra": {
     "hyperf": {
-      "config": "Mine\\SecurityHttp\\ConfigProvider"
+      "config": "Mine\\Security\\Http\\ConfigProvider"
     }
   }
 }

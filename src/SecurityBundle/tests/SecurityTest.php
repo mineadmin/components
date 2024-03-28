@@ -31,7 +31,7 @@ class SecurityTest extends TestCase
     {
         $config = \Mockery::mock(Config::class);
         $container = \Mockery::mock(ContainerInterface::class);
-        $this->assertInstanceOf(Security::class, new Security($config,ApplicationContext::getContainer()));
+        $this->assertInstanceOf(Security::class, new Security($config, ApplicationContext::getContainer()));
     }
 
     public function testGet()
@@ -39,11 +39,11 @@ class SecurityTest extends TestCase
         $config = \Mockery::mock(Config::class);
         $config->allows('get')->andReturn('xxx');
         $container = \Mockery::mock(ContainerInterface::class);
-        $security = new Security($config,$container);
+        $security = new Security($config, $container);
         $container->allows('get')
-            ->andReturn(\Mockery::mock(TokenInterface::class),\Mockery::mock(UserProviderInterface::class),\Mockery::mock(ContextInterface::class));
-        $this->assertInstanceOf(TokenInterface::class,$security->getToken());
-        $this->assertInstanceOf(UserProviderInterface::class,$security->getUserProvider());
-        $this->assertInstanceOf(ContextInterface::class,$security->getContext());
+            ->andReturn(\Mockery::mock(TokenInterface::class), \Mockery::mock(UserProviderInterface::class), \Mockery::mock(ContextInterface::class));
+        $this->assertInstanceOf(TokenInterface::class, $security->getToken());
+        $this->assertInstanceOf(UserProviderInterface::class, $security->getUserProvider());
+        $this->assertInstanceOf(ContextInterface::class, $security->getContext());
     }
 }

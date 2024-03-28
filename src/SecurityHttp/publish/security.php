@@ -1,23 +1,34 @@
 <?php
 
+declare(strict_types=1);
+/**
+ * This file is part of MineAdmin.
+ *
+ * @link     https://www.mineadmin.com
+ * @document https://doc.mineadmin.com
+ * @contact  root@imoi.cn
+ * @license  https://github.com/mineadmin/MineAdmin/blob/master/LICENSE
+ */
+use Mine\Security\Http\Jwt\Black\CacheBlack;
 use Mine\Security\Http\UserProvider;
 use Mine\SecurityBundle\Context\Context;
+
 use function Hyperf\Support\env;
 
 return [
-    /**
+    /*
      * user provider class
      */
-    'provider'  =>  UserProvider::class,
-    /**
+    'provider' => UserProvider::class,
+    /*
      * entity class
      */
-    'entity'    =>  'App\Models\User',
-    /**
+    'entity' => 'App\Models\User',
+    /*
      * An object that attempts to provide a security context
      */
-    'context'   =>  Context::class,
-    'jwt'   =>  [
+    'context' => Context::class,
+    'jwt' => [
         'login_type' => env('JWT_LOGIN_TYPE', 'mpop'), //  登录方式，sso为单点登录，mpop为多点登录
 
         /*
@@ -92,7 +103,8 @@ return [
          */
         'blacklist_cache_ttl' => env('JWT_TTL', 86400),
 
-        'blacklist_prefix' => 'phper666_jwt', // 黑名单缓存的前缀
+        'blacklist_prefix' => 'mineadmin_jwt', // 黑名单缓存的前缀
+        'black' => CacheBlack::class, // 黑名单实现类，默认使用hyperf缓存驱动
 
         /*
          * 区分不同场景的token，比如你一个项目可能会有多种类型的应用接口鉴权,下面自行定义，我只是举例子
@@ -124,11 +136,7 @@ return [
                 'blacklist_cache_ttl' => env('JWT_TTL', 7200), // 黑名单缓存token时间，注意：该时间一定要设置比token过期时间要大一点，默认为100秒,最好设置跟过期时间一样
             ],
         ],
-        'model' => [ // TODO 支持直接获取某模型的数据
-            'class' => '',
-            'pk' => 'uid',
-        ],
         // 是否验证当前场景配置是否是生成当前的token的配置，需要配合自定义中间件实现，false会根据当前token拿到原来的场景配置，并且验证当前token
         'independentTokenVerify' => false,
-    ]
+    ],
 ];

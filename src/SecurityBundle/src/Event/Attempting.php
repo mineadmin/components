@@ -14,7 +14,8 @@ namespace Mine\SecurityBundle\Event;
 
 use Mine\SecurityBundle\Contract\UserInterface;
 
-class Attempting {
+class Attempting
+{
     public function __construct(
         private readonly UserInterface $user
     ) {}

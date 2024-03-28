@@ -24,6 +24,4 @@ interface UserProviderInterface
     public function updateRememberToken(UserInterface $user, string $token): bool;
 
     public function retrieveByCredentials(array $credentials): ?object;
-
-    public function validateCredentials(UserInterface $user, array $credentials): bool;
 }

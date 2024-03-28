@@ -30,9 +30,6 @@ abstract class AbstractUserProvider implements UserProviderInterface
         private readonly Config $config
     ) {}
 
-    /**
-     * @return null|UserInterface
-     */
     public function retrieveByToken(string $token): ?object
     {
         return value(function (Builder $builder, UserInterface $user, string $token) {

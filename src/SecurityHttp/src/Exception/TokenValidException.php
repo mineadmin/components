@@ -10,18 +10,12 @@ declare(strict_types=1);
  * @license  https://github.com/mineadmin/MineAdmin/blob/master/LICENSE
  */
 
-namespace Mine\SecurityBundle\Event;
+namespace Mine\Security\Http\Exception;
 
-use Mine\SecurityBundle\Contract\UserInterface;
-
-class Authenticated
+class TokenValidException extends \RuntimeException
 {
-    public function __construct(
-        private readonly UserInterface $user
-    ) {}
-
-    public function getUser(): UserInterface
+    public function __construct($code = 0, $message = '', ?\Throwable $previous = null)
     {
-        return $this->user;
+        parent::__construct($message, $code, $previous);
     }
 }

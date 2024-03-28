@@ -31,4 +31,8 @@ interface UserInterface
     public function setPassword(string $password): void;
 
     public function getSecurityBuilder(): Builder;
+
+    public function setAttribute(string $key, mixed $value);
+
+    public function getAttributes(): array;
 }

@@ -12,10 +12,10 @@ declare(strict_types=1);
 
 namespace Mine\SecurityBundle;
 
-use Psr\Container\ContainerInterface;
 use Mine\SecurityBundle\Contract\ContextInterface;
 use Mine\SecurityBundle\Contract\TokenInterface;
 use Mine\SecurityBundle\Contract\UserProviderInterface;
+use Psr\Container\ContainerInterface;
 
 final class Security
 {
