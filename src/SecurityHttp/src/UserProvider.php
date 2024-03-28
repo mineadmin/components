@@ -35,6 +35,11 @@ class UserProvider extends AbstractUserProvider
         Context::set(static::class . 'scene', $scene);
     }
 
+    public static function getScene(): string
+    {
+        return Context::get(static::class . 'scene', 'default');
+    }
+
     public function updateRememberToken(UserInterface $user, string $token): bool
     {
         throw new \Exception('Method not implemented');
@@ -65,6 +70,6 @@ class UserProvider extends AbstractUserProvider
         $tokenInstance = new TokenObject();
         $tokenInstance->setClaims($clams);
         $tokenInstance->setIssuedBy($user->getIdentifier());
-        return $this->jwt->generator($tokenInstance, Context::get(static::class . 'scene', 'default'));
+        return $this->jwt->generator($tokenInstance, self::getScene());
     }
 }
