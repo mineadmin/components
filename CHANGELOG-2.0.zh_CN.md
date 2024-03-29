@@ -8,3 +8,4 @@
 - [#55](https://github.com/mineadmin/components/pull/55) 拆分优化组件 crontab
 - [#56](https://github.com/mineadmin/components/pull/56) 拆分`模块化`组件
 - [#58](https://github.com/mineadmin/components/pull/58) 新增基础的 安全认证组件
+- [#59](https://github.com/mineadmin/components/pull/59) 添加安全访问控制组件
