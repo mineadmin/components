@@ -12,20 +12,21 @@ declare(strict_types=1);
 
 namespace Mine\Security\Http\Jwt;
 
-use Hyperf\Context\ApplicationContext;
 use Mine\Security\Http\Constant\TokenValidConstant;
 use Mine\Security\Http\Exception\TokenValidException;
 use Mine\Security\Http\Support\Jwt;
 use Mine\SecurityBundle\Config;
 use Mine\SecurityBundle\Contract\TokenInterface;
 use Mine\SecurityBundle\Contract\UserInterface;
+use Psr\Container\ContainerInterface;
 use Psr\Http\Message\RequestInterface;
 
 class Token implements TokenInterface
 {
     public function __construct(
         private readonly Jwt $jwt,
-        private readonly Config $config
+        private readonly Config $config,
+        private readonly ContainerInterface $container
     ) {}
 
     public function user(...$param): ?UserInterface
@@ -34,8 +35,8 @@ class Token implements TokenInterface
         if ($request === null) {
             throw new \RuntimeException('Request is not available.');
         }
-        if ($request->hasHeader('Authorization')) {
-            throw new TokenValidException('Token is not available.', TokenValidConstant::TOKEN_NOT_FOUND);
+        if (! $request->hasHeader('Authorization')) {
+            throw new TokenValidException(TokenValidConstant::TOKEN_NOT_FOUND, 'Token is not available.');
         }
         $token = str_replace('Bearer ', '', $request->getHeaderLine('Authorization'));
         $scene = $param[0] ?? 'default';
@@ -55,6 +56,6 @@ class Token implements TokenInterface
 
     private function getRequest(): ?RequestInterface
     {
-        return ApplicationContext::getContainer()->get(RequestInterface::class);
+        return $this->container->get(RequestInterface::class);
     }
 }
