@@ -24,7 +24,8 @@
       "Mine\\Crontab\\": "src/Crontab/src",
       "Mine\\Module\\": "src/Module/src",
       "Mine\\SecurityBundle\\": "src/SecurityBundle/src",
-      "Mine\\Security\\Http\\": "src/SecurityHttp/src"
+      "Mine\\Security\\Http\\": "src/SecurityHttp/src",
+      "Mine\\Security\\Access\\": "src/SecurityAccess/src"
     },
     "files": [
       "src/mine-helpers/src/functions.php"
@@ -40,7 +41,8 @@
       "Mine\\Crontab\\Tests\\": "src/Crontab/tests",
       "Mine\\Module\\Tests\\": "src/Module/tests",
       "Mine\\SecurityBundle\\Tests\\": "src/SecurityBundle/tests",
-      "Mine\\Security\\Http\\Tests\\": "src/SecurityHttp/tests"
+      "Mine\\Security\\Http\\Tests\\": "src/SecurityHttp/tests",
+      "Mine\\Security\\Access\\Tests\\": "src/SecurityAccess/tests"
     }
   },
   "authors": [
@@ -80,8 +82,10 @@
     "ext-redis": "*",
     "ext-swoole": ">=5.0",
     "ext-zip": "*",
+    "casbin/casbin": "^v3.21",
     "doctrine/dbal": "^3.1",
     "friendsofhyperf/encryption": "^3.1",
+    "friendsofhyperf/facade": "^v3.1",
     "hyperf/amqp": "~3.1.0",
     "hyperf/async-queue": "~3.1.0",
     "hyperf/cache": "~3.1.0",
