@@ -60,7 +60,7 @@ abstract class AbstractBlack implements BlackContract
 
         if ($config['blacklist_enabled'] && $config['login_type'] === 'sso') {
             $val = $this->storageGet($cacheKey, $config['blacklist_prefix']);
-            // 这里为什么要大于等于0，因为在刷新token时，缓存时间跟签发时间可能一致，详细请看刷新token方法
+            // When refreshing the token, the cache time may be the same as the issue time
             if (! is_null($claims['iat']) && ! empty($val['valid_until'])) {
                 $isFuture = ($claims['iat']->getTimestamp() - $val['valid_until']) >= 0;
             } else {

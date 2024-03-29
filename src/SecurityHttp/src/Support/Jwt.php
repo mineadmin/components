@@ -12,6 +12,7 @@ declare(strict_types=1);
 
 namespace Mine\Security\Http\Support;
 
+use Carbon\Carbon;
 use Lcobucci\JWT\Configuration;
 use Lcobucci\JWT\Signer;
 use Lcobucci\JWT\Signer\Key;
@@ -56,16 +57,16 @@ class Jwt
             $unique = $scene . '_' . $claims[$ssoKey];
         }
 
-        $signer = new $config['supported_algs'][$config['alg']]();
-        $time = new \DateTimeImmutable();
-        $time->modify(sprintf('+%s second', $config['ttl']));
+        $signer = $this->getSigner($config);
+        $time = Carbon::now()->addSeconds($this->getTtl($config));
+        $datetimeImmutable = $time->toDateTimeImmutable();
         $builder = $this->getConfiguration($signer, $this->getKey($config))->builder();
         $builder = $builder
             ->issuedBy($tokenObject->getIssuedBy())
             ->identifiedBy($unique)
-            ->issuedAt($time)
-            ->canOnlyBeUsedAfter($time)
-            ->expiresAt($time);
+            ->issuedAt($datetimeImmutable)
+            ->canOnlyBeUsedAfter($datetimeImmutable)
+            ->expiresAt($datetimeImmutable);
 
         $claims['scene'] = $scene; // Add scene values
         foreach ($claims as $k => $v) {
@@ -83,6 +84,11 @@ class Jwt
         }
 
         return $token;
+    }
+
+    public function getTtl(array $config): int
+    {
+        return (int) $config['ttl'];
     }
 
     /**
@@ -109,11 +115,11 @@ class Jwt
 
         // Verify that the token is blacklisted
         if ($config['blacklist_enabled'] && $this->getBlack($config)->has($claims, $config)) {
-            throw new TokenValidException('Token authentication does not pass', TokenValidConstant::IN_BLACKLIST);
+            throw new TokenValidException(TokenValidConstant::IN_BLACKLIST, 'Token authentication does not pass');
         }
 
         if ($validate && ! $this->getValidationData($signer, $this->getKey($config), $token)) {
-            throw new TokenValidException('Token authentication does not pass', TokenValidConstant::PARSER_DATA_VALID);
+            throw new TokenValidException(TokenValidConstant::PARSER_DATA_VALID, 'Token authentication does not pass');
         }
         return $resolveToken;
     }
@@ -127,7 +133,13 @@ class Jwt
         $oldToken = $this->parse($token, $scene);
         $claims = $oldToken->claims()->all();
         $headers = $oldToken->headers()->all();
-        unset($claims['iat'], $claims['nbf'], $claims['exp'], $claims['jti']);
+        unset(
+            $claims['iat'],
+            $claims['nbf'],
+            $claims['exp'],
+            $claims['jti'],
+            $claims['iss'],
+        );
         $tokenInstance = new TokenObject();
         $tokenInstance->setHeaders($headers);
         $tokenInstance->setClaims($claims);
@@ -138,7 +150,7 @@ class Jwt
      * Invalidate the token.
      * @throws JwtConfigException
      */
-    public function logout(string $token, ?string $scene = null): bool
+    public function logout(string $token, string $scene = 'default'): bool
     {
         $config = $this->getSceneConfig($scene);
         return $this->getBlack($config)->add($this->parse($token), $config);
@@ -150,9 +162,11 @@ class Jwt
     public function getTokenDynamicCacheTime(string $token): int
     {
         $claims = $this->parse($token)->claims();
-        if (! $claims->has(RegisteredClaims::EXPIRATION_TIME)) {
-            $timeUtil = Time::timestamp($claims->get(RegisteredClaims::EXPIRATION_TIME));
-            return $timeUtil->max(Time::now())->diffInSeconds();
+        /**
+         * @var null|\DateTimeImmutable $exp
+         */
+        if ($exp = $claims->get(RegisteredClaims::EXPIRATION_TIME)) {
+            return Carbon::now()->diffInSeconds($exp);
         }
         return -1;
     }
@@ -167,11 +181,6 @@ class Jwt
         $config = $this->getConfiguration($signer, $key);
         $parser = $config->parser()->parse($token);
         $claims = $parser->claims()->all();
-        $now = new \DateTimeImmutable();
-
-        if ($claims['nbf'] > $now || $claims['exp'] < $now) {
-            throw new TokenValidException('Token has expired', TokenValidConstant::EXPIRE);
-        }
 
         $config->setValidationConstraints(new IdentifiedBy($claims['jti']));
         $config->setValidationConstraints(new SignedWith($signer, $key));
@@ -208,12 +217,12 @@ class Jwt
         }
         $sceneConfig = $isDefault ? $config : $config['scene'][$scene];
         if (! $isDefault) {
-            // 如果不是默认的场景，则将默认的配置合并进来
+            // If it is not the default scenario, the default configuration is merged in
             $keys = [
                 'login_type', 'sso_key', 'secret', 'keys',
                 'ttl', 'alg', 'supported_algs', 'symmetry_algs',
                 'asymmetric_algs', 'blacklist_enabled', 'blacklist_grace_period',
-                'blacklist_cache_ttl', 'blacklist_prefix',
+                'blacklist_cache_ttl', 'blacklist_prefix', 'black',
             ];
             foreach ($keys as $key) {
                 if (empty($sceneConfig[$key])) {
@@ -227,7 +236,7 @@ class Jwt
     /**
      * Get the key needed by the corresponding algorithm.
      */
-    private function getKey(array $config, string $type = 'private'): ?Key
+    public function getKey(array $config, string $type = 'private'): ?Key
     {
         $key = null;
         // symmetry algorithm
@@ -240,5 +249,10 @@ class Jwt
             $key = InMemory::base64Encoded($config['keys'][$type]);
         }
         return $key;
+    }
+
+    public function getSigner(array $config): Signer
+    {
+        return new $config['supported_algs'][$config['alg']]();
     }
 }
