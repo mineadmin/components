@@ -18,6 +18,7 @@ parameters:
           - src/tests/
           - src/app-store/test/
           - src/httpServer/tests/
+          - src/SecurityAccess/tests/
   ignoreErrors:
     - '#Unsafe usage of new static\(\)#'
     - '#Call to static method find\(\) on an unknown class#'
