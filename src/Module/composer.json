@@ -33,7 +33,7 @@
       "Mine\\Module\\Tests": "tests"
     }
   },
-  "config": {
+  "extra": {
     "hyperf": {
       "config": "Mine\\Module\\ConfigProvider"
     }

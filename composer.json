@@ -22,7 +22,9 @@
       "Mine\\NextCoreX\\": "src/next-core-x/src",
       "Mine\\HttpServer\\": "src/HttpServer/src",
       "Mine\\Crontab\\": "src/Crontab/src",
-      "Mine\\Module\\": "src/Module/src"
+      "Mine\\Module\\": "src/Module/src",
+      "Mine\\SecurityBundle\\": "src/SecurityBundle/src",
+      "Mine\\Security\\Http\\": "src/SecurityHttp/src"
     },
     "files": [
       "src/mine-helpers/src/functions.php"
@@ -36,7 +38,9 @@
       "Mine\\NextCoreX\\Tests\\": "src/next-core-x/tests",
       "Mine\\HttpServer\\Tests\\": "src/HttpServer/tests",
       "Mine\\Crontab\\Tests\\": "src/Crontab/tests",
-      "Mine\\Module\\Tests\\": "src/Module/tests"
+      "Mine\\Module\\Tests\\": "src/Module/tests",
+      "Mine\\SecurityBundle\\Tests\\": "src/SecurityBundle/tests",
+      "Mine\\Security\\Http\\Tests\\": "src/SecurityHttp/tests"
     }
   },
   "authors": [
@@ -46,7 +50,7 @@
       "role": "Developer"
     },
     {
-      "name": "DeathSatan",
+      "name": "zds",
       "email": "2771717608@qq.com",
       "role": "Developer"
     }
@@ -61,7 +65,10 @@
     "xmo/mine-genertor": "*",
     "xmo/app-store": "*",
     "mine/next-core-x": "*",
-    "mineadmin/http-server": "*"
+    "mineadmin/http-server": "*",
+    "mineadmin/security-bundle": "*",
+    "mineadmin/security-http": "*",
+    "mineadmin/module": "*"
   },
   "require": {
     "php": ">=8.1",
@@ -74,6 +81,7 @@
     "ext-swoole": ">=5.0",
     "ext-zip": "*",
     "doctrine/dbal": "^3.1",
+    "friendsofhyperf/encryption": "^3.1",
     "hyperf/amqp": "~3.1.0",
     "hyperf/async-queue": "~3.1.0",
     "hyperf/cache": "~3.1.0",
@@ -106,7 +114,9 @@
     "hyperf/validation": "~3.1.0",
     "hyperf/websocket-server": "~3.1.0",
     "lcobucci/jwt": "~5.2.0",
+    "mine/next-core-x": "dev-2.0-dev",
     "nesbot/carbon": "^1.0 || ^2.0",
+    "nette/utils": "dev-master",
     "overtrue/flysystem-cos": "^5.0",
     "overtrue/flysystem-qiniu": "^3.0",
     "phpoffice/phpspreadsheet": "^1.24",
@@ -116,9 +126,7 @@
     "symfony/var-exporter": "*",
     "tangwei/apidocs": "^3.0",
     "yurunsoft/phpmailer-swoole": "^1.0",
-    "zoujingli/ip2region": "2.0.*",
-    "nette/utils": "dev-master",
-    "mine/next-core-x": "dev-2.0-dev"
+    "zoujingli/ip2region": "2.0.*"
   },
   "require-dev": {
     "friendsofphp/php-cs-fixer": "^3.0",

@@ -1,0 +1,39 @@
+{
+  "name": "mineadmin/security-http",
+  "description": "MineAdmin Security http component",
+  "type": "library",
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "xmo",
+      "email": "root@imoi.cn",
+      "role": "Developer"
+    },
+    {
+      "name": "zds",
+      "email": "2771717608@qq.com",
+      "role": "Developer"
+    }
+  ],
+  "require": {
+    "php": ">=8.1",
+    "mineadmin/http-server": "2.0.x-dev",
+    "mineadmin/security-bundle": "2.0.x-dev",
+    "lcobucci/jwt": "^5.2"
+  },
+  "autoload": {
+    "psr-4": {
+      "Mine\\Security\\Http\\": "src/"
+    }
+  },
+  "autoload-dev": {
+    "psr-4": {
+      "Mine\\Security\\Http\\Tests\\": "tests/"
+    }
+  },
+  "extra": {
+    "hyperf": {
+      "config": "Mine\\Security\\Http\\ConfigProvider"
+    }
+  }
+}
