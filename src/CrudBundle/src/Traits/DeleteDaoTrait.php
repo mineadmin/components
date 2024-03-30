@@ -10,24 +10,21 @@ declare(strict_types=1);
  * @license  https://github.com/mineadmin/MineAdmin/blob/master/LICENSE
  */
 
-namespace Mine\Traits;
+namespace Mine\CrudBundle\Traits;
 
 use Hyperf\DbConnection\Db;
 use Hyperf\DbConnection\Model\Model;
-use Mine\Abstracts\BaseDao;
-use Mine\CrudBundle\Contract\DeleteDaoContract;
+use Mine\CrudBundle\Abstracts\AbstractDao;
 
 /**
- * @mixin BaseDao
- * @implements DeleteDaoContract
+ * @mixin AbstractDao
  */
 trait DeleteDaoTrait
 {
     public function remove(mixed $idOrWhere, bool $force = false): bool
     {
         return Db::transaction(function () use ($idOrWhere, $force) {
-            $modelClass = $this->getModel();
-            $query = $modelClass::query();
+            $query = $this->getModelQuery();
             /**
              * @var null|bool|Model $instance
              */
@@ -44,39 +41,26 @@ trait DeleteDaoTrait
             if (empty($instance)) {
                 return false;
             }
-            if ($force) {
-                return $instance->forceDelete();
-            }
-            return false;
+            return $force ? $instance->forceDelete() : $instance->delete();
         });
     }
 
     public function delete(mixed $id): bool
     {
-        $model = $this->getModel();
-        $query = $model::query()->getModel();
+        $query = $this->getModelQuery();
         $keyName = $query->getModel()->getKeyName();
-        /**
-         * @var null|Model $instance
-         */
-        $instance = false;
         if (is_array($id)) {
-            $instance = $query->where($id)->first();
+            return $query->whereIn($keyName, $id)->delete();
         }
         if (is_callable($id)) {
-            $instance = $query->where($id)->first();
+            return $query->where($id)->delete();
         }
-        if ($instance === null) {
-            $instance = $query->find($id);
-        }
-        if (empty($instance)) {
-            return false;
-        }
-        return $model::query()
+        return (bool) $query
             ->where(
                 $keyName,
-                $instance->getKey()
-            )->delete();
+                $id
+            )
+            ->delete();
     }
 
     public function removeByIds(array $ids): bool

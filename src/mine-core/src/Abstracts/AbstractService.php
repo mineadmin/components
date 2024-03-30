@@ -13,7 +13,7 @@ declare(strict_types=1);
 namespace Mine\Abstracts;
 
 use Hyperf\Context\Context;
-use Mine\Traits\ServiceTrait;
+use Mine\CrudBundle\Traits\ServiceTrait;
 
 abstract class AbstractService
 {

@@ -18,7 +18,7 @@ use Hyperf\Database\Model\Model;
 use Hyperf\Database\Model\Relations\HasMany;
 use Hyperf\Database\Model\Relations\HasOne;
 use Hyperf\DbConnection\Db;
-use Mine\Contract\UpdateDaoContract;
+use Mine\CrudBundle\Contract\UpdateDaoContract;
 use Mine\ServiceException;
 
 /**

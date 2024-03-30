@@ -13,8 +13,8 @@ declare(strict_types=1);
 namespace Mine\Abstracts;
 
 use Hyperf\Context\Context;
+use Mine\CrudBundle\Traits\MapperTrait;
 use Mine\MineModel;
-use Mine\Traits\MapperTrait;
 
 /**
  * Class AbstractMapper.

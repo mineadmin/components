@@ -10,31 +10,30 @@ declare(strict_types=1);
  * @license  https://github.com/mineadmin/MineAdmin/blob/master/LICENSE
  */
 
-namespace Mine\Traits;
+namespace Mine\CrudBundle\Traits;
 
 use Hyperf\Collection\Arr;
 use Hyperf\Collection\Collection;
 use Hyperf\Database\Model\Model;
 use Hyperf\DbConnection\Db;
-use Mine\Abstracts\BaseDao;
-use Mine\CrudBundle\Contract\SaveOrUpdateDaoContract;
+use Mine\CrudBundle\Abstracts\AbstractDao;
 
 /**
- * @mixin BaseDao
- * @implements SaveOrUpdateDaoContract
+ * @mixin AbstractDao
  */
 trait SaveOrUpdateDaoTrait
 {
     public function saveOrUpdate(array $data, ?array $where = null): Model
     {
-        $keyName = $this->getModelInstance()->getKeyName();
+        $query = $this->getModelQuery();
         if ($where === null) {
-            return $this->getModel()::updateOrCreate(
+            $keyName = $this->getModel()->getKeyName();
+            return $query->updateOrCreate(
                 Arr::only($data, [$keyName]),
-                $data
+                Arr::except($data, [$keyName])
             );
         }
-        return $this->getModelQuery()->updateOrCreate($where, $data);
+        return $query->updateOrCreate($where, $data);
     }
 
     public function batchSaveOrUpdate(
@@ -51,7 +50,7 @@ trait SaveOrUpdateDaoTrait
                     );
                 } else {
                     $result[] = $this->saveOrUpdate(
-                        $item,
+                        Arr::except($item, $whereKeys),
                         Arr::only($item, $whereKeys)
                     );
                 }

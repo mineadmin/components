@@ -10,17 +10,18 @@ declare(strict_types=1);
  * @license  https://github.com/mineadmin/MineAdmin/blob/master/LICENSE
  */
 
-namespace Mine\Traits;
+namespace Mine\CrudBundle\Traits;
 
 use Hyperf\Collection\Collection;
 use Hyperf\Contract\LengthAwarePaginatorInterface;
 use Hyperf\Database\Model\Builder;
-use Mine\Abstracts\BaseDao;
+use Hyperf\Database\Model\Model;
+use Mine\CrudBundle\Abstracts\AbstractDao;
 use Mine\CrudBundle\Contract\PageDaoContract;
 use Mine\ServiceException;
 
 /**
- * @mixin BaseDao
+ * @mixin AbstractDao
  * @mixin PageDaoContract
  */
 trait SelectDaoTrait
@@ -33,7 +34,7 @@ trait SelectDaoTrait
         )->paginate(perPage: $size, page: $page);
     }
 
-    public function count(mixed $params = null): int
+    public function total(mixed $params = null): int
     {
         return $this->handleSearch(
             $this->preQuery(),
@@ -44,21 +45,21 @@ trait SelectDaoTrait
     public function list(mixed $params = null): Collection
     {
         return $this->handleSearch(
-            $this->handleSelect($this->preQuery()),
+            $this->preQuery(),
             $params
         )->get();
     }
 
-    public function getById(mixed $id): Collection
+    public function findById(mixed $id): ?Model
     {
-        return Collection::make($this->getModel()::find($id));
+        return $this->getModelQuery()->take(1)->find($id);
     }
 
     abstract public function handleSearch(Builder $query, mixed $params = null): Builder;
 
     protected function handleSelect(Builder $query): Builder
     {
-        return $query->select($this->getSelectFields() ?? ['*']);
+        return $query->select();
     }
 
     /**
@@ -67,7 +68,7 @@ trait SelectDaoTrait
      */
     protected function getSelectFields(): array
     {
-        return $this->getModelInstance()->getFillable();
+        return $this->getModel()->getFillable();
     }
 
     /**

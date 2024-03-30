@@ -12,7 +12,7 @@ declare(strict_types=1);
 
 namespace Mine;
 
-use Mine\Traits\ControllerTrait;
+use Mine\CrudBundle\Traits\ControllerTrait;
 
 /**
  * 后台控制器基类

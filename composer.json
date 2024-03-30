@@ -25,7 +25,9 @@
       "Mine\\Module\\": "src/Module/src",
       "Mine\\SecurityBundle\\": "src/SecurityBundle/src",
       "Mine\\Security\\Http\\": "src/SecurityHttp/src",
-      "Mine\\Security\\Access\\": "src/SecurityAccess/src"
+      "Mine\\Security\\Access\\": "src/SecurityAccess/src",
+      "Mine\\Admin\\Bundle\\": "src/AdminBundle/src",
+      "Mine\\CrudBundle\\": "src/CrudBundle/src"
     },
     "files": [
       "src/mine-helpers/src/functions.php"
@@ -42,7 +44,9 @@
       "Mine\\Module\\Tests\\": "src/Module/tests",
       "Mine\\SecurityBundle\\Tests\\": "src/SecurityBundle/tests",
       "Mine\\Security\\Http\\Tests\\": "src/SecurityHttp/tests",
-      "Mine\\Security\\Access\\Tests\\": "src/SecurityAccess/tests"
+      "Mine\\Security\\Access\\Tests\\": "src/SecurityAccess/tests",
+      "Mine\\Admin\\Bundle\\Tests\\": "src/AdminBundle/tests",
+      "Mine\\CrudBundle\\Tests\\": "src/CrudBundle/tests"
     }
   },
   "authors": [
@@ -70,7 +74,11 @@
     "mineadmin/http-server": "*",
     "mineadmin/security-bundle": "*",
     "mineadmin/security-http": "*",
-    "mineadmin/module": "*"
+    "mineadmin/security-access": "*",
+    "mineadmin/module": "*",
+    "mineadmin/crud-bundle": "*",
+    "mineadmin/admin-bundle": "*",
+    "mineadmin/crontab": "*"
   },
   "require": {
     "php": ">=8.1",

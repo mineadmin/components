@@ -12,14 +12,14 @@ declare(strict_types=1);
 
 namespace Mine\Abstracts;
 
-use Mine\Contract\DeleteDaoContract;
-use Mine\Contract\PageDaoContract;
-use Mine\Contract\SaveOrUpdateDaoContract;
-use Mine\Contract\UpdateDaoContract;
-use Mine\Traits\DeleteDaoTrait;
-use Mine\Traits\SaveOrUpdateDaoTrait;
-use Mine\Traits\SelectDaoTrait;
-use Mine\Traits\UpdateDaoTrait;
+use Mine\CrudBundle\Contract\DeleteDaoContract;
+use Mine\CrudBundle\Contract\PageDaoContract;
+use Mine\CrudBundle\Contract\SaveOrUpdateDaoContract;
+use Mine\CrudBundle\Contract\UpdateDaoContract;
+use Mine\CrudBundle\Traits\DeleteDaoTrait;
+use Mine\CrudBundle\Traits\SaveOrUpdateDaoTrait;
+use Mine\CrudBundle\Traits\SelectDaoTrait;
+use Mine\CrudBundle\Traits\UpdateDaoTrait;
 
 /**
  * CrudService.
