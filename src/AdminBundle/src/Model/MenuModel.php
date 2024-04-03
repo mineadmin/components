@@ -1,5 +1,15 @@
 <?php
 
+declare(strict_types=1);
+/**
+ * This file is part of MineAdmin.
+ *
+ * @link     https://www.mineadmin.com
+ * @document https://doc.mineadmin.com
+ * @contact  root@imoi.cn
+ * @license  https://github.com/mineadmin/MineAdmin/blob/master/LICENSE
+ */
+
 namespace Mine\Admin\Bundle\Model;
 
 use Hyperf\Database\Model\Model;
@@ -20,5 +30,4 @@ class MenuModel extends Model
     {
         return $this->belongsToMany(RoleModel::class, 'system_role_menu', 'menu_id', 'role_id');
     }
-
 }

@@ -12,6 +12,7 @@ declare(strict_types=1);
 
 namespace Mine\Office\Excel;
 
+use Hyperf\Collection\Arr;
 use Mine\Exception\MineException;
 use Mine\MineModel;
 use Mine\MineRequest;
@@ -25,8 +26,6 @@ use PhpOffice\PhpSpreadsheet\Style\Fill;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\NotFoundExceptionInterface;
 use Psr\Http\Message\ResponseInterface;
-
-use function Hyperf\Collection\data_get;
 
 class PhpOffice extends MineExcel implements ExcelPropertyInterface
 {
@@ -137,7 +136,7 @@ class PhpOffice extends MineExcel implements ExcelPropertyInterface
                     if (! empty($annotation['dictName'])) {
                         $sheet->setCellValue($columnRow, $annotation['dictName'][$value]);
                     } elseif (! empty($annotation['path'])) {
-                        $sheet->setCellValue($columnRow, data_get($items, $annotation['path']));
+                        $sheet->setCellValue($columnRow, Arr::get($item, $annotation['path']));
                     } elseif (! empty($annotation['dictData'])) {
                         $sheet->setCellValue($columnRow, $annotation['dictData'][$value]);
                     } elseif (! empty($this->dictData[$name])) {

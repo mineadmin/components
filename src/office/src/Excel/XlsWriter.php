@@ -12,6 +12,7 @@ declare(strict_types=1);
 
 namespace Mine\Office\Excel;
 
+use Hyperf\Collection\Arr;
 use Mine\Exception\MineException;
 use Mine\MineModel;
 use Mine\MineRequest;
@@ -23,8 +24,6 @@ use Psr\Container\NotFoundExceptionInterface;
 use Psr\Http\Message\ResponseInterface;
 use Vtiful\Kernel\Excel;
 use Vtiful\Kernel\Format;
-
-use function Hyperf\Collection\data_get;
 
 class XlsWriter extends MineExcel implements ExcelPropertyInterface
 {
@@ -150,7 +149,7 @@ class XlsWriter extends MineExcel implements ExcelPropertyInterface
                         } elseif (! empty($property['dictData'])) {
                             $yield[] = $property['dictData'][$value];
                         } elseif (! empty($property['path'])) {
-                            $yield[] = data_get($item, $property['path']);
+                            $yield[] = Arr::get($item, $property['path']);
                         } elseif (! empty($this->dictData[$name])) {
                             $yield[] = $this->dictData[$name][$value] ?? '';
                         } else {

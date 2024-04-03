@@ -1,14 +1,23 @@
 <?php
 
-
+declare(strict_types=1);
+/**
+ * This file is part of MineAdmin.
+ *
+ * @link     https://www.mineadmin.com
+ * @document https://doc.mineadmin.com
+ * @contact  root@imoi.cn
+ * @license  https://github.com/mineadmin/MineAdmin/blob/master/LICENSE
+ */
 use Hyperf\Database\Migrations\Migration;
 use Hyperf\Database\Schema\Blueprint;
 use Hyperf\Database\Schema\Schema;
+
 use function Hyperf\Config\config;
 
 class CreateAdminTables extends Migration
 {
-    public function getConnection (): string
+    public function getConnection(): string
     {
         return $this->config('database.connection') ?: config('database.default');
     }
@@ -20,8 +29,6 @@ class CreateAdminTables extends Migration
 
     /**
      * Run the migrations.
-     *
-     * @return void
      */
     public function up(): void
     {
@@ -58,7 +65,8 @@ class CreateAdminTables extends Migration
                 $table->addColumn('string', 'code', ['length' => 100, 'comment' => '角色代码']);
                 $table->addColumn(
                     'smallInteger',
-                    'data_scope', [
+                    'data_scope',
+                    [
                         'length' => 1,
                         'default' => 1,
                         'comment' => '数据范围（1：全部数据权限 2：自定义数据权限 3：本部门数据权限 4：本部门及以下数据权限 5：本人数据权限）',
@@ -77,22 +85,22 @@ class CreateAdminTables extends Migration
         Schema::create($this->config('database.menu_table'), function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->addColumn('bigInteger', 'parent_id', ['unsigned' => true]);
-            $table->addColumn('string', 'level', ['length' => 500, ]);
-            $table->addColumn('string', 'name', ['length' => 50, ]);
-            $table->addColumn('string', 'code', ['length' => 100, ]);
-            $table->addColumn('string', 'icon', ['length' => 50, ])->nullable();
-            $table->addColumn('string', 'route', ['length' => 200, ])->nullable();
-            $table->addColumn('string', 'component', ['length' => 255, ])->nullable();
-            $table->addColumn('string', 'redirect', ['length' => 255, ])->nullable();
+            $table->addColumn('string', 'level', ['length' => 500]);
+            $table->addColumn('string', 'name', ['length' => 50]);
+            $table->addColumn('string', 'code', ['length' => 100]);
+            $table->addColumn('string', 'icon', ['length' => 50])->nullable();
+            $table->addColumn('string', 'route', ['length' => 200])->nullable();
+            $table->addColumn('string', 'component', ['length' => 255])->nullable();
+            $table->addColumn('string', 'redirect', ['length' => 255])->nullable();
             $table->tinyInteger('is_hidden')->default(1);
-            $table->char('type',1)->default('');
+            $table->char('type', 1)->default('');
             $table->smallInteger('status')->default(1);
             $table->tinyInteger('sort')->unsigned()->default(0);
             $table->addColumn('bigInteger', 'created_by', [])->default(0);
             $table->addColumn('bigInteger', 'updated_by', [])->default(0);
             $table->timestamps();
-            $table->addColumn('timestamp', 'deleted_at', ['precision' => 0, ])->nullable();
-            $table->addColumn('string', 'remark', ['length' => 255, ])->nullable();
+            $table->addColumn('timestamp', 'deleted_at', ['precision' => 0])->nullable();
+            $table->addColumn('string', 'remark', ['length' => 255])->nullable();
         });
 
         Schema::create($this->config('database.department_table'), function (Blueprint $table) {
@@ -154,8 +162,6 @@ class CreateAdminTables extends Migration
 
     /**
      * Reverse the migrations.
-     *
-     * @return void
      */
     public function down(): void
     {
