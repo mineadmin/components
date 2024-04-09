@@ -73,6 +73,9 @@ class CreateModel extends MineCommand
                 if (preg_match(sprintf('/%s(\\b|_[a-zA-Z0-9]+)/i', $module), $tmp)) {
                     $tableList[] = $tmp;
                 }
+                if ($tmp === $table) {
+                    $tableList[] = $tmp;
+                }
             }
 
             if (! empty($table)) {
