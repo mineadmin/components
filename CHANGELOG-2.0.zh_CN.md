@@ -10,3 +10,4 @@
 - [#58](https://github.com/mineadmin/components/pull/58) 新增基础的 安全认证组件
 - [#59](https://github.com/mineadmin/components/pull/59) 添加安全访问控制组件
 - [#61](https://github.com/mineadmin/components/pull/61) 为导出 path 属性提供关联访问方式
+- [#63](https://github.com/mineadmin/components/pull/63) 修复某些单词（category）复数情况下无法生成文件

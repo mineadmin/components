@@ -106,6 +106,7 @@ class ModelGenerator extends MineGenerator implements CodeGenerator
 
         if ($application->run($input, $output) === 0) {
             // 对模型文件处理
+            $modelName = \Hyperf\Stringable\Str::singular($modelName);
             if ($modelName[strlen($modelName) - 1] == 's' && $modelName[strlen($modelName) - 2] != 's') {
                 $oldName = Str::substr($modelName, 0, strlen($modelName) - 1);
                 $oldPath = BASE_PATH . "/app/{$module}/Model/{$oldName}.php";
