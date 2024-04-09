@@ -10,3 +10,4 @@
 - [#58](https://github.com/mineadmin/components/pull/58) New base Secure Authentication Component
 - [#59](https://github.com/mineadmin/components/pull/59) Add components for secure access control
 - - [#61](https://github.com/mineadmin/components/pull/61) Provide associative access to exported path attributes
+- [#64](https://github.com/mineadmin/components/pull/64) Fix the inability to generate a mod in the case of a plural form of table name prefix_table_name(s)
