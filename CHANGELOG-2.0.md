@@ -9,5 +9,6 @@
 - [#56](https://github.com/mineadmin/components/pull/56) Splitting modular components
 - [#58](https://github.com/mineadmin/components/pull/58) New base Secure Authentication Component
 - [#59](https://github.com/mineadmin/components/pull/59) Add components for secure access control
-- - [#61](https://github.com/mineadmin/components/pull/61) Provide associative access to exported path attributes
+- [#61](https://github.com/mineadmin/components/pull/61) Provide associative access to exported path attributes
+- [#63](https://github.com/mineadmin/components/pull/63) Fixes the failure to generate files when certain words (category) are pluralized.
 - [#64](https://github.com/mineadmin/components/pull/64) Fix the inability to generate a mod in the case of a plural form of table name prefix_table_name(s)
