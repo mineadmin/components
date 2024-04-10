@@ -17,7 +17,6 @@ use Hyperf\Database\Schema\Schema;
 use Hyperf\DbConnection\Db;
 use Mine\Mine;
 use Mine\MineCommand;
-use Symfony\Component\Console\Input\InputOption;
 
 use function Hyperf\Support\env;
 use function Hyperf\Support\make;
@@ -151,11 +150,11 @@ class InstallProjectCommand extends MineCommand
             'user_id' => $superAdminId,
             'role_id' => $superRoleId,
         ]);
-        file_put_contents(BASE_PATH.'/.env',<<<ENV
+        file_put_contents(BASE_PATH . '/.env', <<<ENV
 SUPER_ADMIN = {$superAdminId}
 ADMIN_ROLE = {$superRoleId}
 ENV
-,FILE_APPEND);
+            , FILE_APPEND);
     }
 
     protected function finish(): void
