@@ -35,7 +35,7 @@ class PhpOffice extends MineExcel implements ExcelPropertyInterface
      * @throws ContainerExceptionInterface
      * @throws NotFoundExceptionInterface
      */
-    public function import(MineModel $model, ?\Closure $closure = null): bool
+    public function import(MineModel $model, ?\Closure $closure = null): mixed
     {
         $request = container()->get(MineRequest::class);
         $data = [];

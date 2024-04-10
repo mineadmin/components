@@ -17,7 +17,7 @@ use Psr\Http\Message\ResponseInterface;
 
 interface ExcelPropertyInterface
 {
-    public function import(MineModel $model, ?\Closure $closure = null): bool;
+    public function import(MineModel $model, ?\Closure $closure = null): mixed;
 
     public function export(string $filename, array|\Closure $closure): ResponseInterface;
 }

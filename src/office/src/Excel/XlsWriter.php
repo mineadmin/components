@@ -43,7 +43,7 @@ class XlsWriter extends MineExcel implements ExcelPropertyInterface
      * @throws NotFoundExceptionInterface
      * @throws \Exception
      */
-    public function import(MineModel $model, ?\Closure $closure = null): bool
+    public function import(MineModel $model, ?\Closure $closure = null): mixed
     {
         $request = container()->get(MineRequest::class);
         if ($request->hasFile('file')) {

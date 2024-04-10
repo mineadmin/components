@@ -108,7 +108,7 @@ class MineCollection extends Collection
      * @throws ContainerExceptionInterface
      * @throws NotFoundExceptionInterface
      */
-    public function import(string $dto, MineModel $model, ?\Closure $closure = null): bool
+    public function import(string $dto, MineModel $model, ?\Closure $closure = null): mixed
     {
         $excelDrive = config('mineadmin.excel_drive');
         if ($excelDrive === 'auto') {
