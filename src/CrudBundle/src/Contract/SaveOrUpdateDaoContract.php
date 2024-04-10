@@ -43,4 +43,9 @@ interface SaveOrUpdateDaoContract
         ?array $whereKeys = null,
         int $batchSize = 0
     ): Collection;
+
+    /**
+     * 根据传入的数组进行更新.
+     */
+    public function update(array|int|string $id, array $data, bool $isModel = false): bool;
 }

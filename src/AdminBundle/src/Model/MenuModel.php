@@ -15,6 +15,8 @@ namespace Mine\Admin\Bundle\Model;
 use Hyperf\Database\Model\Model;
 use Hyperf\Database\Model\Relations\BelongsToMany;
 
+use function Hyperf\Config\config;
+
 class MenuModel extends Model
 {
     protected ?string $table = 'menu';
@@ -29,5 +31,10 @@ class MenuModel extends Model
     public function roles(): BelongsToMany
     {
         return $this->belongsToMany(RoleModel::class, 'system_role_menu', 'menu_id', 'role_id');
+    }
+
+    public function getConnectionName()
+    {
+        return config('mineadmin.bundle.database.connection', 'default');
     }
 }

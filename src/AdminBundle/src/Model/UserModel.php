@@ -17,6 +17,8 @@ use Hyperf\Database\Model\Model;
 use Hyperf\Database\Model\Relations\BelongsToMany;
 use Mine\SecurityBundle\Contract\UserInterface;
 
+use function Hyperf\Config\config;
+
 class UserModel extends Model implements UserInterface
 {
     protected ?string $table = 'users';
@@ -87,5 +89,10 @@ class UserModel extends Model implements UserInterface
     public function getSecurityBuilder(): Builder
     {
         return $this->newQuery();
+    }
+
+    public function getConnectionName()
+    {
+        return config('mineadmin.bundle.database.connection', 'default');
     }
 }

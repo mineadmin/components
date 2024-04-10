@@ -14,11 +14,15 @@ namespace Mine\CrudBundle\Abstracts;
 
 use Hyperf\Database\Model\Builder;
 use Hyperf\Database\Model\Model;
+use Hyperf\Database\Model\SoftDeletes;
 
 class AbstractDao
 {
     protected static string $model = Model::class;
 
+    /**
+     * @return Model|SoftDeletes
+     */
     public function getModel(): Model
     {
         return new static::$model();

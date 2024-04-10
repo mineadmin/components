@@ -93,6 +93,34 @@ class SaveOrUpdateDaoTest extends TestCase implements SaveOrUpdateDaoContract
         $this->assertInstanceOf(Model::class, $this->saveOrUpdate($data));
     }
 
+    public function testUpdate(): void
+    {
+        $this->modelInstance->allows('getKeyName')->andReturn('id');
+
+        // Mock data and where condition
+        $data = ['name' => 'test', 'email' => 'test@example.com'];
+        $this->builder->allows('where')
+            ->with('id', 1)->andReturn($this->builder)
+            ->with('id', '1')->andReturn($this->builder);
+        $this->builder->allows('whereIn')
+            ->with('id', [1, 2, 3, 4, 5])
+            ->andReturn($this->builder);
+        $mockModel = \Mockery::mock(UserModel::class);
+        $mockModel->allows('fill')->with($data)->andReturn($mockModel);
+        $mockModel->allows('save')->andReturn(true);
+        $this->builder->allows('get')
+            ->andReturn(Collection::make([
+                $mockModel,
+            ]));
+        $this->builder->allows('update')
+            ->with($data)->andReturn(true);
+        $this->update(1, $data);
+        $this->update('1', $data);
+        $this->update([1, 2, 3, 4, 5], $data);
+        $this->update([1, 2, 3, 4, 5], $data, true);
+        $this->assertTrue(true);
+    }
+
     public function testBatchSaveOrUpdate(): void
     {
         // Mock data and where keys

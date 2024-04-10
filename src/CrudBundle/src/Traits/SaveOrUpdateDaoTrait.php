@@ -58,4 +58,24 @@ trait SaveOrUpdateDaoTrait
             return Collection::make($result);
         });
     }
+
+    public function update(array|int|string $id, array $data, bool $isModel = false): bool
+    {
+        $query = $this->getModelQuery();
+        if (is_array($id)) {
+            $query->whereIn($query->getModel()->getKeyName(), $id);
+        } else {
+            $query->where($query->getModel()->getKeyName(), $id);
+        }
+        if (! $isModel) {
+            return (bool) $query->update($data);
+        }
+        $entityList = $query->get();
+        return Db::transaction(function () use ($entityList, $data) {
+            foreach ($entityList as $model) {
+                $model->fill($data)->save();
+            }
+            return true;
+        });
+    }
 }

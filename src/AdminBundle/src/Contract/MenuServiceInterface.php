@@ -9,7 +9,7 @@ declare(strict_types=1);
  * @contact  root@imoi.cn
  * @license  https://github.com/mineadmin/MineAdmin/blob/master/LICENSE
  */
-return [
-    'name' => 'test',
-    'value' => 1,
-];
+
+namespace Mine\Admin\Bundle\Contract;
+
+interface MenuServiceInterface extends CrudServiceInterface {}

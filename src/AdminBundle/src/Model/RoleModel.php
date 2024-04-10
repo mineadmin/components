@@ -15,6 +15,8 @@ namespace Mine\Admin\Bundle\Model;
 use Hyperf\Database\Model\Model;
 use Hyperf\Database\Model\Relations\BelongsToMany;
 
+use function Hyperf\Config\config;
+
 class RoleModel extends Model
 {
     protected ?string $table = 'roles';
@@ -51,5 +53,10 @@ class RoleModel extends Model
     public function depts(): BelongsToMany
     {
         return $this->belongsToMany(DepartmentModel::class, 'system_role_dept', 'role_id', 'dept_id');
+    }
+
+    public function getConnectionName()
+    {
+        return config('mineadmin.bundle.database.connection', 'default');
     }
 }

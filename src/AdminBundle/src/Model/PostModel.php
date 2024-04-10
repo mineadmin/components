@@ -15,6 +15,8 @@ namespace Mine\Admin\Bundle\Model;
 use Hyperf\Database\Model\Model;
 use Hyperf\Database\Model\Relations\BelongsToMany;
 
+use function Hyperf\Config\config;
+
 class PostModel extends Model
 {
     /**
@@ -38,5 +40,10 @@ class PostModel extends Model
     public function users(): BelongsToMany
     {
         return $this->belongsToMany(UserModel::class, 'system_user_post', 'post_id', 'user_id');
+    }
+
+    public function getConnectionName()
+    {
+        return config('mineadmin.bundle.database.connection', 'default');
     }
 }

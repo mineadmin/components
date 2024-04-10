@@ -12,6 +12,7 @@ declare(strict_types=1);
 
 namespace Mine\Admin\Bundle\Command;
 
+use Nette\Utils\FileSystem;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Finder\Finder;
 use Symfony\Component\Finder\SplFileInfo;
@@ -19,16 +20,36 @@ use Symfony\Component\Finder\SplFileInfo;
 class PublishCommand extends AbstractCommand
 {
     public const PUBLISH_PATHS = [
-        __DIR__ . '/../../database' => BASE_PATH,
-        __DIR__ . '/../../languages' => BASE_PATH . 'storage/languages',
-        __DIR__ . '/../../publish' => BASE_PATH . 'config',
+        'publish' => [
+            __DIR__ . '/../../publish' => BASE_PATH . 'config',
+        ],
+        'database' => [
+            __DIR__ . '/../../database' => BASE_PATH,
+        ],
+        'languages' => [
+            __DIR__ . '/../../languages' => BASE_PATH . 'storage/languages',
+        ],
     ];
 
     public function __invoke(): void
     {
-        foreach (self::PUBLISH_PATHS as $source => $target) {
-            $this->publish($source, $target);
+        $inputTag = $this->getInputTag();
+        foreach (self::PUBLISH_PATHS as $tag => $tagSource) {
+            if (in_array($inputTag, [$tag, 'all'], true)) {
+                $this->output->writeln(sprintf('Tag %s publish', $tag));
+                foreach ($tagSource as $source => $target) {
+                    $this->publish($source, $target);
+                }
+            }
         }
+    }
+
+    public function getInputTag(): string
+    {
+        if (! $this->hasOption('tag')) {
+            return 'all';
+        }
+        return $this->input->getOption('tag');
     }
 
     public function name(): string
@@ -38,7 +59,7 @@ class PublishCommand extends AbstractCommand
 
     public function isForce(): bool
     {
-        return (bool) $this->input->getOption('force');
+        return $this->input->hasOption('force') && $this->input->getOption('force');
     }
 
     public function publish(string $source, string $target): void
@@ -54,7 +75,7 @@ class PublishCommand extends AbstractCommand
          * @var SplFileInfo $file
          */
         foreach ($finder as $file) {
-            $targetFile = $this->getTargetPath($file, $target);
+            $targetFile = $this->getTargetPath($file, $target) . DIRECTORY_SEPARATOR . $file->getBasename();
             if (is_file($targetFile) && ! is_dir($target)) {
                 // 添加了对目标路径是否有效的检查
                 $this->output->writeln(sprintf('<error>Invalid target: %s</error>', $targetFile));
@@ -77,11 +98,9 @@ class PublishCommand extends AbstractCommand
         }
     }
 
-    public function copyFile(string $source, string $target): void
+    public function copyFile(SplFileInfo $source, string $target): void
     {
-        if (! copy($source, $target)) {
-            $this->output->writeln(sprintf('<error>Failed to copy %s to %s</error>', $source, $target));
-        }
+        FileSystem::copy($source->getRealPath(), $target);
     }
 
     public function getTargetPath(SplFileInfo $file, string $target): string
@@ -89,10 +108,9 @@ class PublishCommand extends AbstractCommand
         return $target . '/' . $file->getRelativePath();
     }
 
-    protected function getOptions(): array
+    protected function configure(): void
     {
-        return [
-            ['force', 'f', InputOption::VALUE_NONE, 'Force publish files'],
-        ];
+        $this->addOption('force', 'f', InputOption::VALUE_NONE, 'Force publish files');
+        $this->addOption('tag', 'tag', InputOption::VALUE_OPTIONAL, 'Publish tag file');
     }
 }

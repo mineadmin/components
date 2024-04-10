@@ -29,7 +29,7 @@ trait SelectDaoTrait
     public function page(mixed $params = null, int $page = 1, int $size = 10): LengthAwarePaginatorInterface
     {
         return $this->handleSearch(
-            $this->handleSelect($this->preQuery()),
+            $this->handleSelect($this->preQuery($this->getRecycle($params))),
             $params
         )->paginate(perPage: $size, page: $page);
     }
@@ -37,7 +37,7 @@ trait SelectDaoTrait
     public function total(mixed $params = null): int
     {
         return $this->handleSearch(
-            $this->preQuery(),
+            $this->preQuery($this->getRecycle($params)),
             $params
         )->count();
     }
@@ -45,7 +45,7 @@ trait SelectDaoTrait
     public function list(mixed $params = null): Collection
     {
         return $this->handleSearch(
-            $this->preQuery(),
+            $this->preQuery($this->getRecycle($params)),
             $params
         )->get();
     }
@@ -75,9 +75,21 @@ trait SelectDaoTrait
      * initialization DbBuilder.
      * @throws ServiceException
      */
-    protected function preQuery(): Builder
+    protected function preQuery(bool $recycle = false): Builder
     {
-        return $this
+        return $recycle ? $this->getModel()::onlyTrashed() : $this
             ->getModelQuery();
+    }
+
+    private function getRecycle(mixed $params): bool
+    {
+        if (is_object($params)) {
+            $result = get_object_vars($params)['recycle'] ?? false;
+        } elseif (is_array($params)) {
+            $result = $params['recycle'] ?? false;
+        } else {
+            $result = false;
+        }
+        return (bool) $result;
     }
 }
