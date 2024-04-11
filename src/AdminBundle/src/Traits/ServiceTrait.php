@@ -19,9 +19,35 @@ trait ServiceTrait
 {
     public AbstractDao|CrudDao $dao;
 
+    public string $lstTotalField = 'total';
+
+    public string $lstCurrentPageField = 'current_page';
+
+    public string $lstListField = 'list';
+
+    public function getLstListField(): string
+    {
+        return $this->lstListField;
+    }
+
+    public function getLstCurrentPageField(): string
+    {
+        return $this->lstCurrentPageField;
+    }
+
+    public function getLstTotalField(): string
+    {
+        return $this->lstTotalField;
+    }
+
     public function lst(array $params, int $page, int $size): array
     {
-        return $this->dao->page($params, $page, $size)->toArray();
+        $paginator = $this->dao->page($params, $page, $size);
+        return [
+            $this->getLstTotalField() => $paginator->total(),
+            $this->getLstCurrentPageField() => $paginator->currentPage(),
+            $this->getLstListField() => $paginator->items(),
+        ];
     }
 
     public function save(array $params): array
@@ -37,7 +63,7 @@ trait ServiceTrait
     public function delete(array|int|string $ids): bool
     {
         if (! is_array($ids)) {
-            $this->dao->remove($ids);
+            return $this->dao->remove($ids);
         }
         foreach ($ids as $id) {
             $this->dao->remove($id);

@@ -14,7 +14,7 @@ namespace Mine;
 
 use Hyperf\DbConnection\Model\Model;
 use Hyperf\ModelCache\Cacheable;
-use Mine\CrudBundle\Traits\ModelMacroTrait;
+use Mine\Traits\ModelMacroTrait;
 
 /**
  * Class MineModel.

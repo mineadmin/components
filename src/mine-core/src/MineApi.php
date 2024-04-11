@@ -12,7 +12,7 @@ declare(strict_types=1);
 
 namespace Mine;
 
-use Mine\CrudBundle\Traits\ControllerTrait;
+use Mine\Traits\ControllerTrait;
 
 /**
  * API接口控制器基类

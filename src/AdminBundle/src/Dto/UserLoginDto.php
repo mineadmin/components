@@ -14,9 +14,10 @@ namespace Mine\Admin\Bundle\Dto;
 
 class UserLoginDto
 {
-    public string $username;
-
-    public string $password;
+    public function __construct(
+        public ?string $username = null,
+        public ?string $password = null
+    ) {}
 
     public function getUsername(): string
     {
