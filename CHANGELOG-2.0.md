@@ -1,8 +1,6 @@
 # v2.0 - TBD
 
-# v2.0.0-RC 25 March 2024
-
-## Added
+# v2.0-dev - TBD
 
 - [#53](https://github.com/mineadmin/components/pull/53) Splitting components http-server
 - [#55](https://github.com/mineadmin/components/pull/55) Splitting the crontab component
@@ -14,3 +12,4 @@
 - [#63](https://github.com/mineadmin/components/pull/63) Fixes the failure to generate files when certain words (category) are pluralized.
 - [#64](https://github.com/mineadmin/components/pull/64) Fix the inability to generate a mod in the case of a plural form of table name prefix_table_name(s)
 - [#65](https://github.com/mineadmin/components/pull/65) Streamline and optimise the `mine:install` command, and manually set up .env in the future.
+- [#66](https://github.com/mineadmin/components/pull/66) Remove built-in amqp processing
