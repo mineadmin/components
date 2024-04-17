@@ -14,8 +14,6 @@ namespace Xmo\AppStore\Command;
 
 use Hyperf\Command\Annotation\Command;
 use Mine\Helper\Str;
-use RuntimeException;
-use stdClass;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputOption;
 use Xmo\AppStore\Enums\PluginTypeEnum;
@@ -33,7 +31,7 @@ class CreateCommand extends AbstractCommand
         $type = $this->input->getOption('type') ?? 'mix';
         $type = PluginTypeEnum::fromValue($type);
         if (empty($name)) {
-            $this->output->error("Plugin name is empty");
+            $this->output->error('Plugin name is empty');
             return;
         }
         if ($type === null) {
@@ -50,8 +48,8 @@ class CreateCommand extends AbstractCommand
             $pluginPath, $pluginPath . '/src', $pluginPath . '/Database',
         ];
         foreach ($createDirectors as $directory) {
-            if (!mkdir($directory, 0755, true) && !is_dir($directory)) {
-                throw new RuntimeException(sprintf('Directory "%s" was not created', $directory));
+            if (! mkdir($directory, 0755, true) && ! is_dir($directory)) {
+                throw new \RuntimeException(sprintf('Directory "%s" was not created', $directory));
             }
         }
 
@@ -60,7 +58,7 @@ class CreateCommand extends AbstractCommand
 
     public function createMineJson(string $path, string $name, PluginTypeEnum $pluginType): void
     {
-        $output = new stdClass();
+        $output = new \stdClass();
         $output->name = $name;
         $output->version = '1.0.0';
         $output->type = $pluginType->value;
@@ -112,8 +110,8 @@ class CreateCommand extends AbstractCommand
     public function buildStub(string $stub, array $replace): string
     {
         $stubPath = $this->getStubDirectory() . '/' . $stub . '.stub';
-        if (!file_exists($stubPath)) {
-            throw new RuntimeException(sprintf('File %s does not exist', $stubPath));
+        if (! file_exists($stubPath)) {
+            throw new \RuntimeException(sprintf('File %s does not exist', $stubPath));
         }
         $stubBody = file_get_contents($stubPath);
         foreach ($replace as $key => $value) {
@@ -143,11 +141,6 @@ class CreateCommand extends AbstractCommand
         $this->output->success(sprintf('%s Created Successfully', $installScriptPath));
     }
 
-    private function createViewScript(string $namespace, string $path): void
-    {
-        !is_dir($path . '/web') && mkdir($path . '/web', 0775);
-    }
-
     public function commandName(): string
     {
         return 'create';
@@ -160,5 +153,10 @@ class CreateCommand extends AbstractCommand
         $this->addOption('type', 'type', InputOption::VALUE_OPTIONAL, 'Plugin type, default mix optional mix,frond,backend');
         $this->addOption('description', 'desc', InputOption::VALUE_OPTIONAL, 'Plug-in Introduction');
         $this->addOption('author', 'author', InputOption::VALUE_OPTIONAL, 'Plugin Author Information');
+    }
+
+    private function createViewScript(string $namespace, string $path): void
+    {
+        ! is_dir($path . '/web') && mkdir($path . '/web', 0775);
     }
 }
