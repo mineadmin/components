@@ -75,11 +75,12 @@ class CreateCommand extends AbstractCommand
             ],
         ];
         if ($pluginType === PluginTypeEnum::Backend || $pluginType === PluginTypeEnum::Mix) {
-            $namespace = 'Mine\\' . Str::snake($author) . '\\' . Str::snake($name);
+            $namespace = 'Plugin\\' . Str::studly($name);
 
             $this->createInstallScript($namespace, $path);
             $this->createUninstallScript($namespace, $path);
             $this->createConfigProvider($namespace, $path);
+            $this->createViewScript($namespace, $path);
             $output->composer = [
                 'require' => [],
                 'psr-4' => [
@@ -125,6 +126,11 @@ class CreateCommand extends AbstractCommand
         $installScriptPath = $path . '/src/UninstallScript.php';
         file_put_contents($installScriptPath, $installScript);
         $this->output->success(sprintf('%s Created Successfully', $installScriptPath));
+    }
+
+    private function createViewScript(string $namespace, string $path): void
+    {
+        @mkdir($path. '/web', 0775);
     }
 
     public function buildStub(string $stub, array $replace): string
