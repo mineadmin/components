@@ -30,6 +30,10 @@ class CreateCommand extends AbstractCommand
         $name = $this->input->getOption('name');
         $type = $this->input->getOption('type') ?? 'mix';
         $type = PluginTypeEnum::fromValue($type);
+        if (empty($name)) {
+            $this->output->error("Plugin name is empty");
+            return;
+        }
         if ($type === null) {
             $this->output->error('Plugin type is empty');
             return;
