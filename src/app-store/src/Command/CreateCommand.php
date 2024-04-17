@@ -94,7 +94,7 @@ class CreateCommand extends AbstractCommand
             ];
         }
 
-        $output = json_encode($output, JSON_THROW_ON_ERROR | JSON_UNESCAPED_UNICODE, 512);
+        $output = json_encode($output, JSON_THROW_ON_ERROR | JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE, 512);
         file_put_contents($path . '/mine.json', $output);
         $this->output->success(sprintf('%s 创建成功', $path . '/mine.json'));
     }
