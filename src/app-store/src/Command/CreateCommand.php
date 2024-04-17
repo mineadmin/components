@@ -14,6 +14,8 @@ namespace Xmo\AppStore\Command;
 
 use Hyperf\Command\Annotation\Command;
 use Mine\Helper\Str;
+use RuntimeException;
+use stdClass;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputOption;
 use Xmo\AppStore\Enums\PluginTypeEnum;
@@ -48,22 +50,17 @@ class CreateCommand extends AbstractCommand
             $pluginPath, $pluginPath . '/src', $pluginPath . '/Database',
         ];
         foreach ($createDirectors as $directory) {
-            if (! mkdir($directory, 0755, true) && ! is_dir($directory)) {
-                throw new \RuntimeException(sprintf('Directory "%s" was not created', $directory));
+            if (!mkdir($directory, 0755, true) && !is_dir($directory)) {
+                throw new RuntimeException(sprintf('Directory "%s" was not created', $directory));
             }
         }
 
         $this->createMineJson($pluginPath, $name, $type);
     }
 
-    public function commandName(): string
-    {
-        return 'create';
-    }
-
     public function createMineJson(string $path, string $name, PluginTypeEnum $pluginType): void
     {
-        $output = new \stdClass();
+        $output = new stdClass();
         $output->name = $name;
         $output->version = '1.0.0';
         $output->type = $pluginType->value;
@@ -104,14 +101,6 @@ class CreateCommand extends AbstractCommand
         $this->output->success(sprintf('%s 创建成功', $path . '/mine.json'));
     }
 
-    public function createConfigProvider(string $namespace, string $path): void
-    {
-        $installScript = $this->buildStub('ConfigProvider', compact('namespace'));
-        $installScriptPath = $path . '/src/ConfigProvider.php';
-        file_put_contents($installScriptPath, $installScript);
-        $this->output->success(sprintf('%s Created Successfully', $installScriptPath));
-    }
-
     public function createInstallScript(string $namespace, string $path): void
     {
         $installScript = $this->buildStub('InstallScript', compact('namespace'));
@@ -120,24 +109,11 @@ class CreateCommand extends AbstractCommand
         $this->output->success(sprintf('%s Created Successfully', $installScriptPath));
     }
 
-    public function createUninstallScript(string $namespace, string $path): void
-    {
-        $installScript = $this->buildStub('UninstallScript', compact('namespace'));
-        $installScriptPath = $path . '/src/UninstallScript.php';
-        file_put_contents($installScriptPath, $installScript);
-        $this->output->success(sprintf('%s Created Successfully', $installScriptPath));
-    }
-
-    private function createViewScript(string $namespace, string $path): void
-    {
-        @mkdir($path. '/web', 0775);
-    }
-
     public function buildStub(string $stub, array $replace): string
     {
         $stubPath = $this->getStubDirectory() . '/' . $stub . '.stub';
-        if (! file_exists($stubPath)) {
-            throw new \RuntimeException(sprintf('File %s does not exist', $stubPath));
+        if (!file_exists($stubPath)) {
+            throw new RuntimeException(sprintf('File %s does not exist', $stubPath));
         }
         $stubBody = file_get_contents($stubPath);
         foreach ($replace as $key => $value) {
@@ -149,6 +125,32 @@ class CreateCommand extends AbstractCommand
     public function getStubDirectory(): string
     {
         return realpath(__DIR__) . '/Stub';
+    }
+
+    public function createUninstallScript(string $namespace, string $path): void
+    {
+        $installScript = $this->buildStub('UninstallScript', compact('namespace'));
+        $installScriptPath = $path . '/src/UninstallScript.php';
+        file_put_contents($installScriptPath, $installScript);
+        $this->output->success(sprintf('%s Created Successfully', $installScriptPath));
+    }
+
+    public function createConfigProvider(string $namespace, string $path): void
+    {
+        $installScript = $this->buildStub('ConfigProvider', compact('namespace'));
+        $installScriptPath = $path . '/src/ConfigProvider.php';
+        file_put_contents($installScriptPath, $installScript);
+        $this->output->success(sprintf('%s Created Successfully', $installScriptPath));
+    }
+
+    private function createViewScript(string $namespace, string $path): void
+    {
+        !is_dir($path . '/web') && mkdir($path . '/web', 0775);
+    }
+
+    public function commandName(): string
+    {
+        return 'create';
     }
 
     protected function configure()
