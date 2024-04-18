@@ -75,6 +75,7 @@ class CreateCommand extends AbstractCommand
             $this->createInstallScript($namespace, $path);
             $this->createUninstallScript($namespace, $path);
             $this->createConfigProvider($namespace, $path);
+            $this->createViewScript($namespace, $path);
             $output->composer = [
                 'require' => [],
                 'psr-4' => [
@@ -152,5 +153,10 @@ class CreateCommand extends AbstractCommand
         $this->addOption('type', 'type', InputOption::VALUE_OPTIONAL, 'Plugin type, default mix optional mix,frond,backend');
         $this->addOption('description', 'desc', InputOption::VALUE_OPTIONAL, 'Plug-in Introduction');
         $this->addOption('author', 'author', InputOption::VALUE_OPTIONAL, 'Plugin Author Information');
+    }
+
+    private function createViewScript(string $namespace, string $path): void
+    {
+        ! is_dir($path . '/web') && mkdir($path . '/web', 0775);
     }
 }
