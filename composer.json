@@ -22,13 +22,15 @@
       "Mine\\NextCoreX\\": "src/next-core-x/src",
       "Mine\\HttpServer\\": "src/HttpServer/src",
       "Mine\\Crontab\\": "src/Crontab/src",
+      "Mine\\Support\\": "src/Support/src",
       "Mine\\Module\\": "src/Module/src",
       "Mine\\SecurityBundle\\": "src/SecurityBundle/src",
       "Mine\\Security\\Http\\": "src/SecurityHttp/src",
       "Mine\\Security\\Access\\": "src/SecurityAccess/src"
     },
     "files": [
-      "src/mine-helpers/src/functions.php"
+      "src/mine-helpers/src/functions.php",
+      "src/Support/src/functions.php"
     ]
   },
   "autoload-dev": {
@@ -39,6 +41,7 @@
       "Mine\\NextCoreX\\Tests\\": "src/next-core-x/tests",
       "Mine\\HttpServer\\Tests\\": "src/HttpServer/tests",
       "Mine\\Crontab\\Tests\\": "src/Crontab/tests",
+      "Mine\\Support\\Tests\\": "src/Support/tests",
       "Mine\\Module\\Tests\\": "src/Module/tests",
       "Mine\\SecurityBundle\\Tests\\": "src/SecurityBundle/tests",
       "Mine\\Security\\Http\\Tests\\": "src/SecurityHttp/tests",

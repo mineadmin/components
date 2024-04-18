@@ -11,4 +11,4 @@ php bin/hyperf.php db:seed --path=app/System/Database/Seeders
 
 php bin/hyperf.php mine:update
 
-composer coverage
+php ./vendor/bin/pest --coverage --coverage-clover tests/coverage.xml
