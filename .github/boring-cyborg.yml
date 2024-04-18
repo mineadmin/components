@@ -1,0 +1,55 @@
+labelPRBasedOnFilePath:
+  AdminHttpKernel:
+    - src/AdminHttpKernel/**/*
+  MineCore:
+    - src/mine-core/**/*
+  Crontab:
+    - src/Crontab/**/*
+  Generator:
+    - src/generator/**/*
+  HttpServer:
+    - src/HttpServer/**/*
+  JwtAuth:
+    - src/jwt-auth/**/*
+  MineGenerator:
+    - src/mine-generator/**/*
+  MineHelpers:
+    - src/mine-helpers/**/*
+  MineService:
+    - src/mineService/**/*
+  Module:
+    - src/Module/**/*
+  NextCoreX:
+    - src/next-core-x/**/*
+  Office:
+    - src/office/**/*
+  SecurityAccess:
+    - src/SecurityAccess/**/*
+  SecurityBundle:
+    - src/SecurityBundle/**/*
+  SecurityHttp:
+    - src/SecurityHttp/**/*
+  Support:
+    - src/Support/**/*
+  Translatable:
+    - src/translatable/**/*
+  YamlConfig:
+    - src/YamlConfig/**/*
+  UnitTest:
+    - src/**/*Test.php
+  ChangeLog:
+    - CHANGELOG-*.md
+  Composer:
+    - composer.json
+    - src/*/composer.json
+
+firstPRWelcomeComment: >
+  Thanks for opening this pull request! Please check out our contributing guidelines.
+
+# Comment to be posted to congratulate user on their first merged PR
+firstPRMergeComment: >
+  Awesome work, congrats on your first merged pull request!
+
+# Comment to be posted to on first time issues
+firstIssueWelcomeComment: >
+  Thanks for opening your first issue here! Be sure to follow the issue template!
