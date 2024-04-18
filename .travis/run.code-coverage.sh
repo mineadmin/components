@@ -2,4 +2,4 @@
 
 set -e
 
-php ./vendor/bin/pest --coverage --coverage-clover tests/coverage.xml
+composer coverage

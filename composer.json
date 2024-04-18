@@ -154,6 +154,7 @@
   "scripts": {
     "cs-fix": "php-cs-fixer fix $1",
     "test": "pest",
+    "coverage": "pest --coverage --coverage-clover tests/coverage.xml",
     "analyse": "phpstan analyse --memory-limit 1000M -l 0 -c phpstan.neon ./src"
   }
 }
