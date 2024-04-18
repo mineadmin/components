@@ -45,7 +45,7 @@ class CreateCommand extends AbstractCommand
             return;
         }
         $createDirectors = [
-            $pluginPath, $pluginPath . '/src', $pluginPath . '/Database',
+            $pluginPath, $pluginPath . '/src', $pluginPath . '/Database', $pluginPath . '/Database/Migrations', $pluginPath . '/Database/Seeder', $pluginPath . '/web',
         ];
         foreach ($createDirectors as $directory) {
             if (! mkdir($directory, 0755, true) && ! is_dir($directory)) {
