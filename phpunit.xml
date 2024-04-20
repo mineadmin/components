@@ -3,6 +3,7 @@
   <coverage/>
   <testsuites>
     <testsuite name="Tests">
+      <directory suffix="Test.php">./src/Support/tests</directory>
       <directory suffix="Test.php">./src/SecurityHttp/tests</directory>
       <directory suffix="Test.php">./src/SecurityAccess/tests</directory>
       <directory suffix="Test.php">./src/SecurityBundle/tests</directory>
