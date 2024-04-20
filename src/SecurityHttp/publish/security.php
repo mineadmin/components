@@ -10,6 +10,7 @@ declare(strict_types=1);
  * @license  https://github.com/mineadmin/MineAdmin/blob/master/LICENSE
  */
 use Mine\Security\Http\Jwt\Black\CacheBlack;
+use Mine\Security\Http\Jwt\Token;
 use Mine\Security\Http\UserProvider;
 use Mine\SecurityBundle\Context\Context;
 
@@ -20,6 +21,7 @@ return [
      * user provider class
      */
     'provider' => UserProvider::class,
+    'token' => Token::class,
     /*
      * entity class
      */

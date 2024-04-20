@@ -15,4 +15,9 @@ namespace Mine\Security\Http\Attribute;
 use Hyperf\Di\Annotation\AbstractAnnotation;
 
 #[\Attribute(\Attribute::TARGET_PARAMETER)]
-class CurrentUser extends AbstractAnnotation {}
+class CurrentUser extends AbstractAnnotation
+{
+    public function __construct(
+        public string $secret = 'default'
+    ) {}
+}
