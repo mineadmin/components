@@ -34,7 +34,7 @@ final class AppStoreServiceImpl implements AppStoreService
         ConfigInterface $config
     ) {
         $this->client = $clientFactory->create([
-            'base_uri' => 'https://www.mineadmin.com/server/store/',
+            'base_uri' => 'https://www.mineadmin.com/server/server/',
             'timeout' => 10.0,
         ]);
         $this->config = $config->get('mine-extension');
