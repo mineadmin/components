@@ -336,7 +336,7 @@ UseNamespace;
     {
         return $this->tablesContract->handleQuery(function (Builder $builder) {
             return $builder->where($this->tablesContract->getId())
-                ->where('is_ok', self::YES)
+                ->where('is_pk', self::YES)
                 ->value('column_name');
         });
     }
