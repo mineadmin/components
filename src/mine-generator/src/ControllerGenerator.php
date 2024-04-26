@@ -24,6 +24,7 @@ declare(strict_types=1);
 
 namespace Mine\Generator;
 
+use Hyperf\Database\Model\Builder;
 use Hyperf\Support\Filesystem\Filesystem;
 use Mine\Exception\NormalStatusException;
 use Mine\Generator\Contracts\GeneratorTablesContract;
@@ -333,7 +334,11 @@ UseNamespace;
 
     protected function getPk(): string
     {
-        return $this->tablesContract->getPkName();
+        return $this->tablesContract->handleQuery(function (Builder $builder) {
+            return $builder->where($this->tablesContract->getId())
+                ->where('is_ok', self::YES)
+                ->value('column_name');
+        });
     }
 
     protected function getStatusValue(): string
