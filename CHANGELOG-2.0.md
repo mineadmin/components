@@ -14,3 +14,4 @@
 - [#65](https://github.com/mineadmin/components/pull/65) Streamline and optimise the `mine:install` command, and manually set up .env in the future.
 - [#66](https://github.com/mineadmin/components/pull/66) Remove built-in amqp processing
 - [#71](https://github.com/mineadmin/components/pull/71) Added `mine:gen-jwt-secret` Command and `CurrentUser` Attribute
+- [#73](https://github.com/mineadmin/components/pull/73) Fix code generator to get model primary key
