@@ -14,4 +14,3 @@
 - [#65](https://github.com/mineadmin/components/pull/65) 精简优化 `mine:install` 命令，往后手动设置 .env
 - [#66](https://github.com/mineadmin/components/pull/66) 删除内置的 amqp 处理
 - [#71](https://github.com/mineadmin/components/pull/71) 添加了 `mine:gen-jwt-secret` 命令和 `CurrentUser` 注解
-- [#73](https://github.com/mineadmin/components/pull/73) 修复代码生成器获取主键问题
