@@ -15,7 +15,6 @@ namespace Xmo\AppStore\Service\Impl;
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\GuzzleException;
 use GuzzleHttp\RequestOptions;
-use Hyperf\Collection\Arr;
 use Hyperf\Collection\Collection;
 use Hyperf\Contract\ConfigInterface;
 use Hyperf\Guzzle\ClientFactory;
@@ -83,19 +82,19 @@ final class AppStoreServiceImpl implements AppStoreService
     /**
      * Download the specified plug-in to a local directory.
      */
-    public function download(string $identifier,string $version): bool
+    public function download(string $identifier, string $version): bool
     {
-        $downloadResponse = Collection::make($this->request(__FUNCTION__, compact('identifier','version')));
-        if (!$downloadResponse->get('success')){
-            throw new \RuntimeException('服务端返回错误'.$downloadResponse->get('message'));
+        $downloadResponse = Collection::make($this->request(__FUNCTION__, compact('identifier', 'version')));
+        if (! $downloadResponse->get('success')) {
+            throw new \RuntimeException('服务端返回错误' . $downloadResponse->get('message'));
         }
         $file_token = $downloadResponse->get('data.token');
         if (empty($file_token)) {
             throw new \RuntimeException('Failed to get download token');
         }
         $downLoadFileResponse = Collection::make($this->request('download_file', compact('file_token')));
-        if (!$downLoadFileResponse->get('success')){
-            throw new \RuntimeException('服务端返回错误'.$downLoadFileResponse->get('message'));
+        if (! $downLoadFileResponse->get('success')) {
+            throw new \RuntimeException('服务端返回错误' . $downLoadFileResponse->get('message'));
         }
         $file_url = $downLoadFileResponse->get('data.url');
         if (empty($file_url)) {

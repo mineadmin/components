@@ -25,7 +25,7 @@ interface AppStoreService
     /**
      * Download the specified plug-in to a local directory.
      */
-    public function download(string $identifier,string $version): bool;
+    public function download(string $identifier, string $version): bool;
 
     /**
      * Get the details of the specified plugin.

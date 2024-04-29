@@ -30,13 +30,13 @@ class DownloadCommand extends Base
         $identifier = $this->input->getOption('identifier');
         $version = $this->input->getOption('version');
         $appStoreService = ApplicationContext::getContainer()->get(AppStoreService::class);
-        $appStoreService->download($identifier,$version);
+        $appStoreService->download($identifier, $version);
         $this->output->success('Plugin Downloaded Successfully');
     }
 
     protected function configure()
     {
         $this->addOption('identifier', 'n', InputOption::VALUE_REQUIRED, '必选,应用唯一标识符');
-        $this->addOption('version',null,InputOption::VALUE_OPTIONAL,'应用版本号,默认latest','latest');
+        $this->addOption('version', null, InputOption::VALUE_OPTIONAL, '应用版本号,默认latest', 'latest');
     }
 }
