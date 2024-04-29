@@ -15,6 +15,8 @@ namespace Xmo\AppStore\Service\Impl;
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\GuzzleException;
 use GuzzleHttp\RequestOptions;
+use Hyperf\Collection\Arr;
+use Hyperf\Collection\Collection;
 use Hyperf\Contract\ConfigInterface;
 use Hyperf\Guzzle\ClientFactory;
 use Xmo\AppStore\Plugin;
@@ -73,20 +75,35 @@ final class AppStoreServiceImpl implements AppStoreService
     /**
      * Get the details of the specified plugin.
      */
-    public function view(string $plugin): array
+    public function view(string $identifier): array
     {
-        return $this->request(__FUNCTION__, compact('plugin'));
+        return $this->request(__FUNCTION__, compact('identifier'));
     }
 
     /**
      * Download the specified plug-in to a local directory.
      */
-    public function download(string $plugin): bool
+    public function download(string $identifier,string $version): bool
     {
-        $downloadToken = $this->request(__FUNCTION__, compact('plugin'))[0] ?? '';
+        $downloadResponse = Collection::make($this->request(__FUNCTION__, compact('identifier','version')));
+        if (!$downloadResponse->get('success')){
+            throw new \RuntimeException('服务端返回错误'.$downloadResponse->get('message'));
+        }
+        $file_token = $downloadResponse->get('data.token');
+        if (empty($file_token)) {
+            throw new \RuntimeException('Failed to get download token');
+        }
+        $downLoadFileResponse = Collection::make($this->request('download_file', compact('file_token')));
+        if (!$downLoadFileResponse->get('success')){
+            throw new \RuntimeException('服务端返回错误'.$downLoadFileResponse->get('message'));
+        }
+        $file_url = $downLoadFileResponse->get('data.url');
+        if (empty($file_url)) {
+            throw new \RuntimeException('Failed to get download url');
+        }
         $tmpFile = sys_get_temp_dir() . '/' . uniqid('mine', true) . '.zip';
         $tmpFileResource = fopen(sys_get_temp_dir() . '/' . uniqid('mine', true) . '.zip', 'wb+');
-        $response = $this->client->get('download_file?token=' . $downloadToken, [
+        $response = $this->client->get($file_url, [
             RequestOptions::SINK => $tmpFileResource,
         ]);
         if ($response->getStatusCode() !== 200) {
