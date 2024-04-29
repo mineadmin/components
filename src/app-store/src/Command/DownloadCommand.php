@@ -27,14 +27,16 @@ class DownloadCommand extends Base
 
     public function __invoke()
     {
-        $name = $this->input->getOption('name');
+        $identifier = $this->input->getOption('identifier');
+        $version = $this->input->getOption('version');
         $appStoreService = ApplicationContext::getContainer()->get(AppStoreService::class);
-        $appStoreService->download($name);
+        $appStoreService->download($identifier,$version);
         $this->output->success('Plugin Downloaded Successfully');
     }
 
     protected function configure()
     {
-        $this->addOption('name', 'n', InputOption::VALUE_REQUIRED, 'Plug-in Name');
+        $this->addOption('identifier', 'n', InputOption::VALUE_REQUIRED, '必选,应用唯一标识符');
+        $this->addOption('version',null,InputOption::VALUE_OPTIONAL,'应用版本号,默认latest','latest');
     }
 }

@@ -36,7 +36,7 @@ class ListCommand extends Base
             $params['title'] = $title;
         }
         $appStoreService = ApplicationContext::getContainer()->get(AppStoreService::class);
-        $result = $appStoreService->list($params);
+        $result = $appStoreService->list($params)['data']['list'] ?? [];
         $headers = [
             'extensionName', 'description', 'author', 'homePage', 'status',
         ];
