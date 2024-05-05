@@ -25,12 +25,12 @@ interface AppStoreService
     /**
      * Download the specified plug-in to a local directory.
      */
-    public function download(string $plugin): bool;
+    public function download(string $identifier): bool;
 
     /**
      * Get the details of the specified plugin.
      */
-    public function view(string $plugin): array;
+    public function view(string $identifier): array;
 
     /**
      * Get the list of remote plugins.

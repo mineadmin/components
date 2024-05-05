@@ -73,17 +73,17 @@ final class AppStoreServiceImpl implements AppStoreService
     /**
      * Get the details of the specified plugin.
      */
-    public function view(string $plugin): array
+    public function view(string $identifier): array
     {
-        return $this->request(__FUNCTION__, compact('plugin'));
+        return $this->request(__FUNCTION__, compact('identifier'));
     }
 
     /**
      * Download the specified plug-in to a local directory.
      */
-    public function download(string $plugin): bool
+    public function download(string $identifier): bool
     {
-        $downloadToken = $this->request(__FUNCTION__, compact('plugin'))[0] ?? '';
+        $downloadToken = $this->request(__FUNCTION__, compact('identifier'))[0] ?? '';
         $tmpFile = sys_get_temp_dir() . '/' . uniqid('mine', true) . '.zip';
         $tmpFileResource = fopen(sys_get_temp_dir() . '/' . uniqid('mine', true) . '.zip', 'wb+');
         $response = $this->client->get('download_file?token=' . $downloadToken, [
