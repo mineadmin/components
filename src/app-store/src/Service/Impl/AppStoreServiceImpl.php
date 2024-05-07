@@ -78,6 +78,11 @@ final class AppStoreServiceImpl implements AppStoreService
         return $this->request(__FUNCTION__, compact('identifier'));
     }
 
+    public function myApp(array $params): array
+    {
+        return $this->request('my_app_list', $params);
+    }
+
     /**
      * Download the specified plug-in to a local directory.
      */
