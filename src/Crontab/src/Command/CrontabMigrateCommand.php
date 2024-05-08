@@ -38,7 +38,7 @@ class CrontabMigrateCommand extends Base
         $migrator = $this->migrator;
         $migrator->setConnection($connection);
         $this->migrator
-            ->setOutput(new NullOutput(new ArrayInput([]), new ConsoleOutput()))
+            ->setOutput(new NullOutput())
             ->run(dirname(__DIR__, 2) . '/Database/Migrations');
     }
 

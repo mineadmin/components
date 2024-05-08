@@ -97,7 +97,7 @@ class ModelGenerator extends MineGenerator implements CodeGenerator
         }
 
         $input = new ArrayInput($command);
-        $output = new NullOutput(new ArrayInput([]), new BufferedOutput());
+        $output = new NullOutput();
 
         /** @var Application $application */
         $application = $this->container->get(ApplicationInterface::class);
