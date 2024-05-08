@@ -10,13 +10,13 @@ declare(strict_types=1);
  * @license  https://github.com/mineadmin/MineAdmin/blob/master/LICENSE
  */
 
-namespace Xmo\AppStore\Command;
+namespace Mine\AppStore\Command;
 
 use Hyperf\Command\Annotation\Command;
 use Hyperf\Command\Command as Base;
 use Hyperf\Context\ApplicationContext;
+use Mine\AppStore\Service\AppStoreService;
 use Symfony\Component\Console\Input\InputOption;
-use Xmo\AppStore\Service\AppStoreService;
 
 #[Command]
 class ListCommand extends Base

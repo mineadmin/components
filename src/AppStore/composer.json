@@ -16,7 +16,7 @@
     "license": "MIT",
     "autoload": {
         "psr-4": {
-            "Xmo\\AppStore\\": "src/"
+            "Mine\\AppStore\\": "src/"
         }
     },
     "authors": [
@@ -32,7 +32,7 @@
     },
     "extra": {
         "hyperf": {
-            "config": "Xmo\\AppStore\\ConfigProvider"
+            "config": "Mine\\AppStore\\ConfigProvider"
         }
     }
 }

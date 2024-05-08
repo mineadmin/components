@@ -10,12 +10,12 @@ declare(strict_types=1);
  * @license  https://github.com/mineadmin/MineAdmin/blob/master/LICENSE
  */
 
-namespace Xmo\AppStore;
+namespace Mine\AppStore;
 
-use Xmo\AppStore\Service\AppStoreService;
-use Xmo\AppStore\Service\Impl\AppStoreServiceImpl;
-use Xmo\AppStore\Service\Impl\PluginServiceImpl;
-use Xmo\AppStore\Service\PluginService;
+use Mine\AppStore\Service\AppStoreService;
+use Mine\AppStore\Service\Impl\AppStoreServiceImpl;
+use Mine\AppStore\Service\Impl\PluginServiceImpl;
+use Mine\AppStore\Service\PluginService;
 
 class ConfigProvider
 {

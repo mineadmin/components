@@ -16,7 +16,7 @@ parameters:
           - src/next-core-x/tests/*
           - src/mine-core/tests/*
           - src/tests/
-          - src/app-store/test/
+          - src/AppStore/test/
           - src/httpServer/tests/
           - src/SecurityAccess/tests/
   ignoreErrors:

@@ -10,7 +10,7 @@ declare(strict_types=1);
  * @license  https://github.com/mineadmin/MineAdmin/blob/master/LICENSE
  */
 
-namespace Xmo\AppStore\Service\Impl;
+namespace Mine\AppStore\Service\Impl;
 
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\GuzzleException;
@@ -18,8 +18,8 @@ use GuzzleHttp\RequestOptions;
 use Hyperf\Collection\Collection;
 use Hyperf\Contract\ConfigInterface;
 use Hyperf\Guzzle\ClientFactory;
-use Xmo\AppStore\Plugin;
-use Xmo\AppStore\Service\AppStoreService;
+use Mine\AppStore\Plugin;
+use Mine\AppStore\Service\AppStoreService;
 
 use function Hyperf\Support\env;
 use function Hyperf\Translation\trans;

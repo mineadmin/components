@@ -14,9 +14,9 @@ use Hyperf\Context\ApplicationContext;
 use Hyperf\Contract\ConfigInterface;
 use Hyperf\Contract\TranslatorInterface;
 use Hyperf\Guzzle\ClientFactory;
+use Mine\AppStore\Service\Impl\AppStoreServiceImpl;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\StreamInterface;
-use Xmo\AppStore\Service\Impl\AppStoreServiceImpl;
 
 beforeEach(function () {
     putenv('MINE_ACCESS_TOKEN=xxxx1');

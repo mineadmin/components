@@ -10,8 +10,8 @@ declare(strict_types=1);
  * @license  https://github.com/mineadmin/MineAdmin/blob/master/LICENSE
  */
 use Hyperf\Context\ApplicationContext;
-use Xmo\AppStore\Packer\JsonPacker;
-use Xmo\AppStore\Packer\PackerFactory;
+use Mine\AppStore\Packer\JsonPacker;
+use Mine\AppStore\Packer\PackerFactory;
 
 beforeEach(function () {
     $this->mock = ApplicationContext::getContainer()->get(PackerFactory::class);

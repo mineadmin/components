@@ -10,20 +10,20 @@ declare(strict_types=1);
  * @license  https://github.com/mineadmin/MineAdmin/blob/master/LICENSE
  */
 
-namespace Xmo\AppStore\Command;
+namespace Mine\AppStore\Command;
 
 use Hyperf\Command\Annotation\Command;
 use Hyperf\Command\Command as Base;
+use Mine\AppStore\Plugin;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputOption;
-use Xmo\AppStore\Plugin;
 
 #[Command]
-class InstallCommand extends Base
+class UninstallCommand extends Base
 {
-    protected ?string $name = 'mine-extension:install';
+    protected ?string $name = 'mine-extension:uninstall';
 
-    protected string $description = 'Installing Plugin Commands';
+    protected string $description = 'Uninstalling Plugin Commands';
 
     public function __construct(
     ) {
@@ -34,6 +34,11 @@ class InstallCommand extends Base
     {
         $path = $this->input->getArgument('path');
         $yes = $this->input->getOption('yes');
+        $pluginPath = BASE_PATH . '/plugin/' . $path;
+        if (! file_exists($pluginPath)) {
+            $this->output->error(sprintf('Plugin directory %s does not exist', $pluginPath));
+            return;
+        }
         $info = Plugin::read($path);
 
         $headers = ['Extension name', 'author', 'description', 'homepage'];
@@ -44,13 +49,13 @@ class InstallCommand extends Base
             $info['homepage'] ?? '--',
         ];
         $this->table($headers, $rows);
-        $confirm = $yes ?: $this->confirm('Enter to start the installation', true);
+        $confirm = $yes ?: $this->confirm('Is the uninstallation cancelled?', true);
         if (! $confirm) {
-            $this->output->success('Installation has been successfully canceled');
+            $this->output->success('Plugin uninstallation operation cancelled successfully');
             return;
         }
-        Plugin::install($path);
-        $this->output->success(sprintf('Plugin %s installed successfully', $path));
+        Plugin::uninstall($path);
+        $this->output->success(sprintf('Plugin %s uninstalled successfully', $pluginPath));
     }
 
     protected function configure()

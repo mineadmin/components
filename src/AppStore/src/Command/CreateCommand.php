@@ -10,14 +10,14 @@ declare(strict_types=1);
  * @license  https://github.com/mineadmin/MineAdmin/blob/master/LICENSE
  */
 
-namespace Xmo\AppStore\Command;
+namespace Mine\AppStore\Command;
 
 use Hyperf\Command\Annotation\Command;
+use Mine\AppStore\Enums\PluginTypeEnum;
+use Mine\AppStore\Plugin;
 use Mine\Helper\Str;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputOption;
-use Xmo\AppStore\Enums\PluginTypeEnum;
-use Xmo\AppStore\Plugin;
 
 #[Command]
 class CreateCommand extends AbstractCommand

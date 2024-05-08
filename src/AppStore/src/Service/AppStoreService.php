@@ -10,7 +10,7 @@ declare(strict_types=1);
  * @license  https://github.com/mineadmin/MineAdmin/blob/master/LICENSE
  */
 
-namespace Xmo\AppStore\Service;
+namespace Mine\AppStore\Service;
 
 use GuzzleHttp\Exception\GuzzleException;
 

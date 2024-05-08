@@ -10,7 +10,7 @@ declare(strict_types=1);
  * @license  https://github.com/mineadmin/MineAdmin/blob/master/LICENSE
  */
 
-namespace Xmo\AppStore;
+namespace Mine\AppStore;
 
 use Composer\InstalledVersions;
 use Hyperf\Context\ApplicationContext;
@@ -18,12 +18,12 @@ use Hyperf\Contract\ConfigInterface;
 use Hyperf\Database\Migrations\Migrator;
 use Hyperf\Database\Seeders\Seed;
 use Hyperf\Support\Composer;
+use Mine\AppStore\Packer\PackerFactory;
+use Mine\AppStore\Packer\PackerInterface;
+use Mine\AppStore\Utils\FileSystemUtils;
 use Swoole\Coroutine\System;
 use Symfony\Component\Finder\Finder;
 use Symfony\Component\Finder\SplFileInfo;
-use Xmo\AppStore\Packer\PackerFactory;
-use Xmo\AppStore\Packer\PackerInterface;
-use Xmo\AppStore\Utils\FileSystemUtils;
 
 class Plugin
 {

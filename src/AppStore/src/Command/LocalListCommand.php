@@ -10,11 +10,11 @@ declare(strict_types=1);
  * @license  https://github.com/mineadmin/MineAdmin/blob/master/LICENSE
  */
 
-namespace Xmo\AppStore\Command;
+namespace Mine\AppStore\Command;
 
 use Hyperf\Command\Annotation\Command;
 use Hyperf\Command\Command as Base;
-use Xmo\AppStore\Plugin;
+use Mine\AppStore\Plugin;
 
 #[Command]
 class LocalListCommand extends Base
