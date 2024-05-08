@@ -1,17 +1,11 @@
 {
-    "name": "xmo/app-store",
+    "name": "mineadmin/app-store",
     "description": "Mineadmin 2.0 AppStore Extension",
     "type": "library",
     "require": {
         "hyperf/translation": "~3.1.0",
         "nette/utils": "dev-master",
         "ext-zip": "*"
-    },
-    "suggest": {
-        "ext-json": "Required to use JSON."
-    },
-    "require-dev": {
-        "pestphp/pest": "^2.33"
     },
     "license": "MIT",
     "autoload": {
@@ -21,8 +15,14 @@
     },
     "authors": [
         {
+            "name": "xmo",
+            "email": "root@imoi.cn",
+            "role": "Developer"
+        },
+        {
             "name": "zds",
-            "email": "49744633+Death-Satan@users.noreply.github.com"
+            "email": "2771717608@qq.com",
+            "role": "Developer"
         }
     ],
     "config": {

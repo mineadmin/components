@@ -14,8 +14,6 @@ namespace Mine\AppStore;
 
 use Mine\AppStore\Service\AppStoreService;
 use Mine\AppStore\Service\Impl\AppStoreServiceImpl;
-use Mine\AppStore\Service\Impl\PluginServiceImpl;
-use Mine\AppStore\Service\PluginService;
 
 class ConfigProvider
 {
@@ -33,7 +31,6 @@ class ConfigProvider
             ],
             'dependencies' => [
                 AppStoreService::class => AppStoreServiceImpl::class,
-                PluginService::class => PluginServiceImpl::class,
             ],
         ];
 
