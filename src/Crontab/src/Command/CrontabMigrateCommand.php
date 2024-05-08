@@ -14,9 +14,7 @@ namespace Mine\Crontab\Command;
 
 use Hyperf\Command\Command as Base;
 use Hyperf\Database\Migrations\Migrator;
-use Symfony\Component\Console\Input\ArrayInput;
 use Symfony\Component\Console\Input\InputOption;
-use Symfony\Component\Console\Output\ConsoleOutput;
 use Symfony\Component\Console\Output\NullOutput;
 
 class CrontabMigrateCommand extends Base
