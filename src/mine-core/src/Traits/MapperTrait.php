@@ -316,7 +316,7 @@ trait MapperTrait
     public function update(mixed $id, array $data): bool
     {
         $this->filterExecuteAttributes($data, true);
-        return $this->model::query()->userDataScope()->find($id)?->update($data) > 0;
+        return $this->model::find($id)->update($data) > 0;
     }
 
     /**
