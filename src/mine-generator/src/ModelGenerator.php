@@ -33,7 +33,6 @@ use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\NotFoundExceptionInterface;
 use Symfony\Component\Console\Application;
 use Symfony\Component\Console\Input\ArrayInput;
-use Symfony\Component\Console\Output\BufferedOutput;
 use Symfony\Component\Console\Output\NullOutput;
 
 use function Hyperf\Support\env;
@@ -97,7 +96,7 @@ class ModelGenerator extends MineGenerator implements CodeGenerator
         }
 
         $input = new ArrayInput($command);
-        $output = new NullOutput(new ArrayInput([]), new BufferedOutput());
+        $output = new NullOutput();
 
         /** @var Application $application */
         $application = $this->container->get(ApplicationInterface::class);

@@ -1,0 +1,38 @@
+{
+    "name": "mineadmin/app-store",
+    "description": "Mineadmin 2.0 AppStore Extension",
+    "type": "library",
+    "require": {
+        "hyperf/translation": "~3.1.0",
+        "nette/utils": "dev-master",
+        "ext-zip": "*"
+    },
+    "license": "MIT",
+    "autoload": {
+        "psr-4": {
+            "Mine\\AppStore\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "xmo",
+            "email": "root@imoi.cn",
+            "role": "Developer"
+        },
+        {
+            "name": "zds",
+            "email": "2771717608@qq.com",
+            "role": "Developer"
+        }
+    ],
+    "config": {
+        "allow-plugins": {
+            "pestphp/pest-plugin": true
+        }
+    },
+    "extra": {
+        "hyperf": {
+            "config": "Mine\\AppStore\\ConfigProvider"
+        }
+    }
+}
