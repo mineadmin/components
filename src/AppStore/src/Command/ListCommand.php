@@ -47,11 +47,11 @@ class ListCommand extends Base
                 'identifier' => $item['identifier'],
                 'description' => $item['description'],
                 'author' => $item['created_by'],
-                'homePage' => is_array($item['homepage']) ? ($item['homepage'][0] ?? null) : $item['homepage']??null,
+                'homePage' => is_array($item['homepage']) ? ($item['homepage'][0] ?? null) : $item['homepage'] ?? null,
             ];
         }, $result);
         $headers = [
-            'name','identifier', 'description', 'author', 'homePage'
+            'name', 'identifier', 'description', 'author', 'homePage',
         ];
         $this->output->table($headers, $result);
     }

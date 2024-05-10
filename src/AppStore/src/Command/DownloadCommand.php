@@ -17,7 +17,6 @@ use Hyperf\Command\Command as Base;
 use Hyperf\Context\ApplicationContext;
 use Mine\AppStore\Service\AppStoreService;
 use Symfony\Component\Console\Input\InputArgument;
-use Symfony\Component\Console\Input\InputOption;
 
 #[Command]
 class DownloadCommand extends Base
@@ -37,7 +36,7 @@ class DownloadCommand extends Base
 
     protected function configure()
     {
-        $this->addArgument('identifier',InputArgument::REQUIRED,'Required, application unique identifier');
-        $this->addArgument('version',InputArgument::OPTIONAL,'Application version number, default latest','latest');
+        $this->addArgument('identifier', InputArgument::REQUIRED, 'Required, application unique identifier');
+        $this->addArgument('version', InputArgument::OPTIONAL, 'Application version number, default latest', 'latest');
     }
 }

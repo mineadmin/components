@@ -96,7 +96,7 @@ final class AppStoreServiceImpl implements AppStoreService
             throw new \RuntimeException('服务端返回错误' . $downloadResponse->get('message'));
         }
 
-        $file_token = Arr::get($originData,'data.token');
+        $file_token = Arr::get($originData, 'data.token');
         if (empty($file_token)) {
             throw new \RuntimeException('Failed to get download token');
         }
@@ -105,7 +105,7 @@ final class AppStoreServiceImpl implements AppStoreService
         if (! $downLoadFileResponse->get('success')) {
             throw new \RuntimeException('服务端返回错误' . $downLoadFileResponse->get('message'));
         }
-        $file_url = Arr::get($downLoadFileOriginData,'data.url');
+        $file_url = Arr::get($downLoadFileOriginData, 'data.url');
         if (empty($file_url)) {
             throw new \RuntimeException('Failed to get download url');
         }
