@@ -67,7 +67,7 @@ abstract class MineExcel
         }
 
         foreach ($this->annotationMate['_p'] as $name => $mate) {
-            $this->property[$mate[self::ANNOTATION_NAME]->index] = [
+            $tmp = [
                 'name' => $name,
                 'value' => $mate[self::ANNOTATION_NAME]->value,
                 'width' => $mate[self::ANNOTATION_NAME]->width ?? null,
@@ -80,6 +80,11 @@ abstract class MineExcel
                 'dictName' => empty($mate[self::ANNOTATION_NAME]->dictName) ? null : $this->getDictData($mate[self::ANNOTATION_NAME]->dictName),
                 'path' => $mate[self::ANNOTATION_NAME]->path ?? null,
             ];
+            if (isset($mate[self::ANNOTATION_NAME]->index)){
+                $this->property[$mate[self::ANNOTATION_NAME]->index] = $tmp;
+            }else{
+                $this->property[] = $tmp;
+            }
         }
         ksort($this->property);
     }
