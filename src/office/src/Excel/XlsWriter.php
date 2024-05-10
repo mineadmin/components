@@ -64,9 +64,9 @@ class XlsWriter extends MineExcel implements ExcelPropertyInterface
 
             $headerMap = [];
             // 获取表头
-            foreach ($data[0] as $index=> $value) {
+            foreach ($data[0] as $index => $value) {
                 $propertyIndex = $index; // 获得列索引
-                $value = trim((string) $value);
+                $value = trim((string)$value);
                 $headerMap[$propertyIndex] = $fieldMap[$value] ?? null; // 获取表头值
             }
 
@@ -74,10 +74,10 @@ class XlsWriter extends MineExcel implements ExcelPropertyInterface
             unset($data[0]);
             foreach ($data as $row) {
                 $temp = [];
-                foreach ($row as $index=> $value) {
+                foreach ($row as $index => $value) {
                     $propertyIndex = $index; // 获得列索引
                     if (!empty($headerMap[$propertyIndex])) { // 确保列索引存在于表头数组中
-                        $temp[$headerMap[$propertyIndex]] = trim((string) $value); // 映射表头标题到对应值
+                        $temp[$headerMap[$propertyIndex]] = trim((string)$value); // 映射表头标题到对应值
                     }
                 }
                 if (!empty($temp)) {
@@ -165,13 +165,13 @@ class XlsWriter extends MineExcel implements ExcelPropertyInterface
             foreach ($this->property as $property) {
                 foreach ($item as $name => $value) {
                     if ($property['name'] == $name) {
-                        if (! empty($property['dictName'])) {
+                        if (!empty($property['dictName'])) {
                             $yield[] = $property['dictName'][$value];
-                        } elseif (! empty($property['dictData'])) {
+                        } elseif (!empty($property['dictData'])) {
                             $yield[] = $property['dictData'][$value];
-                        } elseif (! empty($property['path'])) {
+                        } elseif (!empty($property['path'])) {
                             $yield[] = Arr::get($item, $property['path']);
-                        } elseif (! empty($this->dictData[$name])) {
+                        } elseif (!empty($this->dictData[$name])) {
                             $yield[] = $this->dictData[$name][$value] ?? '';
                         } else {
                             $yield[] = $value;

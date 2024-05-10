@@ -34,7 +34,7 @@ abstract class MineExcel
 
     public function __construct(string $dto)
     {
-        if (! (new $dto()) instanceof MineModelExcel) {
+        if (!(new $dto()) instanceof MineModelExcel) {
             throw new MineException('dto does not implement an interface of the MineModelExcel', 500);
         }
         $dtoObject = new $dto();
@@ -62,7 +62,7 @@ abstract class MineExcel
      */
     protected function parseProperty(): void
     {
-        if (empty($this->annotationMate) || ! isset($this->annotationMate['_c'])) {
+        if (empty($this->annotationMate) || !isset($this->annotationMate['_c'])) {
             throw new MineException('dto annotation info is empty', 500);
         }
 
@@ -80,9 +80,9 @@ abstract class MineExcel
                 'dictName' => empty($mate[self::ANNOTATION_NAME]->dictName) ? null : $this->getDictData($mate[self::ANNOTATION_NAME]->dictName),
                 'path' => $mate[self::ANNOTATION_NAME]->path ?? null,
             ];
-            if (isset($mate[self::ANNOTATION_NAME]->index)){
+            if (isset($mate[self::ANNOTATION_NAME]->index)) {
                 $this->property[$mate[self::ANNOTATION_NAME]->index] = $tmp;
-            }else{
+            } else {
                 $this->property[] = $tmp;
             }
         }
@@ -117,8 +117,8 @@ abstract class MineExcel
     {
         $data = [];
         foreach (container()
-            ->get(DictDataServiceInterface::class)
-            ->getList(['code' => $dictName]) as $item) {
+                     ->get(DictDataServiceInterface::class)
+                     ->getList(['code' => $dictName]) as $item) {
             $data[$item['key']] = $item['title'];
         }
 
