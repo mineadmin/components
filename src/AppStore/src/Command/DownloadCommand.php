@@ -16,6 +16,7 @@ use Hyperf\Command\Annotation\Command;
 use Hyperf\Command\Command as Base;
 use Hyperf\Context\ApplicationContext;
 use Mine\AppStore\Service\AppStoreService;
+use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputOption;
 
 #[Command]
@@ -27,8 +28,8 @@ class DownloadCommand extends Base
 
     public function __invoke()
     {
-        $identifier = $this->input->getOption('identifier');
-        $version = $this->input->getOption('version');
+        $identifier = $this->input->getArgument('identifier');
+        $version = $this->input->getArgument('version');
         $appStoreService = ApplicationContext::getContainer()->get(AppStoreService::class);
         $appStoreService->download($identifier, $version);
         $this->output->success('Plugin Downloaded Successfully');
@@ -36,7 +37,7 @@ class DownloadCommand extends Base
 
     protected function configure()
     {
-        $this->addOption('identifier', 'n', InputOption::VALUE_REQUIRED, '必选,应用唯一标识符');
-        $this->addOption('version', null, InputOption::VALUE_OPTIONAL, '应用版本号,默认latest', 'latest');
+        $this->addArgument('identifier',InputArgument::REQUIRED,'Required, application unique identifier');
+        $this->addArgument('version',InputArgument::OPTIONAL,'Application version number, default latest','latest');
     }
 }

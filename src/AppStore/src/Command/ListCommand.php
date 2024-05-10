@@ -37,8 +37,21 @@ class ListCommand extends Base
         }
         $appStoreService = ApplicationContext::getContainer()->get(AppStoreService::class);
         $result = $appStoreService->list($params)['data']['list'] ?? [];
+        if (empty($result)) {
+            $this->output->info('No data found');
+            return;
+        }
+        $result = array_map(static function ($item) {
+            return [
+                'name' => $item['name'],
+                'identifier' => $item['identifier'],
+                'description' => $item['description'],
+                'author' => $item['created_by'],
+                'homePage' => is_array($item['homepage']) ? ($item['homepage'][0] ?? null) : $item['homepage']??null,
+            ];
+        }, $result);
         $headers = [
-            'extensionName', 'description', 'author', 'homePage', 'status',
+            'name','identifier', 'description', 'author', 'homePage'
         ];
         $this->output->table($headers, $result);
     }

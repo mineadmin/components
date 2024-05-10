@@ -15,6 +15,7 @@ namespace Mine\AppStore\Service\Impl;
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\GuzzleException;
 use GuzzleHttp\RequestOptions;
+use Hyperf\Collection\Arr;
 use Hyperf\Collection\Collection;
 use Hyperf\Contract\ConfigInterface;
 use Hyperf\Guzzle\ClientFactory;
@@ -89,19 +90,22 @@ final class AppStoreServiceImpl implements AppStoreService
      */
     public function download(string $identifier, string $version): bool
     {
-        $downloadResponse = Collection::make($this->request(__FUNCTION__, compact('identifier', 'version')));
+        $originData = $this->request(__FUNCTION__, compact('identifier', 'version'));
+        $downloadResponse = Collection::make($originData);
         if (! $downloadResponse->get('success')) {
             throw new \RuntimeException('服务端返回错误' . $downloadResponse->get('message'));
         }
-        $file_token = $downloadResponse->get('data.token');
+
+        $file_token = Arr::get($originData,'data.token');
         if (empty($file_token)) {
             throw new \RuntimeException('Failed to get download token');
         }
-        $downLoadFileResponse = Collection::make($this->request('download_file', compact('file_token')));
+        $downLoadFileOriginData = $this->request('download_file', compact('file_token'));
+        $downLoadFileResponse = Collection::make($downLoadFileOriginData);
         if (! $downLoadFileResponse->get('success')) {
             throw new \RuntimeException('服务端返回错误' . $downLoadFileResponse->get('message'));
         }
-        $file_url = $downLoadFileResponse->get('data.url');
+        $file_url = Arr::get($downLoadFileOriginData,'data.url');
         if (empty($file_url)) {
             throw new \RuntimeException('Failed to get download url');
         }
