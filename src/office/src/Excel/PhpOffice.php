@@ -49,17 +49,31 @@ class PhpOffice extends MineExcel implements ExcelPropertyInterface
             $sheet = $reader->load($tempFilePath);
             $endCell = isset($this->property) ? $this->getColumnIndex(count($this->property)) : null;
             try {
+                // 获取展示名称到字段名的映射关系
+                $fieldMap = [];
+                foreach ($this->property as $item) {
+                    $fieldMap[trim($item['value'])] = $item['name'];
+                }
+
+                $headerMap = [];
+                // 获取表头
+                // 获取表头，假设表头在第一行
+                $headerRow = $sheet->getActiveSheet()->getRowIterator(1, 1)->current();
+                foreach ($headerRow->getCellIterator('A', $endCell) as $index=> $item) {
+                    $propertyIndex = ord($index) - 65;; // 获得列索引
+                    $value = trim($item->getFormattedValue());
+                    $headerMap[$propertyIndex] = $fieldMap[$value] ?? null; // 获取表头值
+                }
+                // 读取数据，从第二行开始
                 foreach ($sheet->getActiveSheet()->getRowIterator(2) as $row) {
                     $temp = [];
-                    foreach ($row->getCellIterator('A', $endCell) as $index => $item) {
-                        $propertyIndex = ord($index) - 65;
-                        if (isset($this->property[$propertyIndex])) {
-                            $temp[$this->property[$propertyIndex]['name']] = $item->getFormattedValue();
+                    foreach ($row->getCellIterator('A', $endCell) as $index=> $item) {
+                        $propertyIndex = ord($index) - 65;; // 获得列索引
+                        if (!empty($headerMap[$propertyIndex])) { // 确保列索引存在于表头数组中
+                            $temp[$headerMap[$propertyIndex]] = trim($item->getFormattedValue()); // 映射表头标题到对应值
                         }
                     }
-                    if (! empty($temp)) {
-                        $data[] = $temp;
-                    }
+                    $data[] = $temp;
                 }
                 unlink($tempFilePath);
             } catch (\Throwable $e) {
