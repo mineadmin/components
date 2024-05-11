@@ -14,7 +14,6 @@ namespace Mine\AppStore\Service\Impl;
 
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\GuzzleException;
-use GuzzleHttp\RequestOptions;
 use Hyperf\Collection\Arr;
 use Hyperf\Collection\Collection;
 use Hyperf\Contract\ConfigInterface;
@@ -90,6 +89,11 @@ final class AppStoreServiceImpl implements AppStoreService
      */
     public function download(string $identifier, string $version): bool
     {
+        $localPluginPath = Plugin::PLUGIN_PATH . DIRECTORY_SEPARATOR . $identifier;
+        if (file_exists($localPluginPath)) {
+            throw new \RuntimeException(sprintf('The plugin %s already exists', $identifier));
+        }
+
         $originData = $this->request(__FUNCTION__, compact('identifier', 'version'));
         $downloadResponse = Collection::make($originData);
         if (! $downloadResponse->get('success')) {
@@ -110,18 +114,18 @@ final class AppStoreServiceImpl implements AppStoreService
             throw new \RuntimeException('Failed to get download url');
         }
         $tmpFile = sys_get_temp_dir() . '/' . uniqid('mine', true) . '.zip';
-        $tmpFileResource = fopen(sys_get_temp_dir() . '/' . uniqid('mine', true) . '.zip', 'wb+');
-        $response = $this->client->get($file_url, [
-            RequestOptions::SINK => $tmpFileResource,
-        ]);
+        $response = $this->client->get($file_url);
         if ($response->getStatusCode() !== 200) {
             throw new \RuntimeException('Failed to download plugin');
         }
+        file_put_contents($tmpFile, $response->getBody()->getContents());
+
         $zip = new \ZipArchive();
-        if ($zip->open($tmpFile) !== true) {
+        $zip->open($tmpFile);
+        if ($zip->status !== \ZipArchive::ER_OK) {
             throw new \RuntimeException('Failed to open the zip file');
         }
-        $zip->extractTo(Plugin::PLUGIN_PATH);
+        $zip->extractTo($localPluginPath);
         $zip->close();
         return true;
     }
