@@ -84,6 +84,11 @@ final class AppStoreServiceImpl implements AppStoreService
         return $this->request('my_app_list', $params);
     }
 
+    public function payApp(): array
+    {
+        return $this->request('pay_app_list');
+    }
+
     /**
      * Download the specified plug-in to a local directory.
      */
