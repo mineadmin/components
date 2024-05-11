@@ -30,11 +30,6 @@
             "pestphp/pest-plugin": true
         }
     },
-    "scripts": {
-        "post-autoload-dump": [
-            "postAutoloadDump"
-        ]
-    },
     "extra": {
         "hyperf": {
             "config": "Mine\\AppStore\\ConfigProvider"

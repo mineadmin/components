@@ -14,6 +14,7 @@ namespace Mine\AppStore\Command;
 
 use Hyperf\Command\Annotation\Command;
 use Hyperf\Command\Command as Base;
+use Mine\AppStore\Plugin;
 use Nette\Utils\FileSystem;
 use Symfony\Component\Console\Input\InputOption;
 
@@ -36,6 +37,21 @@ class InitialCommand extends Base
         $this->output->info('Publishing Configuration Files');
         FileSystem::copy($publishPath . '/mine-extension.php', BASE_PATH . '/config/autoload/mine-extension.php');
         $this->output->success('Publishing Configuration File Succeeded');
+
+        if (! file_exists(Plugin::PLUGIN_PATH)) {
+            if (! mkdir($concurrentDirectory = Plugin::PLUGIN_PATH, 0755, true) && ! is_dir($concurrentDirectory)) {
+                throw new \RuntimeException(sprintf('Directory "%s" was not created', $concurrentDirectory));
+            }
+            $binFile = file_get_contents(BASE_PATH . '/bin/hyperf.php');
+            if (str_contains($binFile, 'Mine\AppStore\Plugin::init();')) {
+                $binFile = str_replace('Hyperf\Di\ClassLoader::init();', '\\Mine\\AppStore\\Plugin::init();
+    Hyperf\\Di\\ClassLoader::init();', $binFile);
+                file_put_contents(BASE_PATH . '/bin/hyperf.php', $binFile);
+                $this->output->success('Plugin initialization code added successfully.');
+            }
+            $this->output->success('Plugin directory created successfully');
+        }
+
         $this->output->warning('
         接下来选择开发模式，
         默认是用 ./web 目录作为前端源码所在目录，
