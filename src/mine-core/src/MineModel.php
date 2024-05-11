@@ -14,7 +14,10 @@ namespace Mine;
 
 use Hyperf\DbConnection\Model\Model;
 use Hyperf\ModelCache\Cacheable;
+use Mine\Helper\Str;
 use Mine\Traits\ModelMacroTrait;
+
+use function Hyperf\Support\class_basename;
 
 /**
  * Class MineModel.
@@ -58,6 +61,11 @@ class MineModel extends Model
         $this->registerBase();
         // 注册用户数据权限方法
         $this->registerUserDataScope();
+    }
+
+    public function getTable(): string
+    {
+        return $this->table ?? Str::snake(class_basename($this));
     }
 
     /**
