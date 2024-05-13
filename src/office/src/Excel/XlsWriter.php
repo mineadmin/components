@@ -37,52 +37,6 @@ class XlsWriter extends MineExcel implements ExcelPropertyInterface
         return $xlsxObject->openFile($tempFileName)->openSheet()->getSheetData();
     }
 
-    private function getDataByIndex($data)
-    {
-        unset($data[0]);
-        $importData = [];
-        foreach ($data as $item) {
-            $tmp = [];
-            foreach ($item as $key => $value) {
-                $tmp[$this->property[$key]['name']] = (string) $value;
-            }
-            $importData[] = $tmp;
-        }
-        return $importData;
-    }
-    private function getDataByText($data): array
-    {
-        $importData = [];
-        // 获取展示名称到字段名的映射关系
-        $fieldMap = [];
-        foreach ($this->property as $item) {
-            $fieldMap[trim($item['value'])] = $item['name'];
-        }
-
-        $headerMap = [];
-        // 获取表头
-        foreach ($data[0] as $index => $value) {
-            $propertyIndex = $index; // 获得列索引
-            $value = trim((string)$value);
-            $headerMap[$propertyIndex] = $fieldMap[$value] ?? null; // 获取表头值
-        }
-
-        // 读取数据，从第二行开始
-        unset($data[0]);
-        foreach ($data as $row) {
-            $temp = [];
-            foreach ($row as $index => $value) {
-                $propertyIndex = $index; // 获得列索引
-                if (!empty($headerMap[$propertyIndex])) { // 确保列索引存在于表头数组中
-                    $temp[$headerMap[$propertyIndex]] = trim((string)$value); // 映射表头标题到对应值
-                }
-            }
-            if (!empty($temp)) {
-                $importData[] = $temp;
-            }
-        }
-        return $importData;
-    }
     /**
      * 导入数据.
      * @throws ContainerExceptionInterface
@@ -186,13 +140,13 @@ class XlsWriter extends MineExcel implements ExcelPropertyInterface
             foreach ($this->property as $property) {
                 foreach ($item as $name => $value) {
                     if ($property['name'] == $name) {
-                        if (!empty($property['dictName'])) {
+                        if (! empty($property['dictName'])) {
                             $yield[] = $property['dictName'][$value];
-                        } elseif (!empty($property['dictData'])) {
+                        } elseif (! empty($property['dictData'])) {
                             $yield[] = $property['dictData'][$value];
-                        } elseif (!empty($property['path'])) {
+                        } elseif (! empty($property['path'])) {
                             $yield[] = Arr::get($item, $property['path']);
-                        } elseif (!empty($this->dictData[$name])) {
+                        } elseif (! empty($this->dictData[$name])) {
                             $yield[] = $this->dictData[$name][$value] ?? '';
                         } else {
                             $yield[] = $value;
@@ -221,5 +175,51 @@ class XlsWriter extends MineExcel implements ExcelPropertyInterface
         return $res;
     }
 
+    private function getDataByIndex($data)
+    {
+        unset($data[0]);
+        $importData = [];
+        foreach ($data as $item) {
+            $tmp = [];
+            foreach ($item as $key => $value) {
+                $tmp[$this->property[$key]['name']] = (string) $value;
+            }
+            $importData[] = $tmp;
+        }
+        return $importData;
+    }
 
+    private function getDataByText($data): array
+    {
+        $importData = [];
+        // 获取展示名称到字段名的映射关系
+        $fieldMap = [];
+        foreach ($this->property as $item) {
+            $fieldMap[trim($item['value'])] = $item['name'];
+        }
+
+        $headerMap = [];
+        // 获取表头
+        foreach ($data[0] as $index => $value) {
+            $propertyIndex = $index; // 获得列索引
+            $value = trim((string) $value);
+            $headerMap[$propertyIndex] = $fieldMap[$value] ?? null; // 获取表头值
+        }
+
+        // 读取数据，从第二行开始
+        unset($data[0]);
+        foreach ($data as $row) {
+            $temp = [];
+            foreach ($row as $index => $value) {
+                $propertyIndex = $index; // 获得列索引
+                if (! empty($headerMap[$propertyIndex])) { // 确保列索引存在于表头数组中
+                    $temp[$headerMap[$propertyIndex]] = trim((string) $value); // 映射表头标题到对应值
+                }
+            }
+            if (! empty($temp)) {
+                $importData[] = $temp;
+            }
+        }
+        return $importData;
+    }
 }

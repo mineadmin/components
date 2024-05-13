@@ -29,57 +29,6 @@ use Psr\Http\Message\ResponseInterface;
 
 class PhpOffice extends MineExcel implements ExcelPropertyInterface
 {
-
-    private function getDataByIndex($sheet, $endCell): array
-    {
-        $data = [];
-        foreach ($sheet->getActiveSheet()->getRowIterator(2) as $row) {
-            $temp = [];
-            foreach ($row->getCellIterator('A', $endCell) as $index => $item) {
-                $propertyIndex = ord($index) - 65;
-                if (isset($this->property[$propertyIndex])) {
-                    $temp[$this->property[$propertyIndex]['name']] = $item->getFormattedValue();
-                }
-            }
-            if (! empty($temp)) {
-                $data[] = $temp;
-            }
-        }
-        return $data;
-    }
-    private function getDataByText($sheet, $endCell): array
-    {
-        $data = [];
-        // 获取展示名称到字段名的映射关系
-        $fieldMap = [];
-        foreach ($this->property as $item) {
-            $fieldMap[trim($item['value'])] = $item['name'];
-        }
-
-        $headerMap = [];
-        // 获取表头
-        // 获取表头，假设表头在第一行
-        $headerRow = $sheet->getActiveSheet()->getRowIterator(1, 1)->current();
-        foreach ($headerRow->getCellIterator('A', $endCell) as $index => $item) {
-            $propertyIndex = ord($index) - 65; // 获得列索引
-            $value = trim($item->getFormattedValue());
-            $headerMap[$propertyIndex] = $fieldMap[$value] ?? null; // 获取表头值
-        }
-        // 读取数据，从第二行开始
-        foreach ($sheet->getActiveSheet()->getRowIterator(2) as $row) {
-            $temp = [];
-            foreach ($row->getCellIterator('A', $endCell) as $index => $item) {
-                $propertyIndex = ord($index) - 65; // 获得列索引
-                if (!empty($headerMap[$propertyIndex])) { // 确保列索引存在于表头数组中
-                    $temp[$headerMap[$propertyIndex]] = trim($item->getFormattedValue()); // 映射表头标题到对应值
-                }
-            }
-            $data[] = $temp;
-        }
-        return $data;
-    }
-
-
     /**
      * 导入.
      * @throws Exception
@@ -145,13 +94,13 @@ class PhpOffice extends MineExcel implements ExcelPropertyInterface
             $style = $sheet->getStyle($headerColumn)->getFont()->setBold(true);
             $columnDimension = $sheet->getColumnDimension($headerColumn[0]);
 
-            empty($item['width']) ? $columnDimension->setAutoSize(true) : $columnDimension->setWidth((float)$item['width']);
+            empty($item['width']) ? $columnDimension->setAutoSize(true) : $columnDimension->setWidth((float) $item['width']);
 
             empty($item['align']) || $sheet->getStyle($headerColumn)->getAlignment()->setHorizontal($item['align']);
 
             empty($item['headColor']) || $style->setColor(new Color(str_replace('#', '', $item['headColor'])));
 
-            if (!empty($item['headBgColor'])) {
+            if (! empty($item['headBgColor'])) {
                 $sheet->getStyle($headerColumn)->getFill()
                     ->setFillType(Fill::FILL_SOLID)
                     ->getStartColor()->setARGB(str_replace('#', '', $item['headBgColor']));
@@ -177,24 +126,24 @@ class PhpOffice extends MineExcel implements ExcelPropertyInterface
                         }
                     }
 
-                    if (!empty($annotation['dictName'])) {
+                    if (! empty($annotation['dictName'])) {
                         $sheet->setCellValue($columnRow, $annotation['dictName'][$value]);
-                    } elseif (!empty($annotation['path'])) {
+                    } elseif (! empty($annotation['path'])) {
                         $sheet->setCellValue($columnRow, Arr::get($items, $annotation['path']));
-                    } elseif (!empty($annotation['dictData'])) {
+                    } elseif (! empty($annotation['dictData'])) {
                         $sheet->setCellValue($columnRow, $annotation['dictData'][$value]);
-                    } elseif (!empty($this->dictData[$name])) {
+                    } elseif (! empty($this->dictData[$name])) {
                         $sheet->setCellValue($columnRow, $this->dictData[$name][$value] ?? '');
                     } else {
                         $sheet->setCellValue($columnRow, $value . "\t");
                     }
 
-                    if (!empty($item['color'])) {
+                    if (! empty($item['color'])) {
                         $sheet->getStyle($columnRow)->getFont()
                             ->setColor(new Color(str_replace('#', '', $annotation['color'])));
                     }
 
-                    if (!empty($item['bgColor'])) {
+                    if (! empty($item['bgColor'])) {
                         $sheet->getStyle($columnRow)->getFill()
                             ->setFillType(Fill::FILL_SOLID)
                             ->getStartColor()->setARGB(str_replace('#', '', $annotation['bgColor']));
@@ -228,4 +177,53 @@ class PhpOffice extends MineExcel implements ExcelPropertyInterface
         }
     }
 
+    private function getDataByIndex($sheet, $endCell): array
+    {
+        $data = [];
+        foreach ($sheet->getActiveSheet()->getRowIterator(2) as $row) {
+            $temp = [];
+            foreach ($row->getCellIterator('A', $endCell) as $index => $item) {
+                $propertyIndex = ord($index) - 65;
+                if (isset($this->property[$propertyIndex])) {
+                    $temp[$this->property[$propertyIndex]['name']] = $item->getFormattedValue();
+                }
+            }
+            if (! empty($temp)) {
+                $data[] = $temp;
+            }
+        }
+        return $data;
+    }
+
+    private function getDataByText($sheet, $endCell): array
+    {
+        $data = [];
+        // 获取展示名称到字段名的映射关系
+        $fieldMap = [];
+        foreach ($this->property as $item) {
+            $fieldMap[trim($item['value'])] = $item['name'];
+        }
+
+        $headerMap = [];
+        // 获取表头
+        // 获取表头，假设表头在第一行
+        $headerRow = $sheet->getActiveSheet()->getRowIterator(1, 1)->current();
+        foreach ($headerRow->getCellIterator('A', $endCell) as $index => $item) {
+            $propertyIndex = ord($index) - 65; // 获得列索引
+            $value = trim($item->getFormattedValue());
+            $headerMap[$propertyIndex] = $fieldMap[$value] ?? null; // 获取表头值
+        }
+        // 读取数据，从第二行开始
+        foreach ($sheet->getActiveSheet()->getRowIterator(2) as $row) {
+            $temp = [];
+            foreach ($row->getCellIterator('A', $endCell) as $index => $item) {
+                $propertyIndex = ord($index) - 65; // 获得列索引
+                if (! empty($headerMap[$propertyIndex])) { // 确保列索引存在于表头数组中
+                    $temp[$headerMap[$propertyIndex]] = trim($item->getFormattedValue()); // 映射表头标题到对应值
+                }
+            }
+            $data[] = $temp;
+        }
+        return $data;
+    }
 }
