@@ -69,8 +69,7 @@ class PhpOffice extends MineExcel implements ExcelPropertyInterface
         foreach ($sheet->getActiveSheet()->getRowIterator(2) as $row) {
             $temp = [];
             foreach ($row->getCellIterator('A', $endCell) as $index => $item) {
-                $propertyIndex = ord($index) - 65;
-                ; // 获得列索引
+                $propertyIndex = ord($index) - 65; // 获得列索引
                 if (!empty($headerMap[$propertyIndex])) { // 确保列索引存在于表头数组中
                     $temp[$headerMap[$propertyIndex]] = trim($item->getFormattedValue()); // 映射表头标题到对应值
                 }
