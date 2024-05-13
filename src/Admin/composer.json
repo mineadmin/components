@@ -1,0 +1,40 @@
+{
+    "name": "mineadmin/mineadmin",
+    "description": "MineAdmin http core",
+    "type": "library",
+    "require": {
+        "mineadmin/app-store": "^2.0",
+        "mineadmin/http-server": "^2.0",
+        "mineadmin/security-http": "^2.0",
+        "mineadmin/security-access": "^2.0",
+        "hyperf/constants": "^3.1"
+    },
+    "license": "MIT",
+    "autoload": {
+        "psr-4": {
+            "Mine\\Admin\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "xmo",
+            "email": "root@imoi.cn",
+            "role": "Developer"
+        },
+        {
+            "name": "zds",
+            "email": "2771717608@qq.com",
+            "role": "Developer"
+        }
+    ],
+    "config": {
+        "allow-plugins": {
+            "pestphp/pest-plugin": true
+        }
+    },
+    "extra": {
+        "hyperf": {
+            "config": "Mine\\Admin\\ConfigProvider"
+        }
+    }
+}

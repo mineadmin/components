@@ -26,7 +26,8 @@
       "Mine\\Module\\": "src/Module/src",
       "Mine\\SecurityBundle\\": "src/SecurityBundle/src",
       "Mine\\Security\\Http\\": "src/SecurityHttp/src",
-      "Mine\\Security\\Access\\": "src/SecurityAccess/src"
+      "Mine\\Security\\Access\\": "src/SecurityAccess/src",
+      "Mine\\Admin\\": "src/Admin/src"
     },
     "files": [
       "src/mine-helpers/src/functions.php",

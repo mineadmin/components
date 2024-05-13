@@ -12,9 +12,9 @@ declare(strict_types=1);
 
 namespace Mine\Traits;
 
-use App\System\Model\SystemDept;
-use App\System\Model\SystemRole;
-use App\System\Model\SystemUser;
+use Mine\Admin\Bundle\Module\SystemDept;
+use Mine\Admin\Bundle\Module\SystemRole;
+use Mine\Admin\Bundle\Module\SystemUser;
 use Hyperf\Database\Model\Builder;
 use Hyperf\DbConnection\Db;
 use Mine\Exception\MineException;

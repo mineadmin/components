@@ -32,8 +32,8 @@
     }
   },
   "extra": {
-    "config": {
-      "hyperf": "Mine\\Security\\Access\\ConfigProvider"
+    "hyperf": {
+      "config": "Mine\\Security\\Access\\ConfigProvider"
     }
   }
 }
