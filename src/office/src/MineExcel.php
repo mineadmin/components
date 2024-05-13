@@ -32,6 +32,13 @@ abstract class MineExcel
 
     protected array $dictData = [];
 
+    /**
+     * 是否通过index进行排序
+     * 否则使用属性在代码中的位置进行排序
+     * 同时影响 导入和导出
+     */
+    protected ?bool $orderByIndex;
+
     public function __construct(string $dto)
     {
         if (!(new $dto()) instanceof MineModelExcel) {
@@ -66,6 +73,11 @@ abstract class MineExcel
             throw new MineException('dto annotation info is empty', 500);
         }
 
+        // 判断数组中任意一行包含 index键
+        $this->orderByIndex = array_reduce(array_values($this->annotationMate['_p']), function ($carry, $item) {
+            return $carry || isset($item[self::ANNOTATION_NAME]->index);
+        }, false);
+
         foreach ($this->annotationMate['_p'] as $name => $mate) {
             $tmp = [
                 'name' => $name,
@@ -80,7 +92,8 @@ abstract class MineExcel
                 'dictName' => empty($mate[self::ANNOTATION_NAME]->dictName) ? null : $this->getDictData($mate[self::ANNOTATION_NAME]->dictName),
                 'path' => $mate[self::ANNOTATION_NAME]->path ?? null,
             ];
-            if (isset($mate[self::ANNOTATION_NAME]->index)) {
+
+            if ($this->orderByIndex) {
                 $this->property[$mate[self::ANNOTATION_NAME]->index] = $tmp;
             } else {
                 $this->property[] = $tmp;
