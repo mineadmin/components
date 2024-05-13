@@ -12,9 +12,12 @@ declare(strict_types=1);
 
 namespace Mine;
 
+use Hyperf\Database\Commands\Ast\GenerateModelIDEVisitor;
 use Hyperf\Database\Commands\Ast\ModelUpdateVisitor;
 use Mine\Annotation\DependProxy;
 use Mine\Helper\Str;
+
+use function Hyperf\Support\class_basename;
 
 /**
  * Class MineModelVisitor.
@@ -56,5 +59,29 @@ class MineModelVisitor extends ModelUpdateVisitor
         }
 
         return $cast;
+    }
+
+    protected function parse(): string
+    {
+        $doc = '/**' . PHP_EOL;
+        $doc = $this->parseProperty($doc);
+        $doc = $this->parseMethod($doc);
+        if ($this->option->isWithIde()) {
+            $doc .= ' * @mixin \\' . GenerateModelIDEVisitor::toIDEClass(get_class($this->class)) . PHP_EOL;
+        }
+        $doc .= ' */';
+        return $doc;
+    }
+
+    protected function parseMethod(string $doc): string
+    {
+        foreach ($this->columns as $column) {
+            [$name] = $this->getProperty($column);
+            $methodName = 'where' . ucfirst(Str::studly($name)) . '($value)';
+            $hyperfBuilderNameSpace = '\Hyperf\Database\Model\Builder';
+            $className = class_basename($this->class);
+            $doc .= sprintf(' * @method %s %s', "{$hyperfBuilderNameSpace}|{$className}", $methodName) . PHP_EOL;
+        }
+        return $doc;
     }
 }
