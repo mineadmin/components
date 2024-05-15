@@ -12,7 +12,7 @@ declare(strict_types=1);
 
 namespace Mine\Crontab;
 
-use Mine\Admin\Bundle\Module\SettingCrontab;
+use Mine\Admin\Bundle\Model\SettingCrontab;
 use Hyperf\Crontab\Parser;
 use Hyperf\Di\Annotation\Inject;
 use Hyperf\Guzzle\ClientFactory;

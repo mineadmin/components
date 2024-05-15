@@ -23,6 +23,8 @@ use Hyperf\DbConnection\Db;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\NotFoundExceptionInterface;
 
+use function Hyperf\Support\env;
+
 class SystemDeptSeeder extends Seeder
 {
     /**

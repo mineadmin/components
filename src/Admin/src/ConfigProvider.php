@@ -12,6 +12,8 @@ declare(strict_types=1);
 
 namespace Mine\Admin;
 
+use Mine\SecurityBundle\Config;
+
 class ConfigProvider
 {
     public function __invoke(): array
@@ -23,6 +25,9 @@ class ConfigProvider
                         __DIR__,
                     ],
                 ],
+            ],
+            'dependencies' => [
+                Security\Config::class => Config::class,
             ],
             'publish' => [
                 [

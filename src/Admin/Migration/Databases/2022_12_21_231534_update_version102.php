@@ -14,6 +14,8 @@ use Hyperf\Database\Schema\Blueprint;
 use Hyperf\Database\Schema\Schema;
 use Hyperf\DbConnection\Db;
 
+use function Hyperf\Support\env;
+
 class UpdateVersion102 extends Migration
 {
     /**

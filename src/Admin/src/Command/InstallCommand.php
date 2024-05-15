@@ -42,17 +42,17 @@ class InstallCommand extends AbstractCommand
         }
         $this->output->success('Published configuration file');
 
+        $migrateRealPath = dirname(__DIR__, 2) . '/Migration';
+
         $this->call('migrate', [
-            '--realpath' => dirname(__DIR__, 2) . '/Migration/Databases',
             '--database' => $this->input->getOption('database'),
         ]);
 
-        $this->output->success('Migrated database');
-
         $this->call('db:seed', [
-            '--realpath' => dirname(__DIR__, 2) . '/Migration/Seeder',
+            '--realpath' => true,
             '--database' => $this->input->getOption('database'),
             '--force' => true,
+            '--path' => $migrateRealPath . '/Seeder',
         ]);
         $this->output->success('Seeded database');
     }

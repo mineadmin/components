@@ -10,13 +10,15 @@ declare(strict_types=1);
  * @license  https://github.com/mineadmin/MineAdmin/blob/master/LICENSE
  */
 
-namespace Mine\Admin\Bundle\Module;
+namespace Mine\Admin\Bundle\Model;
 
 use Carbon\Carbon;
+use Hyperf\Database\Model\Builder;
 use Hyperf\Database\Model\Collection;
 use Hyperf\Database\Model\Model as MineModel;
 use Hyperf\Database\Model\Relations\BelongsToMany;
 use Hyperf\Database\Model\SoftDeletes;
+use Mine\SecurityBundle\Contract\UserInterface;
 
 /**
  * @property int $id 用户ID，主键
@@ -43,7 +45,7 @@ use Hyperf\Database\Model\SoftDeletes;
  * @property null|Collection|SystemDept[] $depts
  * @property mixed $password 密码
  */
-class SystemUser extends MineModel
+class SystemUser extends MineModel implements UserInterface
 {
     use SoftDeletes;
 
@@ -112,5 +114,45 @@ class SystemUser extends MineModel
     public static function passwordVerify($password, $hash): bool
     {
         return password_verify($password, $hash);
+    }
+
+    public function getIdentifier(): string
+    {
+        return (string) $this->id;
+    }
+
+    public function getIdentifierName(): string
+    {
+        return $this->getKeyName();
+    }
+
+    public function getRememberToken(): string
+    {
+        throw new \RuntimeException('Not implemented');
+    }
+
+    public function setRememberToken(string $token): void
+    {
+        throw new \RuntimeException('Not implemented');
+    }
+
+    public function getRememberTokenName(): string
+    {
+        throw new \RuntimeException('Not implemented');
+    }
+
+    public function getPassword(): string
+    {
+        return $this->password;
+    }
+
+    public function setPassword(string $password): void
+    {
+        $this->password = $password;
+    }
+
+    public function getSecurityBuilder(): Builder
+    {
+        return $this->newQuery();
     }
 }

@@ -18,7 +18,7 @@ declare(strict_types=1);
  * @license  https://github.com/mineadmin/MineAdmin/blob/master/LICENSE
  */
 use Hyperf\Database\Seeders\Seeder;
-use Mine\Admin\Bundle\Module\SystemDictData;
+use Mine\Admin\Bundle\Model\SystemDictData;
 
 class SystemDictDataSeeder extends Seeder
 {

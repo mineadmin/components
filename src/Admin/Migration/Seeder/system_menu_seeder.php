@@ -11,7 +11,9 @@ declare(strict_types=1);
  */
 use Hyperf\Database\Seeders\Seeder;
 use Hyperf\DbConnection\Db;
-use Mine\Admin\Bundle\Module\SystemMenu;
+use Mine\Admin\Bundle\Model\SystemMenu;
+
+use function Hyperf\Support\env;
 
 class SystemMenuSeeder extends Seeder
 {
@@ -21,14 +23,14 @@ class SystemMenuSeeder extends Seeder
     public function run()
     {
         SystemMenu::truncate();
-        if (env('DB_DRIVER') === 'odbc-sql-server') {
+        if (env('DB_DRIVER') === 'sqlsrv') {
             Db::unprepared('SET IDENTITY_INSERT [' . SystemMenu::getModel()->getTable() . '] ON;');
         }
         $data = $this->data();
         foreach ($data as $i => $value) {
             SystemMenu::create($value);
         }
-        if (env('DB_DRIVER') === 'odbc-sql-server') {
+        if (env('DB_DRIVER') === 'sqlsrv') {
             Db::unprepared('SET IDENTITY_INSERT [' . SystemMenu::getModel()->getTable() . '] OFF;');
         }
     }

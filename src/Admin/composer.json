@@ -15,6 +15,11 @@
             "Mine\\Admin\\": "src/"
         }
     },
+    "autoload-dev": {
+        "psr-4": {
+            "Mine\\Admin\\Tests\\": "tests/"
+        }
+    },
     "authors": [
         {
             "name": "xmo",
