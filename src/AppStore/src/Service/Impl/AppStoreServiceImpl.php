@@ -79,22 +79,22 @@ final class AppStoreServiceImpl implements AppStoreService
         return $this->request(__FUNCTION__, compact('identifier'));
     }
 
-    public function myApp(array $params): array
-    {
-        return $this->request('my_app_list', $params);
-    }
-
     public function payApp(): array
     {
         return $this->request('pay_app_list');
     }
 
+    public function getOtherApp(string $username): array
+    {
+        return $this->request('get_other_app', compact('username'));
+    }
+
     /**
      * Download the specified plug-in to a local directory.
      */
-    public function download(string $identifier, string $version): bool
+    public function download(string $space, string $identifier, string $version): bool
     {
-        $localPluginPath = Plugin::PLUGIN_PATH . DIRECTORY_SEPARATOR . $identifier;
+        $localPluginPath = Plugin::PLUGIN_PATH . DIRECTORY_SEPARATOR . $space . DIRECTORY_SEPARATOR . $identifier;
         if (file_exists($localPluginPath)) {
             throw new \RuntimeException(sprintf('The plugin %s already exists', $identifier));
         }
