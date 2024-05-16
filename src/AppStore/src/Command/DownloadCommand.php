@@ -28,7 +28,7 @@ class DownloadCommand extends Base
     public function __invoke()
     {
         $identifier = $this->input->getArgument('identifier');
-        [ $space, $identifier ] = explode('/', $identifier);
+        [$space, $identifier] = explode('/', $identifier);
         $version = $this->input->getArgument('version');
         $appStoreService = ApplicationContext::getContainer()->get(AppStoreService::class);
         $appStoreService->download($space, $identifier, $version);
