@@ -25,6 +25,7 @@ class ConstantUtilsTest extends TestCase
     protected function setUp(): void
     {
         // 在这里进行测试前的准备工作
+        parent::runBare();
     }
 
     protected function tearDown(): void
