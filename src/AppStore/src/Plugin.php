@@ -264,7 +264,7 @@ class Plugin
                  * @var SplFileInfo $file
                  */
                 $relativeFilePath = $file->getRelativePathname();
-                FileSystemUtils::copy($pluginPath . $relativeFilePath, $frontDirectory . $relativeFilePath);
+                FileSystemUtils::copy($pluginPath . '/web/' . $relativeFilePath, $frontDirectory . $relativeFilePath);
             }
         }
 
