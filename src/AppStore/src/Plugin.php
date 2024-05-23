@@ -138,6 +138,11 @@ class Plugin
         return false;
     }
 
+    public static function forceRefreshJsonPath(): void
+    {
+        self::$mineJsonPaths = [];
+    }
+
     /**
      * Install the plugin according to the given directory.
      */
