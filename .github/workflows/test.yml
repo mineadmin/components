@@ -13,7 +13,7 @@ jobs:
     strategy:
       matrix:
         os: [ ubuntu-latest ]
-        php: [ '8.1','8.2','8.3' ]
+        php: [ '8.1' ]
         swoole: [ 'swoole']
     steps:
       - name: Checkout
@@ -27,7 +27,6 @@ jobs:
         run: composer update -oW
       - name: Run CS Fix
         run: |
-          vendor/bin/php-cs-fixer fix src --dry-run --diff
           vendor/bin/php-cs-fixer fix src --dry-run --diff
   tests:
     needs: cs-fix
@@ -62,6 +61,7 @@ jobs:
           tools: phpize
           extensions: redis, pdo, pdo_mysql, bcmath
           ini-values: opcache.enable_cli=0
+          coverage: xdebug
       - name: Setup Swoole
         run: |
           sudo apt-get install libcurl4-openssl-dev libc-ares-dev libpq-dev
