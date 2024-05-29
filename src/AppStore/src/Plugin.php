@@ -156,8 +156,7 @@ class Plugin
          */
         if ($info === null || $splFile === null) {
             throw new \RuntimeException(
-                'The given directory is not a valid plugin,
-                 probably because it is already installed or the directory is not standardized.' . $path
+                'The given directory is not a valid plugin, probably because it is already installed or the directory is not standardized.' . $path
             );
         }
         self::loadPlugin($info, $splFile);
@@ -196,15 +195,34 @@ class Plugin
             $cmdBody = sprintf('cd %s &&', BASE_PATH);
             $cmdBody .= sprintf('%s require ', $composerBin);
             foreach ($requires as $package => $version) {
-                if (InstalledVersions::isInstalled($package)) {
-                    throw new \RuntimeException(sprintf('Plugin %s depends on %s, but detects package installed', $info['name'], $package));
+                if (! InstalledVersions::isInstalled($package)) {
+                    $cmdBody .= sprintf('%s:%s ', $package, $version);
                 }
-                $cmdBody .= sprintf('%s:%s ', $package, $version);
             }
             $cmdBody .= sprintf('-vvv');
             $result = System::exec($cmdBody);
-            if ($result['code'] !== 0) {
+            if ($result['code'] !== 0 && ! empty($result['ouput'])) {
                 throw new \RuntimeException(sprintf('Failed to execute composer require command, details:%s', $result['output'] ?? '--'));
+            }
+        }
+
+        // run script
+        if (! empty($info['composer']['script'])) {
+            $scripts = $info['composer']['script'];
+            $runScriptCmd = sprintf('cd %s &&', BASE_PATH);
+            foreach ($scripts as $name => $script) {
+                $result = System::exec(sprintf('%s %s', $runScriptCmd, $script));
+                if ($result['code'] !== 0 && ! empty($result['ouput'])) {
+                    throw new \RuntimeException(sprintf('Failed to execute composer script command, details:%s', $result['output'] ?? '--'));
+                }
+            }
+        }
+
+        // check is run publish command
+        if (! empty($info['composer']['config'])) {
+            $composerConfig = (new $info['composer']['config']())();
+            if (! empty($composerConfig['publish'])) {
+                System::exec(sprintf('cd %s && php bin/hyperf.php mine-extension:script %s', BASE_PATH, $path));
             }
         }
 
@@ -227,7 +245,7 @@ class Plugin
             $type = $frontBin['type'] ?? 'npm';
             $front = $frontBin['bin'] ?? 'npm';
             $checkCmd = System::exec(sprintf('%s ', $type));
-            if ($checkCmd['code'] !== 0) {
+            if ($checkCmd['code'] !== 0 && ! empty($result['ouput'])) {
                 throw new \RuntimeException(sprintf('An error occurred executing the command %s, details:%s', $type, $checkCmd['output']));
             }
             $installCmd = match ($type) {
@@ -246,7 +264,7 @@ class Plugin
                 $cmdBody .= sprintf('%s@%s ', $package, $version);
             }
             $result = System::exec($cmdBody);
-            if ($result['code'] !== 0) {
+            if ($result['code'] !== 0 && ! empty($result['ouput'])) {
                 throw new \RuntimeException(sprintf('Merge front-end dependency module error, details %s', $result['output'] ?? '--'));
             }
         }
@@ -299,14 +317,13 @@ class Plugin
             $cmdBody = sprintf('cd %s &&', BASE_PATH);
             $cmdBody .= sprintf('%s remove ', $composerBin);
             foreach ($requires as $package => $version) {
-                if (! InstalledVersions::isInstalled($package)) {
-                    throw new \RuntimeException(sprintf('Plugin %s depends on %s, But the package does not exist in the current environment', $info['name'], $package));
+                if (InstalledVersions::isInstalled($package)) {
+                    $cmdBody .= sprintf('%s:%s ', $package, $version);
                 }
-                $cmdBody .= sprintf('%s:%s ', $package, $version);
             }
             $cmdBody .= sprintf('-vvv');
             $result = System::exec($cmdBody);
-            if ($result['code'] !== 0) {
+            if ($result['code'] !== 0 && ! empty($result['ouput'])) {
                 throw new \RuntimeException(sprintf('Failed to execute composer require command, details:%s', $result['output'] ?? '--'));
             }
         }
@@ -325,7 +342,7 @@ class Plugin
             $type = $frontBin['type'] ?? 'npm';
             $front = $frontBin['bin'] ?? 'npm';
             $checkCmd = System::exec(sprintf('%s ', $type));
-            if ($checkCmd['code'] !== 0) {
+            if ($checkCmd['code'] !== 0 && ! empty($result['ouput'])) {
                 throw new \RuntimeException(sprintf('An error occurred executing the command %s, details:%s', $type, $checkCmd['output']));
             }
             $installCmd = match ($type) {
@@ -344,7 +361,7 @@ class Plugin
                 $cmdBody .= sprintf('%s@%s ', $package, $version);
             }
             $result = System::exec($cmdBody);
-            if ($result['code'] !== 0) {
+            if ($result['code'] !== 0 && ! empty($result['ouput'])) {
                 throw new \RuntimeException(sprintf('Merge front-end dependency module error, details %s', $result['output'] ?? '--'));
             }
         }
