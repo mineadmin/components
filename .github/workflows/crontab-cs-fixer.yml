@@ -2,6 +2,7 @@ name: Pull Request CS Fixer
 on:
   schedule:
     - cron: '0 2 * * *'
+  push:
 
 jobs:
   cs-fix:
@@ -23,8 +24,7 @@ jobs:
         run: composer update -oW
       - name: Run CS Fix
         run: |
-          vendor/bin/php-cs-fixer fix app
-          vendor/bin/php-cs-fixer fix api
+          vendor/bin/php-cs-fixer fix src
       - uses: EndBug/add-and-commit@v9
         with:
           add: '-A'
