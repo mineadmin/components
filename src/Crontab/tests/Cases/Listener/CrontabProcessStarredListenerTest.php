@@ -24,7 +24,7 @@ use PHPUnit\Framework\TestCase;
  * @internal
  * @coversNothing
  */
-#[RequiresPhpExtension('swoole','< 6.0')]
+#[RequiresPhpExtension('swoole', '< 6.0')]
 class CrontabProcessStarredListenerTest extends TestCase
 {
     use RunTestsInCoroutine;
