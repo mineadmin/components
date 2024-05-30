@@ -21,12 +21,14 @@ use Hyperf\Database\ConnectionResolverInterface;
 use Hyperf\Database\Query\Builder;
 use Hyperf\Testing\Concerns\RunTestsInCoroutine;
 use Mine\Crontab\Schedule;
+use PHPUnit\Framework\Attributes\RequiresPhpExtension;
 use PHPUnit\Framework\TestCase;
 
 /**
  * @internal
  * @coversNothing
  */
+#[RequiresPhpExtension('swoole', '< 6.0')]
 class ScheduleTest extends TestCase
 {
     use RunTestsInCoroutine;

@@ -25,6 +25,7 @@ use Mine\SecurityBundle\Contract\UserInterface;
 use Mine\SecurityBundle\Event\Login;
 use Mine\SecurityBundle\Event\Validated;
 use Mine\SecurityBundle\Event\Verified;
+use PHPUnit\Framework\Attributes\RequiresPhpExtension;
 use PHPUnit\Framework\TestCase;
 use Psr\EventDispatcher\EventDispatcherInterface;
 
@@ -32,6 +33,7 @@ use Psr\EventDispatcher\EventDispatcherInterface;
  * @internal
  * @coversNothing
  */
+#[RequiresPhpExtension('swoole', '< 6.0')]
 class UserProviderTest extends TestCase
 {
     use RunTestsInCoroutine;

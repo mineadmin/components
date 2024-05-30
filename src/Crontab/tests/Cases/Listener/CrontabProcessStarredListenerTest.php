@@ -17,12 +17,14 @@ use Hyperf\Engine\Coroutine;
 use Hyperf\Process\ProcessManager;
 use Hyperf\Testing\Concerns\RunTestsInCoroutine;
 use Mine\Crontab\Listener\CrontabProcessStarredListener;
+use PHPUnit\Framework\Attributes\RequiresPhpExtension;
 use PHPUnit\Framework\TestCase;
 
 /**
  * @internal
  * @coversNothing
  */
+#[RequiresPhpExtension('swoole', '< 6.0')]
 class CrontabProcessStarredListenerTest extends TestCase
 {
     use RunTestsInCoroutine;
