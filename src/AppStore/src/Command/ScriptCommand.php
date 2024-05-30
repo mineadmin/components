@@ -14,7 +14,6 @@ namespace Mine\AppStore\Command;
 
 use Hyperf\Collection\Arr;
 use Hyperf\Command\Annotation\Command;
-use Hyperf\Support\Composer;
 use Hyperf\Support\Filesystem\Filesystem;
 use Mine\AppStore\Plugin;
 use Symfony\Component\Console\Command\Command as SymfonyCommand;

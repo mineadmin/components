@@ -15,6 +15,7 @@ namespace Mine\Command;
 use Hyperf\Command\Annotation\Command;
 use Hyperf\Database\Schema\Schema;
 use Hyperf\DbConnection\Db;
+use Mine\AppStore\Plugin;
 use Mine\Mine;
 use Mine\MineCommand;
 
@@ -95,7 +96,7 @@ class InstallProjectCommand extends MineCommand
         }
 
         // 安装插件
-        \Mine\AppStore\Plugin::install('mine-admin/app-store');
+        Plugin::install('mine-admin/app-store');
 
         $downloadFrontCode = $this->confirm('Do you downloading the front-end code to "./web" directory?', true);
 
