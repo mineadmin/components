@@ -33,7 +33,6 @@ class ConfigProvider
                 AppStoreService::class => AppStoreServiceImpl::class,
             ],
         ];
-
         $mineJsonPaths = Plugin::getPluginJsonPaths();
         foreach ($mineJsonPaths as $jsonPath) {
             if (file_exists($jsonPath->getPath() . '/' . Plugin::INSTALL_LOCK_FILE)) {
