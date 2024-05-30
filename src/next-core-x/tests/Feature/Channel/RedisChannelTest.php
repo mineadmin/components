@@ -57,4 +57,4 @@ test('redis push and pull', function () {
     ];
     $this->channel->push('test', $payload);
     expect($this->channel->pull('test'))->toEqual($payload);
-})->skip(version_compare(swoole_version(),'6.0','>='),'Skip for swoole 6.0+');
+})->skip(version_compare(swoole_version(), '6.0', '>='), 'Skip for swoole 6.0+');
