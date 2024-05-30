@@ -28,7 +28,7 @@ use PHPUnit\Framework\TestCase;
  * @internal
  * @coversNothing
  */
-#[RequiresPhpExtension('swoole','< 6.0')]
+#[RequiresPhpExtension('swoole', '< 6.0')]
 class ScheduleTest extends TestCase
 {
     use RunTestsInCoroutine;
