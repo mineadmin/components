@@ -154,11 +154,11 @@ class InstallProjectCommand extends MineCommand
             'user_id' => $superAdminId,
             'role_id' => $superRoleId,
         ]);
-        file_put_contents(BASE_PATH . '/.env', <<<ENV
+        $envConfig = <<<ENV
 SUPER_ADMIN = {$superAdminId}
 ADMIN_ROLE = {$superRoleId}
-ENV
-            , FILE_APPEND);
+ENV;
+        file_put_contents(BASE_PATH . '/.env', $envConfig, FILE_APPEND);
     }
 
     protected function finish(): void
