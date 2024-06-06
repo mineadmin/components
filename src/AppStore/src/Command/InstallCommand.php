@@ -39,7 +39,7 @@ class InstallCommand extends Base
         $headers = ['Extension name','author', 'description', 'homepage'];
         $rows[] = [
             $info['name'],
-            is_string($info['author']) ? $info['author'] : ($info['author'][0]['name'] ?? '--'),
+            is_string($info['author'])?$info['author']: ($info['author'][0]['name'] ?? '--'),
             $info['description'],
             $info['homepage'] ?? '--',
         ];
