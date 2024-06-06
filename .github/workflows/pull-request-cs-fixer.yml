@@ -30,6 +30,5 @@ jobs:
         with:
           add: '-A'
           author_name: StyleCI
-          author_email: root@imoi.cn
           message: 'Apply CS Fixer'
           push: true
