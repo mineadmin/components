@@ -27,19 +27,19 @@ class InstallCommand extends Base
 
     public function __construct(
     ) {
-        parent::__construct() ;
+        parent::__construct();
     }
 
     public function __invoke()
     {
-        $path = $this->input->getArgument('path',);
-        $yes = $this->input->getOption('yes',);
+        $path = $this->input->getArgument('path');
+        $yes = $this->input->getOption('yes');
         $info = Plugin::read($path);
 
-        $headers = ['Extension name','author', 'description', 'homepage'];
+        $headers = ['Extension name', 'author', 'description', 'homepage'];
         $rows[] = [
             $info['name'],
-            is_string($info['author'])?$info['author']: ($info['author'][0]['name'] ?? '--'),
+            is_string($info['author']) ? $info['author'] : ($info['author'][0]['name'] ?? '--'),
             $info['description'],
             $info['homepage'] ?? '--',
         ];
