@@ -2,10 +2,13 @@ name: PHPUnit for MineAdmin
 
 on:
   push:
+    paths:
+      - 'src/**'
   pull_request:
+    paths:
+      - 'src/**'
   schedule:
     - cron: '0 2 * * *'
-
 jobs:
   tests:
     name: Test on PHP${{ matrix.php-version }} Swoole-${{ matrix.sw-version }}
