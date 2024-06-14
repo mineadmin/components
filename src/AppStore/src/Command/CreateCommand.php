@@ -22,9 +22,11 @@ use Symfony\Component\Console\Input\InputOption;
 #[Command]
 class CreateCommand extends AbstractCommand
 {
+    protected const COMMAND_NAME = 'create';
+
     protected string $description = 'Creating Plug-ins';
 
-    public function __invoke()
+    public function __invoke(): int
     {
         $path = $this->input->getArgument('path');
         $name = $this->input->getOption('name');
@@ -32,17 +34,17 @@ class CreateCommand extends AbstractCommand
         $type = PluginTypeEnum::fromValue($type);
         if (empty($name)) {
             $this->output->error('Plugin name is empty');
-            return;
+            return AbstractCommand::FAILURE;
         }
         if ($type === null) {
             $this->output->error('Plugin type is empty');
-            return;
+            return AbstractCommand::FAILURE;
         }
 
         $pluginPath = Plugin::PLUGIN_PATH . '/' . $path;
         if (file_exists($pluginPath)) {
             $this->output->error(sprintf('Plugin directory %s already exists', $path));
-            return;
+            return AbstractCommand::FAILURE;
         }
         $createDirectors = [
             $pluginPath, $pluginPath . '/src', $pluginPath . '/Database', $pluginPath . '/Database/Migrations', $pluginPath . '/Database/Seeder', $pluginPath . '/web',
@@ -54,6 +56,7 @@ class CreateCommand extends AbstractCommand
         }
 
         $this->createMineJson($pluginPath, $name, $type);
+        return AbstractCommand::SUCCESS;
     }
 
     public function createMineJson(string $path, string $name, PluginTypeEnum $pluginType): void
@@ -141,18 +144,13 @@ class CreateCommand extends AbstractCommand
         $this->output->success(sprintf('%s Created Successfully', $installScriptPath));
     }
 
-    public function commandName(): string
+    protected function configure(): void
     {
-        return 'create';
-    }
-
-    protected function configure()
-    {
-        $this->addArgument('path', InputArgument::REQUIRED, 'Plugin Path');
-        $this->addOption('name', 'name', InputOption::VALUE_REQUIRED, 'Plug-in Name');
-        $this->addOption('type', 'type', InputOption::VALUE_OPTIONAL, 'Plugin type, default mix optional mix,frond,backend');
-        $this->addOption('description', 'desc', InputOption::VALUE_OPTIONAL, 'Plug-in Introduction');
-        $this->addOption('author', 'author', InputOption::VALUE_OPTIONAL, 'Plugin Author Information');
+        $this->addArgument('path', InputArgument::REQUIRED, 'Plugin Path')
+            ->addOption('name', 'name', InputOption::VALUE_REQUIRED, 'Plug-in Name')
+            ->addOption('type', 'type', InputOption::VALUE_OPTIONAL, 'Plugin type, default mix optional mix,frond,backend')
+            ->addOption('description', 'desc', InputOption::VALUE_OPTIONAL, 'Plug-in Introduction')
+            ->addOption('author', 'author', InputOption::VALUE_OPTIONAL, 'Plugin Author Information');
     }
 
     private function createViewScript(string $namespace, string $path): void

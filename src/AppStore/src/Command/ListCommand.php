@@ -13,19 +13,18 @@ declare(strict_types=1);
 namespace Mine\AppStore\Command;
 
 use Hyperf\Command\Annotation\Command;
-use Hyperf\Command\Command as Base;
 use Hyperf\Context\ApplicationContext;
 use Mine\AppStore\Service\AppStoreService;
 use Symfony\Component\Console\Input\InputOption;
 
 #[Command]
-class ListCommand extends Base
+class ListCommand extends AbstractCommand
 {
-    protected ?string $name = 'mine-extension:list';
+    protected const COMMAND_NAME = 'list';
 
     protected string $description = 'View a list of remote app store plugins';
 
-    public function __invoke()
+    public function __invoke(): int
     {
         $params = [];
         $params['type'] = $this->input->getOption('type');
@@ -39,7 +38,7 @@ class ListCommand extends Base
         $result = $appStoreService->list($params)['data']['list'] ?? [];
         if (empty($result)) {
             $this->output->info('No data found');
-            return;
+            return AbstractCommand::FAILURE;
         }
         $result = array_map(static function ($item) {
             return [
@@ -54,11 +53,12 @@ class ListCommand extends Base
             'name', 'identifier', 'description', 'author', 'homePage',
         ];
         $this->output->table($headers, $result);
+        return AbstractCommand::SUCCESS;
     }
 
     protected function configure()
     {
-        $this->addOption('type', 't', InputOption::VALUE_OPTIONAL, 'Type of plugin to query');
-        $this->addOption('title', 'title', InputOption::VALUE_OPTIONAL, 'Plugin Title');
+        $this->addOption('type', 't', InputOption::VALUE_OPTIONAL, 'Type of plugin to query')
+            ->addOption('title', 'title', InputOption::VALUE_OPTIONAL, 'Plugin Title');
     }
 }
