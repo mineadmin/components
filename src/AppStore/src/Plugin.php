@@ -18,6 +18,7 @@ use Hyperf\Contract\ConfigInterface;
 use Hyperf\Database\Migrations\Migrator;
 use Hyperf\Database\Seeders\Seed;
 use Hyperf\Support\Composer;
+use Mine\AppStore\Exception\PluginNotFoundException;
 use Mine\AppStore\Packer\PackerFactory;
 use Mine\AppStore\Packer\PackerInterface;
 use Mine\AppStore\Utils\FileSystemUtils;
@@ -64,8 +65,7 @@ class Plugin
      */
     public static function checkPlugin(\SplFileInfo $mineJson): bool
     {
-        $path = $mineJson->getRealPath();
-        $info = self::read($path);
+        $info = self::read($mineJson->getRealPath());
         $rules = [
             'name' => 'required|string',
             'description' => 'required|string',
@@ -98,21 +98,26 @@ class Plugin
 
     /**
      * Query plugin information based on a given catalog.
+     * @return array<string,mixed>
+     * @throws PluginNotFoundException
      */
-    public static function read(string $path)
+    public static function read(string $path): array
     {
         $jsonPaths = self::getPluginJsonPaths();
         foreach ($jsonPaths as $jsonPath) {
             if ($jsonPath->getRelativePath() === $path) {
                 $info = self::getPacker()->unpack(file_get_contents($jsonPath->getRealPath()));
-                $info['status'] = file_exists($jsonPath->getPath() . '/' . self::INSTALL_LOCK_FILE);
+                $info['status'] = is_file($jsonPath->getPath() . '/' . self::INSTALL_LOCK_FILE);
                 return $info;
             }
         }
-        return null;
+        throw new PluginNotFoundException($path);
     }
 
-    public static function getSplFile(string $path): ?SplFileInfo
+    /**
+     * @throws PluginNotFoundException
+     */
+    public static function getSplFile(string $path): SplFileInfo
     {
         $jsonPaths = self::getPluginJsonPaths();
         foreach ($jsonPaths as $jsonPath) {
@@ -120,7 +125,7 @@ class Plugin
                 return $jsonPath;
             }
         }
-        return null;
+        throw new PluginNotFoundException($path);
     }
 
     /**
@@ -150,15 +155,7 @@ class Plugin
     {
         $info = self::read($path);
         $splFile = self::getSplFile($path);
-        /*
-         * Checks if info and splFile are empty and throws a runtimeException if they are empty,
-         * indicating that the given path is not the plugin directory.
-         */
-        if ($info === null || $splFile === null) {
-            throw new \RuntimeException(
-                'The given directory is not a valid plugin, probably because it is already installed or the directory is not standardized.' . $path
-            );
-        }
+
         self::loadPlugin($info, $splFile);
         $pluginPath = self::PLUGIN_PATH . '/' . $path;
         if ($info['status']) {
@@ -167,10 +164,10 @@ class Plugin
             );
         }
         // Performs a check on plugin dependencies. Determine if the plugin also depends on other plugins
+        if (! empty($info['require']) && ! is_array($info['require'])) {
+            throw new \RuntimeException('Plugin dependency format error');
+        }
         if (! empty($info['require'])) {
-            if (! is_array($info['require'])) {
-                throw new \RuntimeException('Plugin dependency format error');
-            }
             $pluginRequires = $info['require'];
             foreach ($pluginRequires as $require) {
                 if (! self::exists($require)) {
