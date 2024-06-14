@@ -13,19 +13,18 @@ declare(strict_types=1);
 namespace Mine\AppStore\Command;
 
 use Hyperf\Command\Annotation\Command;
-use Hyperf\Command\Command as Base;
 use Mine\AppStore\Plugin;
 use Nette\Utils\FileSystem;
 use Symfony\Component\Console\Input\InputOption;
 
 #[Command]
-class InitialCommand extends Base
+class InitialCommand extends AbstractCommand
 {
-    protected ?string $name = 'mine-extension:initial';
+    protected const COMMAND_NAME = 'initial';
 
     protected string $description = 'MineAdmin Extended Store Initialization Command Line';
 
-    public function __invoke(): void
+    public function __invoke(): int
     {
         $this->output->info('Start initialization');
         $this->output->info('Publishing multilingual documents');
@@ -38,7 +37,7 @@ class InitialCommand extends Base
         FileSystem::copy($publishPath . '/mine-extension.php', BASE_PATH . '/config/autoload/mine-extension.php');
         $this->output->success('Publishing Configuration File Succeeded');
 
-        if (! file_exists(Plugin::PLUGIN_PATH)) {
+        if (! is_dir(Plugin::PLUGIN_PATH)) {
             if (! mkdir($concurrentDirectory = Plugin::PLUGIN_PATH, 0755, true) && ! is_dir($concurrentDirectory)) {
                 throw new \RuntimeException(sprintf('Directory "%s" was not created', $concurrentDirectory));
             }
@@ -62,6 +61,7 @@ class InitialCommand extends Base
         The default is to use . /web directory as the front-end source code directory.
         You can also configure the mine-extension.php configuration file
         Manually specify the front-end source code development directory');
+        return AbstractCommand::SUCCESS;
     }
 
     protected function configure()

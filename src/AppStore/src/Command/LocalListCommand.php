@@ -13,17 +13,16 @@ declare(strict_types=1);
 namespace Mine\AppStore\Command;
 
 use Hyperf\Command\Annotation\Command;
-use Hyperf\Command\Command as Base;
 use Mine\AppStore\Plugin;
 
 #[Command]
-class LocalListCommand extends Base
+class LocalListCommand extends AbstractCommand
 {
-    protected ?string $name = 'mine-extension:local-list';
+    protected const COMMAND_NAME = 'local-list';
 
     protected string $description = 'List all locally installed extensions(列出本地所有已经安装的扩展)';
 
-    public function __invoke()
+    public function __invoke(): int
     {
         $list = Plugin::getPluginJsonPaths();
 
@@ -33,22 +32,22 @@ class LocalListCommand extends Base
         $rows = [];
         foreach ($list as $splFileInfo) {
             $info = Plugin::read($splFileInfo->getRelativePath());
-            if (empty($info)) {
-                $this->error('read plugin.json error.' . $splFileInfo->getPath());
-                return;
-            }
-            $current = [];
-            $current[] = $info['name'];
-            $current[] = $info['description'];
+            $current = [
+                $info['name'],
+                $info['description'],
+            ];
             if (is_string($info['author'])) {
                 $current[] = $info['author'];
             } else {
                 $current[] = $info['author'][0]['name'] ?? '--';
             }
-            $current[] = $info['homePage'] ?? '--';
-            $current[] = $info['status'] ? 'installed' : 'uninstalled';
+            $current += [
+                $info['homePage'] ?? '--',
+                $info['status'] ? 'installed' : 'uninstalled',
+            ];
             $rows[] = $current;
         }
         $this->table($headers, $rows);
+        return AbstractCommand::SUCCESS;
     }
 }

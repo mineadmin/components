@@ -13,24 +13,18 @@ declare(strict_types=1);
 namespace Mine\AppStore\Command;
 
 use Hyperf\Command\Annotation\Command;
-use Hyperf\Command\Command as Base;
 use Mine\AppStore\Plugin;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputOption;
 
 #[Command]
-class InstallCommand extends Base
+class InstallCommand extends AbstractCommand
 {
-    protected ?string $name = 'mine-extension:install';
+    protected const COMMAND_NAME = 'install';
 
     protected string $description = 'Installing Plugin Commands';
 
-    public function __construct(
-    ) {
-        parent::__construct();
-    }
-
-    public function __invoke()
+    public function __invoke(): int
     {
         $path = $this->input->getArgument('path');
         $yes = $this->input->getOption('yes');
@@ -47,15 +41,16 @@ class InstallCommand extends Base
         $confirm = $yes ?: $this->confirm('Enter to start the installation', true);
         if (! $confirm) {
             $this->output->success('Installation has been successfully canceled');
-            return;
+            return AbstractCommand::SUCCESS;
         }
         Plugin::install($path);
         $this->output->success(sprintf('Plugin %s installed successfully', $path));
+        return AbstractCommand::SUCCESS;
     }
 
-    protected function configure()
+    protected function configure(): void
     {
-        $this->addArgument('path', InputArgument::REQUIRED, 'Plug-in Catalog (relative path)');
-        $this->addOption('yes', 'y', InputOption::VALUE_NONE, 'silent installation');
+        $this->addArgument('path', InputArgument::REQUIRED, 'Plug-in Catalog (relative path)')
+            ->addOption('yes', 'y', InputOption::VALUE_NONE, 'silent installation');
     }
 }

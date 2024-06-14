@@ -13,19 +13,18 @@ declare(strict_types=1);
 namespace Mine\AppStore\Command;
 
 use Hyperf\Command\Annotation\Command;
-use Hyperf\Command\Command as Base;
 use Hyperf\Context\ApplicationContext;
 use Mine\AppStore\Service\AppStoreService;
 use Symfony\Component\Console\Input\InputArgument;
 
 #[Command]
-class DownloadCommand extends Base
+class DownloadCommand extends AbstractCommand
 {
-    protected ?string $name = 'mine-extension:download';
+    protected const COMMAND_NAME = 'download';
 
     protected string $description = 'Download the specified remote plug-in file locally';
 
-    public function __invoke()
+    public function __invoke(): int
     {
         $identifier = $this->input->getArgument('identifier');
         [$space, $identifier] = explode('/', $identifier);
@@ -33,11 +32,12 @@ class DownloadCommand extends Base
         $appStoreService = ApplicationContext::getContainer()->get(AppStoreService::class);
         $appStoreService->download($space, $identifier, $version);
         $this->output->success('Plugin Downloaded Successfully');
+        return AbstractCommand::SUCCESS;
     }
 
     protected function configure()
     {
-        $this->addArgument('identifier', InputArgument::REQUIRED, 'Required, application unique identifier');
-        $this->addArgument('version', InputArgument::OPTIONAL, 'Application version number, default latest', 'latest');
+        $this->addArgument('identifier', InputArgument::REQUIRED, 'Required, application unique identifier')
+            ->addArgument('version', InputArgument::OPTIONAL, 'Application version number, default latest', 'latest');
     }
 }
