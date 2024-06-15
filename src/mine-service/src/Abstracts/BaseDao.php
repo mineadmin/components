@@ -22,7 +22,7 @@ use Mine\ServiceException;
 abstract class BaseDao
 {
     /**
-     * @var class-string<ModelClass>|string
+     * @var class-string<ModelClass>
      */
     protected string $model;
 

@@ -88,6 +88,7 @@ class CreateModel extends MineCommand
                 }
             }
         }
+        return MineCommand::SUCCESS;
     }
 
     protected function getOptions(): array

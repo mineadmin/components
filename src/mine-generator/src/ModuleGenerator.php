@@ -23,9 +23,8 @@ class ModuleGenerator extends MineGenerator
 
     /**
      * 设置模块信息.
-     * @return $this
      */
-    public function setModuleInfo(array $moduleInfo): ModuleGenerator
+    public function setModuleInfo(array $moduleInfo): static
     {
         $this->moduleInfo = $moduleInfo;
         return $this;

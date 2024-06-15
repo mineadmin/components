@@ -34,23 +34,14 @@ class MineMigrateRollback extends BaseCommand
      */
     protected string $description = 'Run rollback the database migrations';
 
-    /**
-     * The migrator instance.
-     *
-     * @var Migrator
-     */
-    protected $migrator;
-
     protected $module;
 
     /**
      * Create a new migration command instance.
      */
-    public function __construct(Migrator $migrator)
+    public function __construct(protected Migrator $migrator)
     {
         parent::__construct();
-
-        $this->migrator = $migrator;
 
         $this->setDescription('The run migrate rollback class of MineAdmin module');
     }
