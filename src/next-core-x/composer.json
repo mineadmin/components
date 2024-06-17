@@ -2,7 +2,10 @@
   "name": "mineadmin/next-core-x",
   "description": "hyperf im basic services, providing the most basic channels and the subscribe publish module.",
   "keywords": [
-    "Hyperf","Library","components","im-server"
+    "Hyperf",
+    "Library",
+    "components",
+    "im-server"
   ],
   "authors": [
     {
@@ -10,6 +13,15 @@
       "role": "Developer"
     }
   ],
+  "require": {
+    "php": ">=8.1",
+    "hyperf/di": "^3.1",
+    "hyperf/framework": "^3.1",
+    "hyperf/snowflake": "^3.1"
+  },
+  "require-dev": {
+    "roave/security-advisories": "dev-latest"
+  },
   "autoload": {
     "psr-4": {
       "Mine\\NextCoreX": "src"
@@ -19,16 +31,6 @@
     "psr-4": {
       "Mine\\NextCoreX\\Tests": "tests"
     }
-  },
-  "require": {
-    "php": ">=8.1",
-    "hyperf/framework": "^3.1",
-    "hyperf/di": "^3.1",
-    "hyperf/snowflake": "^3.1"
-  }
-  ,
-  "require-dev": {
-    "roave/security-advisories": "dev-latest"
   },
   "extra": {
     "hyperf": {

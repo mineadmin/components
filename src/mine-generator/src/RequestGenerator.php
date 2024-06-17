@@ -185,7 +185,7 @@ class RequestGenerator extends MineGenerator implements CodeGenerator
      */
     protected function initNamespace(): string
     {
-        return $this->getNamespace() . '\\Request';
+        return $this->getNamespace() . '\Request';
     }
 
     /**

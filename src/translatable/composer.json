@@ -1,7 +1,8 @@
 {
     "name": "xmo/mine-translatable",
-    "type": "library",
+    "description": "The Hyperf Multilingual Model package.",
     "license": "MIT",
+    "type": "library",
     "keywords": [
         "php",
         "hyperf",
@@ -9,7 +10,6 @@
         "language",
         "database"
     ],
-    "description": "The Hyperf Multilingual Model package.",
     "authors": [
         {
             "name": "X.Mo",
@@ -30,22 +30,13 @@
             "email": "ds@dimsav.com",
             "homepage": "http://dimsav.com",
             "role": "Developer"
-        },{
+        },
+        {
             "name": "zds",
             "email": "2771717608@qq.com",
             "role": "Developer"
         }
     ],
-    "autoload": {
-        "psr-4": {
-            "Mine\\Translatable\\": "src/"
-        }
-    },
-    "autoload-dev": {
-        "psr-4": {
-            "Mine\\Translatable\\": "tests"
-        }
-    },
     "require": {
         "php": ">=8.1",
         "ext-swoole": ">=5.0",
@@ -60,21 +51,31 @@
     "require-dev": {
         "friendsofphp/php-cs-fixer": "^3.0",
         "hyperf/testing": "^3.1",
+        "mockery/mockery": "^1.0",
         "phpstan/phpstan": "^1.0",
-        "swoole/ide-helper": "^5.0",
-        "mockery/mockery": "^1.0"
+        "swoole/ide-helper": "^5.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "Mine\\Translatable\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Mine\\Translatable\\": "tests"
+        }
     },
     "config": {
         "sort-packages": true
-    },
-    "scripts": {
-        "test": "co-phpunit -c phpunit.xml --colors=always",
-        "analyse": "phpstan analyse --memory-limit 1024M -l 0 ./src",
-        "cs-fix": "php-cs-fixer fix $1"
     },
     "extra": {
         "hyperf": {
             "config": "Mine\\Translatable\\ConfigProvider"
         }
+    },
+    "scripts": {
+        "analyse": "phpstan analyse --memory-limit 1024M -l 0 ./src",
+        "cs-fix": "php-cs-fixer fix $1",
+        "test": "co-phpunit -c phpunit.xml --colors=always"
     }
 }

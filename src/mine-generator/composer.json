@@ -1,10 +1,12 @@
 {
   "name": "xmo/mine-generator",
-  "type": "library",
-  "license": "Apache-2.0",
   "description": "MineAdmin Code Generator",
+  "license": "Apache-2.0",
+  "type": "library",
   "keywords": [
-    "MineAdmin","Hyperf","admin",
+    "MineAdmin",
+    "Hyperf",
+    "admin",
     "generator-code"
   ],
   "authors": [
@@ -19,21 +21,21 @@
       "role": "Developer"
     }
   ],
+  "require": {
+    "php": ">=8.1"
+  },
   "autoload": {
     "psr-4": {
       "Mine\\Generator\\": "src"
     }
   },
-  "require": {
-    "php": ">=8.1"
+  "config": {
+    "optimize-autoloader": true,
+    "sort-packages": true
   },
   "extra": {
     "hyperf": {
       "config": "Mine\\Generator\\GeneratorConfigProvider"
     }
-  },
-  "config": {
-    "optimize-autoloader": true,
-    "sort-packages": true
   }
 }

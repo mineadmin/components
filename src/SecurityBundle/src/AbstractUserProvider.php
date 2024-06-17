@@ -91,7 +91,7 @@ abstract class AbstractUserProvider implements UserProviderInterface
 
     protected function getUserEntity(): UserInterface
     {
-        $entityClass = $this->config->get('entity', '\\App\\Model\\User');
+        $entityClass = $this->config->get('entity', '\App\Model\User');
         if (! class_exists($entityClass)) {
             new NotFoundUserEntityException();
         }

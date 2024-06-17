@@ -1,7 +1,8 @@
 {
   "name": "xmo/mine-service",
-  "type": "library",
+  "description": "mineadmin Service package",
   "license": "Apache-2.0",
+  "type": "library",
   "keywords": [
     "mineadmin",
     "service"
@@ -18,25 +19,24 @@
       "role": "Developer"
     }
   ],
-  "description": "mineadmin Service package",
+  "require": {
+    "php": ">=8.1"
+  },
   "autoload": {
     "psr-4": {
       "Mine\\": "src/"
     }
   },
-  "require": {
-    "php": ">=8.1"
-  },
   "config": {
     "optimize-autoloader": true,
     "sort-packages": true
-  },
-  "scripts": {
-    "cs-fix": "php-cs-fixer fix $1"
   },
   "extra": {
     "hyperf": {
       "config": "Mine\\Generator\\GeneratorConfigProvider"
     }
+  },
+  "scripts": {
+    "cs-fix": "php-cs-fixer fix $1"
   }
 }

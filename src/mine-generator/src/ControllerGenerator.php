@@ -236,7 +236,7 @@ class ControllerGenerator extends MineGenerator implements CodeGenerator
      */
     protected function initNamespace(): string
     {
-        $namespace = $this->getNamespace() . '\\Controller';
+        $namespace = $this->getNamespace() . '\Controller';
         if (! empty($this->tablesContract->getPackageName())) {
             return $namespace . '\\' . Str::title($this->tablesContract->getPackageName());
         }
@@ -325,7 +325,7 @@ UseNamespace;
     protected function getDtoClass(): string
     {
         return sprintf(
-            '\\%s\\Dto\\%s::class',
+            '\%s\Dto\%s::class',
             $this->tablesContract->getNamespace(),
             $this->getBusinessName() . 'Dto'
         );

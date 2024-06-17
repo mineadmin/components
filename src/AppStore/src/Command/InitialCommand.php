@@ -43,8 +43,8 @@ class InitialCommand extends AbstractCommand
             }
             $binFile = file_get_contents(BASE_PATH . '/bin/hyperf.php');
             if (str_contains($binFile, 'Mine\AppStore\Plugin::init();')) {
-                $binFile = str_replace('Hyperf\Di\ClassLoader::init();', '\\Mine\\AppStore\\Plugin::init();
-    Hyperf\\Di\\ClassLoader::init();', $binFile);
+                $binFile = str_replace('Hyperf\Di\ClassLoader::init();', '\Mine\AppStore\Plugin::init();
+    Hyperf\Di\ClassLoader::init();', $binFile);
                 file_put_contents(BASE_PATH . '/bin/hyperf.php', $binFile);
                 $this->output->success('Plugin initialization code added successfully.');
             }

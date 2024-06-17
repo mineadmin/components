@@ -195,7 +195,7 @@ class MapperGenerator extends MineGenerator implements CodeGenerator
      */
     protected function initNamespace(): string
     {
-        return $this->getNamespace() . '\\Mapper';
+        return $this->getNamespace() . '\Mapper';
     }
 
     /**
