@@ -415,6 +415,6 @@ class Plugin
             $loader->addClassMap($mineInfo['composer']['classMap']);
         }
 
-        self::checkPlugin($mine);
+        // self::checkPlugin($mine);
     }
 }
