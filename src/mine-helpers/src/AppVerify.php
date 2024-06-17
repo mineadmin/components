@@ -30,9 +30,9 @@ class AppVerify
      */
     public function __construct(string $scene = 'api')
     {
-        /* @var JWT $this->jwt */
-        $this->jwt = make(JWT::class)->setScene($scene);
-        $this->request = make(RequestInterface::class);
+        /* @var JWT $this ->jwt */
+        $this->jwt = static::getJwtGivenScene($scene);
+        $this->request = static::getRequest();
     }
 
     /**
@@ -74,7 +74,7 @@ class AppVerify
      */
     public function getApiId(): string
     {
-        $accessToken = $this->request->getQueryParams()['access_token'] ?? null;
+        $accessToken = $this->request->query('access_token') ?? null;
         return (string) $this->jwt->getParserData($accessToken)['id'];
     }
 
@@ -98,11 +98,20 @@ class AppVerify
 
     /**
      * 刷新token.
-     * @throws InvalidArgumentException
      */
     public function refresh(): string
     {
         $accessToken = $this->request->getQueryParams()['access_token'] ?? null;
         return $this->jwt->refreshToken($accessToken);
+    }
+
+    protected static function getRequest(): RequestInterface
+    {
+        return make(RequestInterface::class);
+    }
+
+    protected static function getJwtGivenScene(string $scene): JWT
+    {
+        return make(JWT::class)->setScene($scene);
     }
 }

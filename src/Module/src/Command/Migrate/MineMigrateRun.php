@@ -34,23 +34,14 @@ class MineMigrateRun extends BaseCommand
      */
     protected string $description = 'Run the database migrations';
 
-    /**
-     * The migrator instance.
-     *
-     * @var Migrator
-     */
-    protected $migrator;
-
     protected $module;
 
     /**
      * Create a new migration command instance.
      */
-    public function __construct(Migrator $migrator)
+    public function __construct(protected Migrator $migrator)
     {
         parent::__construct();
-
-        $this->migrator = $migrator;
 
         $this->setDescription('The run migrate class of MineAdmin module');
     }
@@ -58,10 +49,10 @@ class MineMigrateRun extends BaseCommand
     /**
      * Execute the console command.
      */
-    public function handle()
+    public function handle(): int
     {
         if (! $this->confirmToProceed()) {
-            return;
+            return BaseCommand::FAILURE;
         }
 
         $this->module = trim($this->input->getArgument('name'));
@@ -83,6 +74,7 @@ class MineMigrateRun extends BaseCommand
         if ($this->input->getOption('seed') && ! $this->input->getOption('pretend')) {
             $this->call('db:seed', ['--force' => true]);
         }
+        return BaseCommand::SUCCESS;
     }
 
     protected function getOptions(): array

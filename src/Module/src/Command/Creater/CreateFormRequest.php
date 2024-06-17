@@ -28,7 +28,7 @@ class CreateFormRequest extends MineCommand
 
     protected string $module;
 
-    public function configure()
+    public function configure(): void
     {
         parent::configure();
         $this->setHelp('run "php bin/hyperf.php mine:module <module_name> <name>"');
@@ -46,7 +46,7 @@ class CreateFormRequest extends MineCommand
         );
     }
 
-    public function handle()
+    public function handle(): int
     {
         $this->module = ucfirst(trim($this->input->getArgument('module_name')));
         $this->name = ucfirst(trim($this->input->getArgument('name')));
@@ -61,11 +61,12 @@ class CreateFormRequest extends MineCommand
             );
         } catch (FileNotFoundException $e) {
             $this->error($e->getMessage());
-            exit;
+            return MineCommand::FAILURE;
         }
 
         $fs->put($this->getModulePath() . $this->name . 'FormRequest.php', $content);
 
         $this->info('<info>[INFO] Created request:</info> ' . $this->name . 'FormRequest.php');
+        return MineCommand::SUCCESS;
     }
 }

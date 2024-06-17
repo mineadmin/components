@@ -37,21 +37,14 @@ class MineSeederRun extends BaseCommand
      */
     protected string $description = 'Seed the database with records';
 
-    /**
-     * The seed instance.
-     */
-    protected Seed $seed;
-
     protected string $module;
 
     /**
      * Create a new seed command instance.
      */
-    public function __construct(Seed $seed)
+    public function __construct(protected Seed $seed)
     {
         parent::__construct();
-
-        $this->seed = $seed;
 
         $this->setDescription('The run seeder class of MineAdmin module');
     }
@@ -59,10 +52,10 @@ class MineSeederRun extends BaseCommand
     /**
      * Handle the current command.
      */
-    public function handle()
+    public function handle(): int
     {
         if (! $this->confirmToProceed()) {
-            return;
+            return BaseCommand::FAILURE;
         }
 
         $this->module = ucfirst(trim($this->input->getArgument('name')));
@@ -74,6 +67,7 @@ class MineSeederRun extends BaseCommand
         }
 
         $this->seed->run([$this->getSeederPath()]);
+        return BaseCommand::SUCCESS;
     }
 
     protected function getArguments(): array

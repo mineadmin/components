@@ -22,25 +22,25 @@ class Id
 
     public const SEQUENCE_BITS = 5; // 毫秒内自增位
 
-    private $workerId; // 工作机器ID
+    private int $workerId; // 工作机器ID
 
-    private $datacenterId; // 数据中心ID
+    private int $datacenterId; // 数据中心ID
 
-    private $sequence; // 毫秒内序列
+    private int $sequence; // 毫秒内序列
 
-    private $maxWorkerId = -1 ^ (-1 << self::WORKER_ID_BITS); // 机器ID最大值
+    private int $maxWorkerId = -1 ^ (-1 << self::WORKER_ID_BITS); // 机器ID最大值
 
-    private $maxDatacenterId = -1 ^ (-1 << self::DATACENTER_ID_BITS); // 数据中心ID最大值
+    private int $maxDatacenterId = -1 ^ (-1 << self::DATACENTER_ID_BITS); // 数据中心ID最大值
 
-    private $workerIdShift = self::SEQUENCE_BITS; // 机器ID偏左移位数
+    private int $workerIdShift = self::SEQUENCE_BITS; // 机器ID偏左移位数
 
-    private $datacenterIdShift = self::SEQUENCE_BITS + self::WORKER_ID_BITS; // 数据中心ID左移位数
+    private int $datacenterIdShift = self::SEQUENCE_BITS + self::WORKER_ID_BITS; // 数据中心ID左移位数
 
-    private $timestampLeftShift = self::SEQUENCE_BITS + self::WORKER_ID_BITS + self::DATACENTER_ID_BITS; // 时间毫秒左移位数
+    private int $timestampLeftShift = self::SEQUENCE_BITS + self::WORKER_ID_BITS + self::DATACENTER_ID_BITS; // 时间毫秒左移位数
 
-    private $sequenceMask = -1 ^ (-1 << self::SEQUENCE_BITS); // 生成序列的掩码
+    private int $sequenceMask = -1 ^ (-1 << self::SEQUENCE_BITS); // 生成序列的掩码
 
-    private $lastTimestamp = -1; // 上次生产id时间戳
+    private int $lastTimestamp = -1; // 上次生产id时间戳
 
     public function __construct($workerId = 1, $datacenterId = 1, $sequence = 0)
     {

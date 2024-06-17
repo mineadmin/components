@@ -36,7 +36,7 @@ class LoginUser
      */
     public function __construct(string $scene = 'default')
     {
-        /* @var JWT $this->jwt */
+        /* @var JWT $this ->jwt */
         $this->jwt = make(JWT::class)->setScene($scene);
     }
 
@@ -139,9 +139,10 @@ class LoginUser
      */
     public function isAdminRole(): bool
     {
+        $container = container();
         return in_array(
-            container()->get(RoleServiceInterface::class)->read((int) env('ADMIN_ROLE'), ['code'])->code,
-            container()->get(UserServiceInterface::class)->getInfo()['roles']
+            $container->get(RoleServiceInterface::class)->read((int) env('ADMIN_ROLE'), ['code'])->code,
+            $container->get(UserServiceInterface::class)->getInfo()['roles']
         );
     }
 
@@ -156,7 +157,6 @@ class LoginUser
 
     /**
      * 刷新token.
-     * @throws InvalidArgumentException
      */
     public function refresh(): string
     {
