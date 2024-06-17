@@ -66,7 +66,6 @@
         "hyperf/validation": "~3.1.0",
         "hyperf/websocket-server": "~3.1.0",
         "lcobucci/jwt": "~5.2.0",
-        "mine/next-core-x": "dev-2.0-dev",
         "nesbot/carbon": "^1.0 || ^2.0",
         "nette/utils": "dev-master",
         "overtrue/flysystem-cos": "^5.0",
