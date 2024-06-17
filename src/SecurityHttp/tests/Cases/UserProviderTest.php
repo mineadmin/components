@@ -49,7 +49,7 @@ class UserProviderTest extends TestCase
         $event = \Mockery::mock(EventDispatcherInterface::class);
         $config = \Mockery::mock(Config::class);
         $config->allows('get')
-            ->with('entity', '\\App\\Model\\User')
+            ->with('entity', '\App\Model\User')
             ->andReturn(UserModel::class);
         $builder = \Mockery::mock(Builder::class);
         ApplicationContext::getContainer()->set('mock.builder', $builder);
@@ -101,7 +101,7 @@ class UserProviderTest extends TestCase
         $event = \Mockery::mock(EventDispatcherInterface::class);
         $config = \Mockery::mock(Config::class);
         $config->allows('get')
-            ->with('entity', '\\App\\Model\\User')
+            ->with('entity', '\App\Model\User')
             ->andReturn(UserModel::class);
         $builder = \Mockery::mock(Builder::class);
         ApplicationContext::getContainer()->set('mock.builder', $builder);

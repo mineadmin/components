@@ -157,7 +157,7 @@ class DtoGenerator extends MineGenerator implements CodeGenerator
      */
     protected function initNamespace(): string
     {
-        return $this->getNamespace() . '\\Dto';
+        return $this->getNamespace() . '\Dto';
     }
 
     /**

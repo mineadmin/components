@@ -183,7 +183,7 @@ class ServiceGenerator extends MineGenerator implements CodeGenerator
      */
     protected function initNamespace(): string
     {
-        return $this->getNamespace() . '\\Service';
+        return $this->getNamespace() . '\Service';
     }
 
     /**

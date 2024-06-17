@@ -239,7 +239,7 @@ class ModelGenerator extends MineGenerator implements CodeGenerator
      */
     protected function initNamespace(): string
     {
-        return $this->getNamespace() . '\\Model';
+        return $this->getNamespace() . '\Model';
     }
 
     /**

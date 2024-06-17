@@ -455,9 +455,9 @@ class VueIndexGenerator extends MineGenerator implements CodeGenerator
     {
         $data = str_replace('    ', '  ', json_encode($data, JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT));
         $data = str_replace(['"true"', '"false"', '\\'], [true, false, ''], $data);
-        $data = preg_replace('/(\s+)\"(.+)\":/', '\\1\\2:', $data);
+        $data = preg_replace('/(\s+)\"(.+)\":/', '\1\2:', $data);
         if ($removeValueQuotes) {
-            $data = preg_replace('/(:\s)\"(.+)\"/', '\\1\\2', $data);
+            $data = preg_replace('/(:\s)\"(.+)\"/', '\1\2', $data);
         }
         return $data;
     }

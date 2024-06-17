@@ -84,9 +84,9 @@ class CreateCommand extends AbstractCommand
                 'psr-4' => [
                     $namespace . '\\' => 'src',
                 ],
-                'installScript' => $namespace . '\\InstallScript',
-                'uninstallScript' => $namespace . '\\UninstallScript',
-                'config' => $namespace . '\\ConfigProvider',
+                'installScript' => $namespace . '\InstallScript',
+                'uninstallScript' => $namespace . '\UninstallScript',
+                'config' => $namespace . '\ConfigProvider',
             ];
         }
 

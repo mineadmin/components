@@ -11,7 +11,7 @@ declare(strict_types=1);
  */
 return [
     'dto' => [
-        'namespace' => 'App\\Dto',
+        'namespace' => 'App\Dto',
         'path' => BASE_PATH . DIRECTORY_SEPARATOR . 'app' . DIRECTORY_SEPARATOR . 'Dto',
         'type' => [
             'mapping' => [
@@ -26,11 +26,11 @@ return [
         ],
     ],
     'mapper' => [
-        'namespace' => 'App\\Mapper',
+        'namespace' => 'App\Mapper',
         'path' => BASE_PATH . DIRECTORY_SEPARATOR . 'app' . DIRECTORY_SEPARATOR . 'Mapper',
     ],
     'service' => [
-        'namespace' => 'App\\Service',
+        'namespace' => 'App\Service',
         'path' => BASE_PATH . DIRECTORY_SEPARATOR . 'app' . DIRECTORY_SEPARATOR . 'Service',
         'impl' => 'Impl',
     ],
