@@ -31,7 +31,7 @@
   },
   "extra": {
     "hyperf": {
-      "config": "\\Mine\\Crontab\\ConfigProvider"
+      "config": "Mine\\Crontab\\ConfigProvider"
     }
   }
 }

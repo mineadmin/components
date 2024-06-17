@@ -15,7 +15,6 @@
         },
         {
             "name": "zds",
-            "email": "2771717608@qq.com",
             "role": "Developer"
         }
     ],
@@ -26,11 +25,6 @@
     "autoload": {
         "psr-4": {
             "Mine\\Office\\": "src/"
-        }
-    },
-    "autoload-dev": {
-        "psr-4": {
-            "MineTest\\": "tests"
         }
     },
     "config": {

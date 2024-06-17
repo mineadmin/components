@@ -1,167 +1,178 @@
 {
-  "name": "xmo/mine",
-  "description": "mineAdmin核心组件",
-  "license": "Apache-2.0",
-  "keywords": [
-    "MineAdmin",
-    "hyperf",
-    "hyperf-admin",
-    "Admin"
-  ],
-  "authors": [
-    {
-      "name": "xmo",
-      "email": "root@imoi.cn",
-      "role": "Developer"
-    },
-    {
-      "name": "zds",
-      "email": "2771717608@qq.com",
-      "role": "Developer"
-    }
-  ],
-  "homepage": "http://www.mineadmin.com",
-  "require": {
-    "php": ">=8.1",
-    "ext-gd": "*",
-    "ext-json": "*",
-    "ext-openssl": "*",
-    "ext-pdo": "*",
-    "ext-pdo_mysql": "*",
-    "ext-redis": "*",
-    "ext-swoole": ">=5.0",
-    "ext-zip": "*",
-    "casbin/casbin": "^3.21",
-    "doctrine/dbal": "^3.1",
-    "friendsofhyperf/encryption": "^3.1",
-    "friendsofhyperf/facade": "^3.1",
-    "hyperf/amqp": "~3.1.0",
-    "hyperf/async-queue": "~3.1.0",
-    "hyperf/cache": "~3.1.0",
-    "hyperf/codec": "~3.1.0",
-    "hyperf/command": "~3.1.0",
-    "hyperf/config": "~3.1.0",
-    "hyperf/constants": "~3.1.0",
-    "hyperf/crontab": "~3.1.0",
-    "hyperf/database": "~3.1.0",
-    "hyperf/database-pgsql": "~3.1.0",
-    "hyperf/db-connection": "~3.1.0",
-    "hyperf/di": "~3.1.0",
-    "hyperf/filesystem": "~3.1.0",
-    "hyperf/flysystem-oss": "^1.2",
-    "hyperf/framework": "~3.1.0",
-    "hyperf/guzzle": "~3.1.0",
-    "hyperf/http-server": "~3.1.0",
-    "hyperf/logger": "~3.1.0",
-    "hyperf/memory": "~3.1.0",
-    "hyperf/migration-generator": "~3.1.0",
-    "hyperf/model-cache": "~3.1.0",
-    "hyperf/model-listener": "~3.1.0",
-    "hyperf/paginator": "~3.1.0",
-    "hyperf/pool": "~3.1.0",
-    "hyperf/process": "~3.1.0",
-    "hyperf/redis": "~3.1.0",
-    "hyperf/snowflake": "~3.1.0",
-    "hyperf/support": "~3.1.0",
-    "hyperf/translation": "~3.1.0",
-    "hyperf/validation": "~3.1.0",
-    "hyperf/websocket-server": "~3.1.0",
-    "lcobucci/jwt": "~5.2.0",
-    "mine/next-core-x": "dev-2.0-dev",
-    "nesbot/carbon": "^1.0 || ^2.0",
-    "nette/utils": "dev-master",
-    "overtrue/flysystem-cos": "^5.0",
-    "overtrue/flysystem-qiniu": "^3.0",
-    "phpoffice/phpspreadsheet": "^1.24",
-    "ramsey/uuid": "^4.7",
-    "symfony/property-access": "^6.0",
-    "symfony/serializer": "^6.0",
-    "symfony/var-exporter": "*",
-    "tangwei/apidocs": "^3.0",
-    "yurunsoft/phpmailer-swoole": "^1.0",
-    "zoujingli/ip2region": "~2.0.0"
-  },
-  "require-dev": {
-    "ergebnis/composer-normalize": "dev-main",
-    "friendsofphp/php-cs-fixer": "^3.0",
-    "hyperf/testing": "~3.1.0",
-    "mockery/mockery": "^1.0",
-    "pestphp/pest": "2.x-dev",
-    "phpstan/phpstan": "^1.0",
-    "swoole/ide-helper": "dev-master"
-  },
-  "replace": {
-    "mine/next-core-x": "*",
-    "mineadmin/app-store": "*",
-    "mineadmin/http-server": "*",
-    "mineadmin/module": "*",
-    "mineadmin/security-bundle": "*",
-    "mineadmin/security-http": "*",
-    "xmo/jwt-auth": "*",
-    "xmo/mine": "*",
-    "xmo/mine-gateway": "*",
-    "xmo/mine-genertor": "*",
-    "xmo/mine-helpers": "*",
-    "xmo/mine-office": "*",
-    "xmo/mine-translatable": "*"
-  },
-  "minimum-stability": "dev",
-  "autoload": {
-    "psr-4": {
-      "Mine\\": "src/mine-core/src",
-      "Mine\\AppStoreSdk\\": "src/AppStore/src",
-      "Mine\\AppStore\\": "src/AppStore/src",
-      "Mine\\Crontab\\": "src/Crontab/src",
-      "Mine\\Generator\\": "src/mine-generator/src",
-      "Mine\\Helper\\": "src/mine-helpers/src",
-      "Mine\\HttpServer\\": "src/HttpServer/src",
-      "Mine\\Module\\": "src/Module/src",
-      "Mine\\NextCoreX\\": "src/next-core-x/src",
-      "Mine\\Office\\": "src/office/src",
-      "Mine\\SecurityBundle\\": "src/SecurityBundle/src",
-      "Mine\\Security\\Access\\": "src/SecurityAccess/src",
-      "Mine\\Security\\Http\\": "src/SecurityHttp/src",
-      "Mine\\Support\\": "src/Support/src",
-      "Mine\\Translatable\\": "src/translatable/src",
-      "Xmo\\JWTAuth\\": "src/jwt-auth/src"
-    },
-    "files": [
-      "src/mine-helpers/src/functions.php",
-      "src/Support/src/functions.php"
-    ]
-  },
-  "autoload-dev": {
-    "psr-4": {
-      "Mine\\AppStoreSdk\\Tests\\": "src/AppStoreSdk/tests",
-      "Mine\\AppStore\\Tests\\": "src/AppStore/tests",
-      "Mine\\Crontab\\Tests\\": "src/Crontab/tests",
-      "Mine\\HttpServer\\Tests\\": "src/HttpServer/tests",
-      "Mine\\Module\\Tests\\": "src/Module/tests",
-      "Mine\\NextCoreX\\Tests\\": "src/next-core-x/tests",
-      "Mine\\SecurityBundle\\Tests\\": "src/SecurityBundle/tests",
-      "Mine\\Security\\Access\\Tests\\": "src/SecurityAccess/tests",
-      "Mine\\Security\\Http\\Tests\\": "src/SecurityHttp/tests",
-      "Mine\\Support\\Tests\\": "src/Support/tests",
-      "Mine\\Tests\\": "tests",
-      "Xmo\\MineCore\\Tests\\": "src/mine-core/tests"
-    }
-  },
-  "config": {
-    "allow-plugins": {
-      "ergebnis/composer-normalize": true,
-      "pestphp/pest-plugin": true
-    },
-    "optimize-autoloader": true,
-    "sort-packages": true
-  },
-  "scripts": {
-    "analyse": "phpstan analyse --memory-limit 1000M -l 0 -c phpstan.neon ./src",
-    "coverage": "pest --coverage --coverage-clover tests/coverage.xml",
-    "cs-fix": "php-cs-fixer fix $1",
-    "json-fix": [
-      "@composer normalize --no-update-lock",
-      "find ./src -name composer.json -exec composer normalize --no-update-lock {} \\;"
+    "name": "mineadmin/components",
+    "description": "mineAdmin核心组件",
+    "license": "Apache-2.0",
+    "keywords": [
+        "MineAdmin",
+        "hyperf",
+        "hyperf-admin",
+        "Admin"
     ],
-    "test": "pest"
-  }
+    "authors": [
+        {
+            "name": "xmo",
+            "email": "root@imoi.cn",
+            "role": "Developer"
+        },
+        {
+            "name": "zds",
+            "role": "Developer"
+        }
+    ],
+    "homepage": "http://www.mineadmin.com",
+    "require": {
+        "php": ">=8.1",
+        "ext-gd": "*",
+        "ext-json": "*",
+        "ext-openssl": "*",
+        "ext-pdo": "*",
+        "ext-pdo_mysql": "*",
+        "ext-redis": "*",
+        "ext-swoole": ">=5.0",
+        "ext-zip": "*",
+        "casbin/casbin": "^3.21",
+        "doctrine/dbal": "^3.1",
+        "friendsofhyperf/encryption": "^3.1",
+        "friendsofhyperf/facade": "^3.1",
+        "hyperf/amqp": "~3.1.0",
+        "hyperf/async-queue": "~3.1.0",
+        "hyperf/cache": "~3.1.0",
+        "hyperf/codec": "~3.1.0",
+        "hyperf/command": "~3.1.0",
+        "hyperf/config": "~3.1.0",
+        "hyperf/constants": "~3.1.0",
+        "hyperf/crontab": "~3.1.0",
+        "hyperf/database": "~3.1.0",
+        "hyperf/database-pgsql": "~3.1.0",
+        "hyperf/db-connection": "~3.1.0",
+        "hyperf/di": "~3.1.0",
+        "hyperf/filesystem": "~3.1.0",
+        "hyperf/flysystem-oss": "^1.2",
+        "hyperf/framework": "~3.1.0",
+        "hyperf/guzzle": "~3.1.0",
+        "hyperf/http-server": "~3.1.0",
+        "hyperf/logger": "~3.1.0",
+        "hyperf/memory": "~3.1.0",
+        "hyperf/migration-generator": "~3.1.0",
+        "hyperf/model-cache": "~3.1.0",
+        "hyperf/model-listener": "~3.1.0",
+        "hyperf/paginator": "~3.1.0",
+        "hyperf/pool": "~3.1.0",
+        "hyperf/process": "~3.1.0",
+        "hyperf/redis": "~3.1.0",
+        "hyperf/snowflake": "~3.1.0",
+        "hyperf/support": "~3.1.0",
+        "hyperf/translation": "~3.1.0",
+        "hyperf/validation": "~3.1.0",
+        "hyperf/websocket-server": "~3.1.0",
+        "lcobucci/jwt": "~5.2.0",
+        "mine/next-core-x": "dev-2.0-dev",
+        "nesbot/carbon": "^1.0 || ^2.0",
+        "nette/utils": "dev-master",
+        "overtrue/flysystem-cos": "^5.0",
+        "overtrue/flysystem-qiniu": "^3.0",
+        "phpoffice/phpspreadsheet": "^1.24",
+        "ramsey/uuid": "^4.7",
+        "symfony/property-access": "^6.0",
+        "symfony/serializer": "^6.0",
+        "symfony/var-exporter": "*",
+        "tangwei/apidocs": "^3.0",
+        "yurunsoft/phpmailer-swoole": "^1.0",
+        "zoujingli/ip2region": "~2.0.0"
+    },
+    "require-dev": {
+        "ergebnis/composer-normalize": "dev-main",
+        "friendsofphp/php-cs-fixer": "^3.0",
+        "hyperf/testing": "~3.1.0",
+        "mockery/mockery": "^1.0",
+        "pestphp/pest": "2.x-dev",
+        "phpstan/phpstan": "^1.0",
+        "swoole/ide-helper": "dev-master"
+    },
+    "replace": {
+        "mineadmin/app-store": "*",
+        "mineadmin/crontab": "*",
+        "mineadmin/http-server": "*",
+        "mineadmin/module": "*",
+        "mineadmin/security-access": "*",
+        "mineadmin/security-bundle": "*",
+        "mineadmin/security-http": "*",
+        "mineadmin/support": "*"
+    },
+    "minimum-stability": "dev",
+    "autoload": {
+        "psr-4": {
+            "Mine\\": [
+                "src/mine-service/src/",
+                "src/mine-core/src/"
+            ],
+            "Mine\\AppStore\\": "src/AppStore/src/",
+            "Mine\\Crontab\\": "src/Crontab/src/",
+            "Mine\\Generator\\": "src/mine-generator/src/",
+            "Mine\\Helper\\": "src/mine-helpers/src/",
+            "Mine\\HttpServer\\": "src/HttpServer/src/",
+            "Mine\\Module\\": "src/Module/src/",
+            "Mine\\Office\\": "src/office/src/",
+            "Mine\\SecurityBundle\\": "src/SecurityBundle/src/",
+            "Mine\\Security\\Access\\": "src/SecurityAccess/src/",
+            "Mine\\Security\\Http\\": "src/SecurityHttp/src/",
+            "Mine\\Support\\": "src/Support/src/",
+            "Mine\\Translatable\\": "src/translatable/src/",
+            "Xmo\\JWTAuth\\": "src/jwt-auth/src/"
+        },
+        "files": [
+            "src/Support/src/functions.php",
+            "src/mine-helpers/src/functions.php"
+        ]
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Mine\\Crontab\\Tests\\": "src/Crontab/tests/",
+            "Mine\\HttpServer\\Tests\\": "src/HttpServer/tests/",
+            "Mine\\Module\\Tests": "src/Module/tests/",
+            "Mine\\SecurityBundle\\Tests\\": "src/SecurityBundle/tests/",
+            "Mine\\Security\\Access\\Tests\\": "src/SecurityAccess/tests/",
+            "Mine\\Security\\Http\\Tests\\": "src/SecurityHttp/tests/",
+            "Mine\\Support\\Tests\\": "src/Support/tests/",
+            "Mine\\Tests\\": "tests/",
+            "Mine\\Translatable\\": "src/translatable/tests/"
+        },
+        "files": []
+    },
+    "config": {
+        "allow-plugins": {
+            "ergebnis/composer-normalize": true,
+            "pestphp/pest-plugin": true
+        },
+        "optimize-autoloader": true,
+        "sort-packages": true
+    },
+    "scripts": {
+        "analyse": "phpstan analyse --memory-limit 1000M -l 0 -c phpstan.neon ./src",
+        "coverage": "pest --coverage --coverage-clover tests/coverage.xml",
+        "cs-fix": "php-cs-fixer fix $1",
+        "json-fix": [
+            "@composer normalize --no-update-lock",
+            "find ./src -name composer.json -exec composer normalize --no-update-lock {} \\;"
+        ],
+        "test": "pest"
+    },
+    "extra": {
+        "hyperf": {
+            "config": [
+                "Mine\\AppStore\\ConfigProvider",
+                "Mine\\ConfigProvider",
+                "Mine\\Crontab\\ConfigProvider",
+                "Mine\\Generator\\GeneratorConfigProvider",
+                "Mine\\Generator\\GeneratorConfigProvider",
+                "Mine\\HttpServer\\ConfigProvider",
+                "Mine\\Module\\ConfigProvider",
+                "Mine\\SecurityBundle\\ConfigProvider",
+                "Mine\\Security\\Http\\ConfigProvider",
+                "Mine\\Support\\ConfigProvider",
+                "Mine\\Translatable\\ConfigProvider",
+                "Xmo\\JWTAuth\\ConfigProvider"
+            ]
+        }
+    }
 }
