@@ -1,8 +1,8 @@
 {
   "name": "mineadmin/crontab",
   "description": "加强 Hyperf Crontab",
-  "type": "library",
   "license": "MIT",
+  "type": "library",
   "authors": [
     {
       "name": "x.mo",

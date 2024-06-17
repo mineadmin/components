@@ -1,9 +1,12 @@
 {
   "name": "mineadmin/module",
   "description": "基于 MineAdmin 的模块化开发组件",
-  "type": "library",
   "license": "MIT",
-  "keywords": ["Hyperf","Module"],
+  "type": "library",
+  "keywords": [
+    "Hyperf",
+    "Module"
+  ],
   "authors": [
     {
       "name": "xmo",
@@ -18,10 +21,10 @@
   ],
   "require": {
     "php": ">=8.1",
-    "mineadmin/http-server": "2.0.x-dev",
     "hyperf/migration-generator": "^3.1",
-    "symfony/yaml": "*",
-    "hyperf/validation": "^3.1"
+    "hyperf/validation": "^3.1",
+    "mineadmin/http-server": "2.0.x-dev",
+    "symfony/yaml": "*"
   },
   "autoload": {
     "psr-4": {
