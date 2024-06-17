@@ -28,20 +28,12 @@ class MineMigrate extends BaseCommand
     protected $module;
 
     /**
-     * The migration creator instance.
-     *
-     * @var MineMigrationCreator
-     */
-    protected $creator;
-
-    /**
      * Create a new migration install command instance.
      */
-    public function __construct(MineMigrationCreator $creator)
+    public function __construct(protected MineMigrationCreator $creator)
     {
         parent::__construct('mine:migrate-gen');
         $this->setDescription('Generate a new MineAdmin module migration file');
-        $this->creator = $creator;
     }
 
     /**
@@ -58,6 +50,7 @@ class MineMigrate extends BaseCommand
 
         if (empty($this->module)) {
             $this->error('<--module module_name> required');
+            return BaseCommand::FAILURE;
             exit;
         }
 
@@ -86,7 +79,7 @@ class MineMigrate extends BaseCommand
         // Now we are ready to write the migration out to disk. Once we've written
         // the migration out, we will dump-autoload for the entire framework to
         // make sure that the migrations are registered by the class loaders.
-        $this->writeMigration($name, $table, $create);
+        return $this->writeMigration($name, $table, $create);
     }
 
     protected function getArguments(): array
@@ -110,7 +103,7 @@ class MineMigrate extends BaseCommand
     /**
      * Write the migration file to disk.
      */
-    protected function writeMigration(string $name, ?string $table, bool $create): void
+    protected function writeMigration(string $name, ?string $table, bool $create): int
     {
         try {
             $file = pathinfo($this->creator->create(
@@ -120,8 +113,10 @@ class MineMigrate extends BaseCommand
                 $create
             ), PATHINFO_FILENAME);
             $this->info("<info>[INFO] Created Migration:</info> {$file}");
+            return BaseCommand::SUCCESS;
         } catch (\Throwable $e) {
             $this->error("<error>[ERROR] Created Migration:</error> {$e->getMessage()}");
+            return BaseCommand::FAILURE;
         }
     }
 

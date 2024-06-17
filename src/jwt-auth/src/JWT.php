@@ -142,6 +142,7 @@ class JWT extends AbstractJWT
     /**
      * 刷新token.
      * @return Token
+     * @throws \RuntimeException
      */
     public function refreshToken(?string $token = null)
     {

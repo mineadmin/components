@@ -14,7 +14,7 @@ namespace Mine\Generator;
 
 interface CodeGenerator
 {
-    public function generator();
+    public function generator(): void;
 
-    public function preview();
+    public function preview(): string;
 }

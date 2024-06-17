@@ -35,7 +35,7 @@ class ConsoleTable
     protected array $header = [];
 
     /**
-     * 头部对齐方式 默认1 ALGIN_LEFT 0 ALIGN_RIGHT 2 ALIGN_CENTER.
+     * 头部对齐方式 默认1 ALIGN_LEFT 0 ALIGN_RIGHT 2 ALIGN_CENTER.
      */
     protected int $headerAlign = 1;
 
@@ -45,7 +45,7 @@ class ConsoleTable
     protected array $rows = [];
 
     /**
-     * 单元格对齐方式 默认1 ALGIN_LEFT 0 ALIGN_RIGHT 2 ALIGN_CENTER.
+     * 单元格对齐方式 默认1 ALIGN_LEFT 0 ALIGN_RIGHT 2 ALIGN_CENTER.
      */
     protected int $cellAlign = 1;
 
@@ -109,7 +109,7 @@ class ConsoleTable
     /**
      * 设置表格头信息 以及对齐方式.
      * @param array $header 要输出的Header信息
-     * @param int $align 对齐方式 默认1 ALGIN_LEFT 0 ALIGN_RIGHT 2 ALIGN_CENTER
+     * @param int $align 对齐方式 默认1 ALIGN_LEFT 0 ALIGN_RIGHT 2 ALIGN_CENTER
      */
     public function setHeader(array $header, int $align = 1): void
     {
@@ -122,7 +122,7 @@ class ConsoleTable
     /**
      * 设置输出表格数据 及对齐方式.
      * @param array $rows 要输出的表格数据（二维数组）
-     * @param int $align 对齐方式 默认1 ALGIN_LEFT 0 ALIGN_RIGHT 2 ALIGN_CENTER
+     * @param int $align 对齐方式 默认1 ALIGN_LEFT 0 ALIGN_RIGHT 2 ALIGN_CENTER
      */
     public function setRows(array $rows, int $align = 1): void
     {
@@ -136,7 +136,7 @@ class ConsoleTable
 
     /**
      * 设置全局单元格对齐方式.
-     * @param int $align 对齐方式 默认1 ALGIN_LEFT 0 ALIGN_RIGHT 2 ALIGN_CENTER
+     * @param int $align 对齐方式 默认1 ALIGN_LEFT 0 ALIGN_RIGHT 2 ALIGN_CENTER
      * @return $this
      */
     public function setCellAlign(int $align = 1)

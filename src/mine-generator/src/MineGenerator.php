@@ -25,12 +25,10 @@ abstract class MineGenerator
 
     protected string $namespace;
 
-    protected ContainerInterface $container;
-
     /**
      * MineGenerator constructor.
      */
-    public function __construct(ContainerInterface $container)
+    public function __construct(protected ContainerInterface $container)
     {
         $this->setStubDir(
             realpath(
@@ -39,7 +37,6 @@ abstract class MineGenerator
                 )
             ) . DIRECTORY_SEPARATOR . 'Stubs' . DIRECTORY_SEPARATOR
         );
-        $this->container = $container;
     }
 
     public function getStubDir(): string

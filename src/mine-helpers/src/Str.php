@@ -25,17 +25,16 @@ use Psr\Container\NotFoundExceptionInterface;
 
 class Str
 {
-    protected static $snakeCache = [];
+    protected static array $snakeCache = [];
 
-    protected static $camelCache = [];
+    protected static array $camelCache = [];
 
-    protected static $studlyCache = [];
+    protected static array $studlyCache = [];
 
     /**
-     * 检查字符串中是否包含某些字符串.
-     * @param array|string $needles
+     * @description 检查字符串中是否包含某些字符串.
      */
-    public static function contains(string $haystack, $needles): bool
+    public static function contains(string $haystack, array|string $needles): bool
     {
         foreach ((array) $needles as $needle) {
             if ($needle != '' && mb_strpos($haystack, $needle) !== false) {
@@ -47,11 +46,9 @@ class Str
     }
 
     /**
-     * 检查字符串是否以某些字符串结尾.
-     *
-     * @param array|string $needles
+     * @description 检查字符串是否以某些字符串结尾.
      */
-    public static function endsWith(string $haystack, $needles): bool
+    public static function endsWith(string $haystack, array|string $needles): bool
     {
         foreach ((array) $needles as $needle) {
             if ((string) $needle === static::substr($haystack, -static::length($needle))) {
@@ -63,11 +60,9 @@ class Str
     }
 
     /**
-     * 检查字符串是否以某些字符串开头.
-     *
-     * @param array|string $needles
+     * @description  检查字符串是否以某些字符串开头.
      */
-    public static function startsWith(string $haystack, $needles): bool
+    public static function startsWith(string $haystack, array|string $needles): bool
     {
         foreach ((array) $needles as $needle) {
             if ($needle != '' && mb_strpos($haystack, $needle) === 0) {
@@ -84,26 +79,14 @@ class Str
     public static function random(int $length = 6, int $type = -1, string $addChars = ''): string
     {
         $str = '';
-        switch ($type) {
-            case 0:
-                $chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz' . $addChars;
-                break;
-            case 1:
-                $chars = str_repeat('0123456789', 3);
-                break;
-            case 2:
-                $chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ' . $addChars;
-                break;
-            case 3:
-                $chars = 'abcdefghijklmnopqrstuvwxyz' . $addChars;
-                break;
-            case 4:
-                $chars = '们以我到他会作时要动国产的一是工就年阶义发成部民可出能方进在了不和有大这主中人上为来分生对于学下级地个用同行面说种过命度革而多子后自社加小机也经力线本电高量长党得实家定深法表着水理化争现所二起政三好十战无农使性前等反体合斗路图把结第里正新开论之物从当两些还天资事队批点育重其思与间内去因件日利相由压员气业代全组数果期导平各基或月毛然如应形想制心样干都向变关问比展那它最及外没看治提五解系林者米群头意只明四道马认次文通但条较克又公孔领军流入接席位情运器并飞原油放立题质指建区验活众很教决特此常石强极土少已根共直团统式转别造切九你取西持总料连任志观调七么山程百报更见必真保热委手改管处己将修支识病象几先老光专什六型具示复安带每东增则完风回南广劳轮科北打积车计给节做务被整联步类集号列温装即毫知轴研单色坚据速防史拉世设达尔场织历花受求传口断况采精金界品判参层止边清至万确究书' . $addChars;
-                break;
-            default:
-                $chars = 'ABCDEFGHIJKMNPQRSTUVWXYZabcdefghijkmnpqrstuvwxyz23456789' . $addChars;
-                break;
-        }
+        $chars = match ($type) {
+            0 => 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz' . $addChars,
+            1 => str_repeat('0123456789', 3),
+            2 => 'ABCDEFGHIJKLMNOPQRSTUVWXYZ' . $addChars,
+            3 => 'abcdefghijklmnopqrstuvwxyz' . $addChars,
+            4 => '们以我到他会作时要动国产的一是工就年阶义发成部民可出能方进在了不和有大这主中人上为来分生对于学下级地个用同行面说种过命度革而多子后自社加小机也经力线本电高量长党得实家定深法表着水理化争现所二起政三好十战无农使性前等反体合斗路图把结第里正新开论之物从当两些还天资事队批点育重其思与间内去因件日利相由压员气业代全组数果期导平各基或月毛然如应形想制心样干都向变关问比展那它最及外没看治提五解系林者米群头意只明四道马认次文通但条较克又公孔领军流入接席位情运器并飞原油放立题质指建区验活众很教决特此常石强极土少已根共直团统式转别造切九你取西持总料连任志观调七么山程百报更见必真保热委手改管处己将修支识病象几先老光专什六型具示复安带每东增则完风回南广劳轮科北打积车计给节做务被整联步类集号列温装即毫知轴研单色坚据速防史拉世设达尔场织历花受求传口断况采精金界品判参层止边清至万确究书' . $addChars,
+            default => 'ABCDEFGHIJKMNPQRSTUVWXYZabcdefghijkmnpqrstuvwxyz23456789' . $addChars,
+        };
         if ($length > 10) {
             $chars = $type == 1 ? str_repeat($chars, $length) : str_repeat($chars, 5);
         }
@@ -219,12 +202,13 @@ class Str
 
     /**
      * 秒数转时分格式.
-     * @param $time int
      */
     public static function Sec2Time(int $time): string
     {
         $value = [
-            'years' => 0, 'days' => 0, 'hours' => 0,
+            'years' => 0,
+            'days' => 0,
+            'hours' => 0,
             'minutes' => 0,
             'seconds' => 0,
         ];
@@ -268,7 +252,7 @@ class Str
     }
 
     /**
-     * Replace the first occurrence of a given value in the string.
+     * @description  Replace the first occurrence of a given value in the string.
      */
     public static function replaceFirst(string $search, string $replace, string $subject, int &$offset = 0): string
     {

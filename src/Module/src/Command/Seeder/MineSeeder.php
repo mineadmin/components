@@ -25,39 +25,33 @@ use Symfony\Component\Console\Input\InputOption;
 #[Command]
 class MineSeeder extends BaseCommand
 {
-    /**
-     * The seeder creator instance.
-     */
-    protected SeederCreator $creator;
-
     protected string $module;
 
     /**
      * Create a new seeder generator command instance.
      */
-    public function __construct(SeederCreator $creator)
+    public function __construct(protected SeederCreator $creator)
     {
         parent::__construct('mine:seeder-gen');
-        $this->setDescription('Generate a new MineAdmin module seeder class');
 
-        $this->creator = $creator;
+        $this->setDescription('Generate a new MineAdmin module seeder class');
     }
 
     /**
      * Handle the current command.
      */
-    public function handle()
+    public function handle(): int
     {
         $this->module = ucfirst(trim($this->input->getOption('module')));
         $name = Str::snake(trim($this->input->getArgument('name')));
 
-        $this->writeMigration($name);
+        return $this->writeMigration($name);
     }
 
     /**
      * Write the seeder file to disk.
      */
-    protected function writeMigration(string $name)
+    protected function writeMigration(string $name): int
     {
         $path = $this->ensureSeederDirectoryAlreadyExist(
             $this->getSeederPath()
@@ -66,6 +60,7 @@ class MineSeeder extends BaseCommand
         $file = pathinfo($this->creator->create($name, $path), PATHINFO_FILENAME);
 
         $this->info("<info>[INFO] Created Seeder:</info> {$file}");
+        return BaseCommand::SUCCESS;
     }
 
     protected function ensureSeederDirectoryAlreadyExist(string $path): string
