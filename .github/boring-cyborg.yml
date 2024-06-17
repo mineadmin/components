@@ -17,10 +17,6 @@ labelPRBasedOnFilePath:
     - src/mine-helpers/**/*
   MineService:
     - src/mineService/**/*
-  Module:
-    - src/Module/**/*
-  NextCoreX:
-    - src/next-core-x/**/*
   Office:
     - src/office/**/*
   SecurityAccess:
