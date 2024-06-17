@@ -33,7 +33,7 @@
   },
   "autoload-dev": {
     "psr-4": {
-      "Mine\\Module\\Tests": "tests"
+      "Mine\\Module\\Tests\\": "tests"
     }
   },
   "extra": {

@@ -129,7 +129,7 @@
         "psr-4": {
             "Mine\\Crontab\\Tests\\": "src/Crontab/tests/",
             "Mine\\HttpServer\\Tests\\": "src/HttpServer/tests/",
-            "Mine\\Module\\Tests": "src/Module/tests/",
+            "Mine\\Module\\Tests\\": "src/Module/tests/",
             "Mine\\SecurityBundle\\Tests\\": "src/SecurityBundle/tests/",
             "Mine\\Security\\Access\\Tests\\": "src/SecurityAccess/tests/",
             "Mine\\Security\\Http\\Tests\\": "src/SecurityHttp/tests/",
