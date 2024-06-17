@@ -155,8 +155,8 @@ class InstallProjectCommand extends MineCommand
             'role_id' => $superRoleId,
         ]);
         $envConfig = <<<ENV
-SUPER_ADMIN = {$superAdminId}
-ADMIN_ROLE = {$superRoleId}
+SUPER_ADMIN={$superAdminId}
+ADMIN_ROLE={$superAdminId}
 ENV;
         file_put_contents(BASE_PATH . '/.env', $envConfig, FILE_APPEND);
     }
