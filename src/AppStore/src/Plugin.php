@@ -201,7 +201,7 @@ class Plugin
                 $requireCmd = sprintf('%s require %s', $composerBin, implode(' ', $packageList));
                 $execList[] = $requireCmd;
             }
-            foreach ($execList as $cmd){
+            foreach ($execList as $cmd) {
                 $result = System::exec($cmd);
                 if ($result['code'] !== 0 && ! empty($result['ouput'])) {
                     throw new \RuntimeException(sprintf('Failed to execute composer require command, details:%s', $result['output'] ?? '--'));
