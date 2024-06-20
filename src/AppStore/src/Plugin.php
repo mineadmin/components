@@ -189,17 +189,23 @@ class Plugin
             if (($checkCmd['code'] ?? 0) !== 0) {
                 throw new \RuntimeException(sprintf('Composer command error, details:%s', $checkCmd['output'] ?? '--'));
             }
-            $cmdBody = sprintf('cd %s &&', BASE_PATH);
-            $cmdBody .= sprintf('%s require ', $composerBin);
+
+            $execList[] = sprintf('cd %s &&', BASE_PATH);
+            $packageList = [];
             foreach ($requires as $package => $version) {
                 if (! InstalledVersions::isInstalled($package)) {
-                    $cmdBody .= sprintf('%s:%s ', $package, $version);
+                    $packageList[] = sprintf('%s:%s ', $package, $version);
                 }
             }
-            $cmdBody .= sprintf('-vvv');
-            $result = System::exec($cmdBody);
-            if ($result['code'] !== 0 && ! empty($result['ouput'])) {
-                throw new \RuntimeException(sprintf('Failed to execute composer require command, details:%s', $result['output'] ?? '--'));
+            if (! empty($packageList)) {
+                $requireCmd = sprintf('%s require %s', $composerBin, implode(' ', $packageList));
+                $execList[] = $requireCmd;
+            }
+            foreach ($execList as $cmd) {
+                $result = System::exec($cmd);
+                if ($result['code'] !== 0 && ! empty($result['ouput'])) {
+                    throw new \RuntimeException(sprintf('Failed to execute composer require command, details:%s', $result['output'] ?? '--'));
+                }
             }
         }
 
