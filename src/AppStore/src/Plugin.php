@@ -317,7 +317,7 @@ class Plugin
             $execList[] = sprintf('cd %s', BASE_PATH);
             foreach ($requires as $package => $version) {
                 if (InstalledVersions::isInstalled($package)) {
-                    $execList[] = sprintf('%s remove %s ', $composerBin,$package);
+                    $execList[] = sprintf('%s remove %s ', $composerBin, $package);
                 }
             }
 
