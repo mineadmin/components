@@ -65,7 +65,7 @@ class Plugin
      */
     public static function checkPlugin(\SplFileInfo $mineJson): bool
     {
-        $info = self::read($mineJson->getRealPath());
+        $info = self::read($mineJson->getRelativePath());
         $rules = [
             'name' => 'required|string',
             'description' => 'required|string',
