@@ -190,7 +190,7 @@ class Plugin
                 throw new \RuntimeException(sprintf('Composer command error, details:%s', $checkCmd['output'] ?? '--'));
             }
 
-            $execList[] = sprintf('cd %s &&', BASE_PATH);
+            $execList[] = sprintf('cd %s', BASE_PATH);
             $packageList = [];
             foreach ($requires as $package => $version) {
                 if (! InstalledVersions::isInstalled($package)) {
@@ -207,6 +207,11 @@ class Plugin
                     throw new \RuntimeException(sprintf('Failed to execute composer require command, details:%s', $result['output'] ?? '--'));
                 }
             }
+        }
+
+        if (! empty($info['composer']['installScript']) && class_exists($installScript = $info['composer']['installScript'])) {
+            $installScript = ApplicationContext::getContainer()->make($installScript);
+            $installScript();
         }
 
         // run script
@@ -230,11 +235,6 @@ class Plugin
         }
 
         $frontDirectory = self::getConfig('front_directory', BASE_PATH . '/web');
-
-        if (! empty($info['installScript']) && class_exists($info['installScript'])) {
-            $installScript = ApplicationContext::getContainer()->make($info['installScript']);
-            $installScript();
-        }
 
         // Handling front-end dependency information
         if (! empty($info['package']['dependencies'])) {
@@ -306,10 +306,6 @@ class Plugin
                 'No installation behavior was detected for this plugin, and uninstallation could not be performed'
             );
         }
-        if (! empty($info['uninstallScript']) && class_exists($info['uninstallScript'])) {
-            $uninstallScript = ApplicationContext::getContainer()->make($info['uninstallScript']);
-            $uninstallScript();
-        }
         if (! empty($info['composer']['require'])) {
             $requires = $info['composer']['require'];
             $composerBin = self::getConfig('composer.bin', 'composer');
@@ -317,18 +313,25 @@ class Plugin
             if (($checkCmd['code'] ?? 0) !== 0) {
                 throw new \RuntimeException(sprintf('Composer command error, details:%s', $checkCmd['output'] ?? '--'));
             }
-            $cmdBody = sprintf('cd %s &&', BASE_PATH);
-            $cmdBody .= sprintf('%s remove ', $composerBin);
+            $execList = [];
+            $execList[] = sprintf('cd %s', BASE_PATH);
             foreach ($requires as $package => $version) {
                 if (InstalledVersions::isInstalled($package)) {
-                    $cmdBody .= sprintf('%s:%s ', $package, $version);
+                    $execList[] = sprintf('%s remove %s ', $composerBin, $package);
                 }
             }
-            $cmdBody .= sprintf('-vvv');
-            $result = System::exec($cmdBody);
-            if ($result['code'] !== 0 && ! empty($result['ouput'])) {
-                throw new \RuntimeException(sprintf('Failed to execute composer require command, details:%s', $result['output'] ?? '--'));
+
+            foreach ($execList as $exec) {
+                $result = System::exec($exec);
+                if ($result['code'] !== 0 && ! empty($result['ouput'])) {
+                    throw new \RuntimeException(sprintf('Failed to execute composer require command, details:%s', $result['output'] ?? '--'));
+                }
             }
+        }
+
+        if (! empty($info['composer']['uninstallScript']) && class_exists($info['composer']['uninstallScript'])) {
+            $uninstallScript = ApplicationContext::getContainer()->make($info['composer']['uninstallScript']);
+            $uninstallScript();
         }
 
         $frontDirectory = self::getConfig('front_directory', BASE_PATH . '/web');
