@@ -92,9 +92,6 @@
         "mineadmin/app-store": "*",
         "mineadmin/crontab": "*",
         "mineadmin/http-server": "*",
-        "mineadmin/security-access": "*",
-        "mineadmin/security-bundle": "*",
-        "mineadmin/security-http": "*",
         "mineadmin/support": "*"
     },
     "minimum-stability": "dev",
@@ -110,9 +107,6 @@
             "Mine\\Helper\\": "src/mine-helpers/src/",
             "Mine\\HttpServer\\": "src/HttpServer/src/",
             "Mine\\Office\\": "src/office/src/",
-            "Mine\\SecurityBundle\\": "src/SecurityBundle/src/",
-            "Mine\\Security\\Access\\": "src/SecurityAccess/src/",
-            "Mine\\Security\\Http\\": "src/SecurityHttp/src/",
             "Mine\\Support\\": "src/Support/src/",
             "Mine\\Translatable\\": "src/translatable/src/",
             "Xmo\\JWTAuth\\": "src/jwt-auth/src/"
@@ -126,9 +120,6 @@
         "psr-4": {
             "Mine\\Crontab\\Tests\\": "src/Crontab/tests/",
             "Mine\\HttpServer\\Tests\\": "src/HttpServer/tests/",
-            "Mine\\SecurityBundle\\Tests\\": "src/SecurityBundle/tests/",
-            "Mine\\Security\\Access\\Tests\\": "src/SecurityAccess/tests/",
-            "Mine\\Security\\Http\\Tests\\": "src/SecurityHttp/tests/",
             "Mine\\Support\\Tests\\": "src/Support/tests/",
             "Mine\\Tests\\": "tests/",
             "Mine\\Translatable\\": "src/translatable/tests/"
@@ -152,8 +143,6 @@
                 "Mine\\Generator\\GeneratorConfigProvider",
                 "Mine\\Generator\\GeneratorConfigProvider",
                 "Mine\\HttpServer\\ConfigProvider",
-                "Mine\\SecurityBundle\\ConfigProvider",
-                "Mine\\Security\\Http\\ConfigProvider",
                 "Mine\\Support\\ConfigProvider",
                 "Mine\\Translatable\\ConfigProvider",
                 "Xmo\\JWTAuth\\ConfigProvider"
