@@ -37,7 +37,7 @@ class ConfigProvider
         foreach ($mineJsonPaths as $jsonPath) {
             if (file_exists($jsonPath->getPath() . '/' . Plugin::INSTALL_LOCK_FILE)) {
                 $info = json_decode(file_get_contents($jsonPath->getRealPath()), true);
-                if (! empty($info['composer']['config'])) {
+                if (! empty($info['composer']['config']) && class_exists($info['composer']['config'])) {
                     $provider = (new ($info['composer']['config']))();
                     $initialConfig = array_merge_recursive($provider, $initialConfig);
                 }
