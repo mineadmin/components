@@ -24,6 +24,7 @@ declare(strict_types=1);
 
 namespace Mine\Generator;
 
+use Hyperf\Collection\Collection;
 use Hyperf\Support\Filesystem\Filesystem;
 use Mine\Exception\NormalStatusException;
 use Mine\Generator\Contracts\GeneratorTablesContract;
@@ -47,6 +48,8 @@ class ControllerGenerator extends MineGenerator implements CodeGenerator
 
     protected Filesystem $filesystem;
 
+    protected Collection $columns;
+
     /**
      * 设置生成信息.
      * @throws ContainerExceptionInterface
@@ -59,6 +62,7 @@ class ControllerGenerator extends MineGenerator implements CodeGenerator
         if (empty($tablesContract->getModuleName()) || empty($tablesContract->getMenuName())) {
             throw new NormalStatusException(t('setting.gen_code_edit'));
         }
+        $this->columns = $tablesContract->getColumns();
         $this->setNamespace($this->tablesContract->getNamespace());
         return $this->placeholderReplace();
     }
@@ -331,9 +335,17 @@ UseNamespace;
         );
     }
 
+    /**
+     * 生成代码表主键.
+     */
     protected function getPk(): string
     {
-        return $this->tablesContract->getPkName();
+        foreach ($this->columns as $column) {
+            if ($column->is_pk == self::YES) {
+                return $column->column_name;
+            }
+        }
+        return '';
     }
 
     protected function getStatusValue(): string
