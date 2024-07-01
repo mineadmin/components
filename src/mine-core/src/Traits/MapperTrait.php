@@ -231,7 +231,7 @@ trait MapperTrait
     /**
      * 过滤新增或写入不存在的字段.
      */
-    public function filterExecuteAttributes(array $data, bool $removePk = false): array
+    public function filterExecuteAttributes(array &$data, bool $removePk = false): void
     {
         $model = new $this->model();
         $attrs = $model->getFillable();
@@ -244,8 +244,6 @@ trait MapperTrait
             unset($data[$model->getKeyName()]);
         }
         $model = null;
-
-        return $data;
     }
 
     /**
@@ -253,7 +251,8 @@ trait MapperTrait
      */
     public function save(array $data): mixed
     {
-        $model = $this->model::create($this->filterExecuteAttributes($data, $this->getModel()->incrementing));
+        $this->filterExecuteAttributes($data, $this->getModel()->incrementing);
+        $model = $this->model::create($data);
         return $model->{$model->getKeyName()};
     }
 
@@ -316,7 +315,8 @@ trait MapperTrait
      */
     public function update(mixed $id, array $data): bool
     {
-        return $this->model::find($id)->update($this->filterExecuteAttributes($data, true)) > 0;
+        $this->filterExecuteAttributes($data, true);
+        return $this->model::find($id)->update($data) > 0;
     }
 
     /**
@@ -324,7 +324,8 @@ trait MapperTrait
      */
     public function updateByCondition(array $condition, array $data): bool
     {
-        return $this->model::query()->where($condition)->update($this->filterExecuteAttributes($data, true)) > 0;
+        $this->filterExecuteAttributes($data, true);
+        return $this->model::query()->where($condition)->update($data) > 0;
     }
 
     /**
