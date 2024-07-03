@@ -129,7 +129,7 @@ class JWT extends AbstractJWT
                 throw new TokenValidException('Token authentication does not pass', 401);
             }
 
-            if ($validate && ! $this->validateToken($signer, $this->getKey($config), $token)) {
+            if ($validate && ! $this->validateToken($signer, $this->getKey($config, 'public'), $token)) {
                 throw new TokenValidException('Token authentication does not pass', 401);
             }
 
