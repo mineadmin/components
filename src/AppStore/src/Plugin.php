@@ -226,14 +226,6 @@ class Plugin
             }
         }
 
-        // check is run publish command
-        if (! empty($info['composer']['config'])) {
-            $composerConfig = (new $info['composer']['config']())();
-            if (! empty($composerConfig['publish'])) {
-                System::exec(sprintf('cd %s && php bin/hyperf.php mine-extension:script %s', BASE_PATH, $path));
-            }
-        }
-
         $frontDirectory = self::getConfig('front_directory', BASE_PATH . '/web');
 
         // Handling front-end dependency information
@@ -295,6 +287,14 @@ class Plugin
         }
 
         file_put_contents($pluginPath . '/' . self::INSTALL_LOCK_FILE, 1);
+
+        // check is run publish command
+        if (! empty($info['composer']['config'])) {
+            $composerConfig = (new $info['composer']['config']())();
+            if (! empty($composerConfig['publish'])) {
+                System::exec(sprintf('cd %s && php bin/hyperf.php mine-extension:script %s', BASE_PATH, $path));
+            }
+        }
     }
 
     public static function uninstall(string $path): void
