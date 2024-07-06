@@ -295,6 +295,9 @@ class Plugin
                 System::exec(sprintf('cd %s && php bin/hyperf.php mine-extension:script %s', BASE_PATH, $path));
             }
         }
+
+        // remove cache
+        System::exec(sprintf('rm -rf %s', BASE_PATH . DIRECTORY_SEPARATOR . 'runtime/container'));
     }
 
     public static function uninstall(string $path): void
