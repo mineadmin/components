@@ -1,0 +1,26 @@
+{
+    "name": "mine-admin/pay-gateway",
+    "version": "1.0.0",
+    "type": "mixed",
+    "description": "快速接入微信支付宝支付",
+    "author": [
+        {
+            "name": "demo"
+        }
+    ],
+    "composer": {
+        "require": {
+            "yansongda/pay": "~3.7",
+            "hyperf/guzzle": "~3.1"
+        },
+        "psr-4": {
+            "Plugin\\MineAdmin\\PayGateway\\": "src"
+        },
+        "installScript": "Plugin\\MineAdmin\\PayGateway\\InstallScript",
+        "uninstallScript": "Plugin\\MineAdmin\\PayGateway\\UninstallScript",
+        "config": "Plugin\\MineAdmin\\PayGateway\\ConfigProvider"
+    },
+    "package": {
+        "dependencies": []
+    }
+}
