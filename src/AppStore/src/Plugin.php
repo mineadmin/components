@@ -36,7 +36,9 @@ class Plugin
     /**
      * Plugin root directory.
      */
-    public const PLUGIN_PATH = BASE_PATH . '/plugin';
+    public const PLUGIN_PATH = BASE_PATH . '/' . self::PLUGIN_PREFIX;
+
+    public const PLUGIN_PREFIX = 'plugin';
 
     private static array $mineJsonPaths = [];
 
