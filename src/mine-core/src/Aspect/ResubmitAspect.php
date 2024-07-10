@@ -48,32 +48,28 @@ class ResubmitAspect extends AbstractAspect
      */
     public function process(ProceedingJoinPoint $proceedingJoinPoint)
     {
-        try {
-            $result = $proceedingJoinPoint->process();
+        $result = $proceedingJoinPoint->process();
 
-            /* @var $resubmit Resubmit */
-            if (isset($proceedingJoinPoint->getAnnotationMetadata()->method[Resubmit::class])) {
-                $resubmit = $proceedingJoinPoint->getAnnotationMetadata()->method[Resubmit::class];
-            }
-
-            $request = container()->get(MineRequest::class);
-
-            $key = md5(sprintf('%s-%s-%s', $request->ip(), $request->getPathInfo(), $request->getMethod()));
-
-            $lockRedis = new MineLockRedis();
-            $lockRedis->setTypeName('resubmit');
-
-            if ($lockRedis->check($key)) {
-                $lockRedis = null;
-                throw new NormalStatusException($resubmit->message ?: t('mineadmin.resubmit'), 500);
-            }
-
-            $lockRedis->lock($key, $resubmit->second);
-            $lockRedis = null;
-
-            return $result;
-        } catch (\Throwable $e) {
-            throw new MineException($e->getMessage(), $e->getCode());
+        /* @var $resubmit Resubmit */
+        if (isset($proceedingJoinPoint->getAnnotationMetadata()->method[Resubmit::class])) {
+            $resubmit = $proceedingJoinPoint->getAnnotationMetadata()->method[Resubmit::class];
         }
+
+        $request = container()->get(MineRequest::class);
+
+        $key = md5(sprintf('%s-%s-%s', $request->ip(), $request->getPathInfo(), $request->getMethod()));
+
+        $lockRedis = new MineLockRedis();
+        $lockRedis->setTypeName('resubmit');
+
+        if ($lockRedis->check($key)) {
+            $lockRedis = null;
+            throw new NormalStatusException($resubmit->message ?: t('mineadmin.resubmit'), 500);
+        }
+
+        $lockRedis->lock($key, $resubmit->second);
+        $lockRedis = null;
+
+        return $result;
     }
 }
