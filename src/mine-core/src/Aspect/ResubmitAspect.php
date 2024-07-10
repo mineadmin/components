@@ -19,7 +19,6 @@ use Hyperf\Di\Exception\Exception;
 use Hyperf\Logger\LoggerFactory;
 use Hyperf\Redis\Redis;
 use Mine\Annotation\Resubmit;
-use Mine\Exception\MineException;
 use Mine\Exception\NormalStatusException;
 use Mine\MineRequest;
 use Mine\Redis\MineLockRedis;
