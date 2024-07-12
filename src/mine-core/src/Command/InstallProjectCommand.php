@@ -15,7 +15,6 @@ namespace Mine\Command;
 use Hyperf\Command\Annotation\Command;
 use Hyperf\Database\Schema\Schema;
 use Hyperf\DbConnection\Db;
-use Mine\AppStore\Plugin;
 use Mine\Mine;
 use Mine\MineCommand;
 
@@ -94,9 +93,6 @@ class InstallProjectCommand extends MineCommand
         if (! file_exists(BASE_PATH . '/config/autoload/mineadmin.php')) {
             $this->call('vendor:publish', ['package' => 'xmo/mine']);
         }
-
-        // 安装插件
-        Plugin::install('mine-admin/app-store');
 
         $downloadFrontCode = $this->confirm('Do you downloading the front-end code to "./web" directory?', true);
 
