@@ -95,9 +95,6 @@ class InstallProjectCommand extends MineCommand
             $this->call('vendor:publish', ['package' => 'xmo/mine']);
         }
 
-        // 安装插件
-        Plugin::install('mine-admin/app-store');
-
         $downloadFrontCode = $this->confirm('Do you downloading the front-end code to "./web" directory?', true);
 
         // 下载前端代码
