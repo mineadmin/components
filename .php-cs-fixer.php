@@ -1,5 +1,7 @@
 <?php
 
+use PhpCsFixer\Runner\Parallel\ParallelConfig;
+
 $header = <<<'EOF'
 This file is part of MineAdmin.
 
@@ -10,6 +12,7 @@ This file is part of MineAdmin.
 EOF;
 
 return (new PhpCsFixer\Config())
+    ->setParallelConfig(new ParallelConfig(20,10))
     ->setRiskyAllowed(true)
     ->setRules([
         '@PSR2' => true,

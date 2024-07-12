@@ -15,7 +15,6 @@ namespace Mine\Command;
 use Hyperf\Command\Annotation\Command;
 use Hyperf\Database\Schema\Schema;
 use Hyperf\DbConnection\Db;
-use Mine\AppStore\Plugin;
 use Mine\Mine;
 use Mine\MineCommand;
 
