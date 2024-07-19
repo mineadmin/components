@@ -99,7 +99,10 @@ final class AppStoreServiceImpl implements AppStoreService
             throw new \RuntimeException(sprintf('The plugin %s already exists', $identifier));
         }
 
-        $originData = $this->request(__FUNCTION__, compact('identifier', 'version'));
+        $originData = $this->request(__FUNCTION__, [
+            'identifier'    =>  $space.'/'.$identifier,
+            'version'       =>  $version
+        ]);
         $downloadResponse = Collection::make($originData);
         if (! $downloadResponse->get('success')) {
             throw new \RuntimeException('服务端返回错误' . $downloadResponse->get('message'));
