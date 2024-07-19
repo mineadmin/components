@@ -100,8 +100,8 @@ final class AppStoreServiceImpl implements AppStoreService
         }
 
         $originData = $this->request(__FUNCTION__, [
-            'identifier'    =>  $space.'/'.$identifier,
-            'version'       =>  $version
+            'identifier' => $space . '/' . $identifier,
+            'version' => $version,
         ]);
         $downloadResponse = Collection::make($originData);
         if (! $downloadResponse->get('success')) {
