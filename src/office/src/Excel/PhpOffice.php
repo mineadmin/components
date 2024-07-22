@@ -116,6 +116,9 @@ class PhpOffice extends MineExcel implements ExcelPropertyInterface
             while ($generate->valid()) {
                 $column = 0;
                 $items = $generate->current();
+                if ($callbackData instanceof \Closure) {
+                    $items = $callbackData($items);
+                }
                 foreach ($items as $name => $value) {
                     $columnRow = $this->getColumnIndex($column) . $row;
                     $annotation = '';
