@@ -94,7 +94,7 @@ final class AppStoreServiceImpl implements AppStoreService
      */
     public function download(string $space, string $identifier, string $version): bool
     {
-        $localPluginPath = Plugin::PLUGIN_PATH . DIRECTORY_SEPARATOR . $space . DIRECTORY_SEPARATOR . $identifier;
+        $localPluginPath = Plugin::PLUGIN_PATH . DIRECTORY_SEPARATOR . $identifier;
         if (file_exists($localPluginPath)) {
             throw new \RuntimeException(sprintf('The plugin %s already exists', $identifier));
         }
