@@ -27,10 +27,9 @@ class DownloadCommand extends AbstractCommand
     public function __invoke(): int
     {
         $identifier = $this->input->getArgument('identifier');
-        [$space, $identifier] = explode('/', $identifier);
         $version = $this->input->getArgument('version');
         $appStoreService = ApplicationContext::getContainer()->get(AppStoreService::class);
-        $appStoreService->download($space, $identifier, $version);
+        $appStoreService->download($identifier, $version);
         $this->output->success('Plugin Downloaded Successfully');
         return AbstractCommand::SUCCESS;
     }
