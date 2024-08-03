@@ -92,7 +92,7 @@ final class AppStoreServiceImpl implements AppStoreService
     /**
      * Download the specified plug-in to a local directory.
      */
-    public function download(string $space, string $identifier, string $version): bool
+    public function download(string $identifier, string $version): bool
     {
         $localPluginPath = Plugin::PLUGIN_PATH . DIRECTORY_SEPARATOR . $identifier;
         if (file_exists($localPluginPath)) {
@@ -100,7 +100,7 @@ final class AppStoreServiceImpl implements AppStoreService
         }
 
         $originData = $this->request(__FUNCTION__, [
-            'identifier' => $space . '/' . $identifier,
+            'identifier' => $identifier,
             'version' => $version,
         ]);
         $downloadResponse = Collection::make($originData);
