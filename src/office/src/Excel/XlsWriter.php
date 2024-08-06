@@ -142,6 +142,8 @@ class XlsWriter extends MineExcel implements ExcelPropertyInterface
                     if ($property['name'] == $name) {
                         if (! empty($property['dictName'])) {
                             $yield[] = $property['dictName'][$value];
+                        } elseif (! empty($property['path'])&&! empty($property['dictData'])) {
+                            $yield[] = $property['dictData'][Arr::get($item, $property['path'])];
                         } elseif (! empty($property['dictData'])) {
                             $yield[] = $property['dictData'][$value];
                         } elseif (! empty($property['path'])) {
