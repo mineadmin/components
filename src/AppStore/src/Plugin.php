@@ -431,4 +431,36 @@ class Plugin
 
         // self::checkPlugin($mine);
     }
+
+    /**
+     * load language file
+     * usege:
+     *      t('plugin.mine-admin.app-store.app_not_installed')
+     *      pt('mine-admin.app-store', app_not_installed')
+     * @param $lang
+     * @return array
+     */
+    public static function getPluginLanguages($lang): array
+    {
+        $langDirName = 'languages';
+        $files = Finder::create()
+            ->in(self::PLUGIN_PATH)
+            ->path("$langDirName/$lang")
+            ->name('*.php')
+            ->sortByChangedTime();
+        $languages = [];
+        foreach ($files as $file) {
+            $lockFile = $file->getPath().'/../../'.self::INSTALL_LOCK_FILE;
+            if (is_file($lockFile)) {
+                $prefix = str_replace("$langDirName/$lang", '',$file->getRelativePath());
+                $prefix = str_replace("/", '.', $prefix);
+                $array = require_once($file);
+                foreach ($array as $key => $value) {
+                    $languages["$prefix$key"] = $value;
+                }
+                unset($array);
+            }
+        }
+        return $languages;
+    }
 }
