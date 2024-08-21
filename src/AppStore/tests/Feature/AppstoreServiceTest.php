@@ -20,7 +20,7 @@ use Psr\Http\Message\StreamInterface;
 
 beforeEach(function () {
     putenv('MINE_ACCESS_TOKEN=xxxx1');
-    ApplicationContext::getContainer()->set(TranslatorInterface::class, new class() implements TranslatorInterface {
+    ApplicationContext::getContainer()->set(TranslatorInterface::class, new class implements TranslatorInterface {
         public function trans(string $key, array $replace = [], ?string $locale = null): array|string
         {
             return 'xxx';
@@ -58,7 +58,7 @@ beforeEach(function () {
         ->andReturn($response);
     $mockClientFactory->allows('create')->andReturn($mockClient);
     ApplicationContext::getContainer()->set(ClientFactory::class, $mockClientFactory);
-    ApplicationContext::getContainer()->set(ConfigInterface::class, new class() implements ConfigInterface {
+    ApplicationContext::getContainer()->set(ConfigInterface::class, new class implements ConfigInterface {
         public function get(string $key, mixed $default = null): mixed
         {
             return [];

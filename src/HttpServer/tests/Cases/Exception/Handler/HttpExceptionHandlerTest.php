@@ -44,7 +44,7 @@ class HttpExceptionHandlerTest extends TestCase
         $instance = \Mockery::mock(HttpExceptionHandler::class);
         $this->assertTrue($method->invoke($instance, \Mockery::mock(HttpException::class)));
         $this->assertFalse($method->invoke($instance, new \Exception()));
-        $this->assertTrue($method->invoke($instance, new class() extends HttpException {}));
+        $this->assertTrue($method->invoke($instance, new class extends HttpException {}));
     }
 
     public function testHandle(): void
@@ -61,7 +61,7 @@ class HttpExceptionHandlerTest extends TestCase
         })->andReturn($response);
         $method->invoke(
             $instance,
-            new class() extends HttpException {
+            new class extends HttpException {
                 protected $message = 'xxx';
 
                 protected $code = 100;
