@@ -133,7 +133,7 @@ final class AppStoreServiceImpl implements AppStoreService
         if ($zip->status !== \ZipArchive::ER_OK) {
             throw new \RuntimeException('Failed to open the zip file');
         }
-        $zip->extractTo($localPluginPath);
+        $zip->extractTo(Plugin::PLUGIN_PATH . DIRECTORY_SEPARATOR . explode('/', $identifier)[0]);
         $zip->close();
         return true;
     }
