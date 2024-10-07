@@ -36,7 +36,7 @@ class LocalListCommand extends AbstractCommand
                 $info['name'],
                 $info['description'],
             ];
-            if (is_string($info['author'])) {
+            if (\is_string($info['author'])) {
                 $current[] = $info['author'];
             } else {
                 $current[] = $info['author'][0]['name'] ?? '--';

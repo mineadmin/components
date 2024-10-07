@@ -166,7 +166,7 @@ class Plugin
             );
         }
         // Performs a check on plugin dependencies. Determine if the plugin also depends on other plugins
-        if (! empty($info['require']) && ! is_array($info['require'])) {
+        if (! empty($info['require']) && ! \is_array($info['require'])) {
             throw new \RuntimeException('Plugin dependency format error');
         }
         if (! empty($info['require'])) {
@@ -174,7 +174,7 @@ class Plugin
             foreach ($pluginRequires as $require) {
                 if (! self::exists($require)) {
                     throw new \RuntimeException(
-                        sprintf(
+                        \sprintf(
                             'Plugin %s depends on plugin %s, but the dependency is not installed',
                             $info['name'],
                             $require
@@ -187,26 +187,26 @@ class Plugin
         if (! empty($info['composer']['require'])) {
             $requires = $info['composer']['require'];
             $composerBin = self::getConfig('composer.bin', 'composer');
-            $checkCmd = System::exec(sprintf('%s --version', $composerBin));
+            $checkCmd = System::exec(\sprintf('%s --version', $composerBin));
             if (($checkCmd['code'] ?? 0) !== 0) {
-                throw new \RuntimeException(sprintf('Composer command error, details:%s', $checkCmd['output'] ?? '--'));
+                throw new \RuntimeException(\sprintf('Composer command error, details:%s', $checkCmd['output'] ?? '--'));
             }
 
-            $execList[] = sprintf('cd %s', BASE_PATH);
+            $execList[] = \sprintf('cd %s', BASE_PATH);
             $packageList = [];
             foreach ($requires as $package => $version) {
                 if (! InstalledVersions::isInstalled($package)) {
-                    $packageList[] = sprintf('%s:%s ', $package, $version);
+                    $packageList[] = \sprintf('%s:%s ', $package, $version);
                 }
             }
             if (! empty($packageList)) {
-                $requireCmd = sprintf('%s require %s', $composerBin, implode(' ', $packageList));
+                $requireCmd = \sprintf('%s require %s', $composerBin, implode(' ', $packageList));
                 $execList[] = $requireCmd;
             }
             foreach ($execList as $cmd) {
                 $result = System::exec($cmd);
                 if ($result['code'] !== 0 && ! empty($result['ouput'])) {
-                    throw new \RuntimeException(sprintf('Failed to execute composer require command, details:%s', $result['output'] ?? '--'));
+                    throw new \RuntimeException(\sprintf('Failed to execute composer require command, details:%s', $result['output'] ?? '--'));
                 }
             }
         }
@@ -219,11 +219,11 @@ class Plugin
         // run script
         if (! empty($info['composer']['script'])) {
             $scripts = $info['composer']['script'];
-            $runScriptCmd = sprintf('cd %s &&', BASE_PATH);
+            $runScriptCmd = \sprintf('cd %s &&', BASE_PATH);
             foreach ($scripts as $name => $script) {
-                $result = System::exec(sprintf('%s %s', $runScriptCmd, $script));
+                $result = System::exec(\sprintf('%s %s', $runScriptCmd, $script));
                 if ($result['code'] !== 0 && ! empty($result['ouput'])) {
-                    throw new \RuntimeException(sprintf('Failed to execute composer script command, details:%s', $result['output'] ?? '--'));
+                    throw new \RuntimeException(\sprintf('Failed to execute composer script command, details:%s', $result['output'] ?? '--'));
                 }
             }
         }
@@ -235,15 +235,15 @@ class Plugin
             $frontBin = self::getConfig('front-tool');
             $dependencies = $info['package']['dependencies'];
             if (! file_exists($frontDirectory . '/package.json')) {
-                throw new \RuntimeException(sprintf('Specified frontend directory %s package.json not found', $frontDirectory));
+                throw new \RuntimeException(\sprintf('Specified frontend directory %s package.json not found', $frontDirectory));
             }
             $packageJson = self::getPacker()->unpack(file_get_contents($frontDirectory . '/package.json'));
             $frontDependencies = array_keys($packageJson['dependencies'] ?? []);
             $type = $frontBin['type'] ?? 'npm';
             $front = $frontBin['bin'] ?? 'npm';
-            $checkCmd = System::exec(sprintf('%s ', $type));
+            $checkCmd = System::exec(\sprintf('%s ', $type));
             if ($checkCmd['code'] !== 0 && ! empty($result['ouput'])) {
-                throw new \RuntimeException(sprintf('An error occurred executing the command %s, details:%s', $type, $checkCmd['output']));
+                throw new \RuntimeException(\sprintf('An error occurred executing the command %s, details:%s', $type, $checkCmd['output']));
             }
             $installCmd = match ($type) {
                 'npm', 'pnpm' => 'install',
@@ -253,16 +253,16 @@ class Plugin
             if ($installCmd === null) {
                 throw new \RuntimeException('Front-end tool type is not recognizable npm,yarn,pnpm');
             }
-            $cmdBody = sprintf('cd %s && %s %s ', $frontDirectory, $front, $installCmd);
+            $cmdBody = \sprintf('cd %s && %s %s ', $frontDirectory, $front, $installCmd);
             foreach ($dependencies as $package => $version) {
-                if (in_array($package, $frontDependencies, true)) {
-                    throw new \RuntimeException(sprintf('Plugin %s depends on %s, but the dependency already exists in the project.', $info['name'], $package));
+                if (\in_array($package, $frontDependencies, true)) {
+                    throw new \RuntimeException(\sprintf('Plugin %s depends on %s, but the dependency already exists in the project.', $info['name'], $package));
                 }
-                $cmdBody .= sprintf('%s@%s ', $package, $version);
+                $cmdBody .= \sprintf('%s@%s ', $package, $version);
             }
             $result = System::exec($cmdBody);
             if ($result['code'] !== 0 && ! empty($result['ouput'])) {
-                throw new \RuntimeException(sprintf('Merge front-end dependency module error, details %s', $result['output'] ?? '--'));
+                throw new \RuntimeException(\sprintf('Merge front-end dependency module error, details %s', $result['output'] ?? '--'));
             }
         }
 
@@ -294,12 +294,12 @@ class Plugin
         if (! empty($info['composer']['config'])) {
             $composerConfig = (new $info['composer']['config']())();
             if (! empty($composerConfig['publish'])) {
-                System::exec(sprintf('cd %s && php bin/hyperf.php mine-extension:script %s', BASE_PATH, $path));
+                System::exec(\sprintf('cd %s && php bin/hyperf.php mine-extension:script %s', BASE_PATH, $path));
             }
         }
 
         // remove cache
-        System::exec(sprintf('rm -rf %s', BASE_PATH . DIRECTORY_SEPARATOR . 'runtime/container'));
+        System::exec(\sprintf('rm -rf %s', BASE_PATH . \DIRECTORY_SEPARATOR . 'runtime/container'));
     }
 
     public static function uninstall(string $path): void
@@ -314,22 +314,22 @@ class Plugin
         if (! empty($info['composer']['require'])) {
             $requires = $info['composer']['require'];
             $composerBin = self::getConfig('composer.bin', 'composer');
-            $checkCmd = System::exec(sprintf('%s --version', $composerBin));
+            $checkCmd = System::exec(\sprintf('%s --version', $composerBin));
             if (($checkCmd['code'] ?? 0) !== 0) {
-                throw new \RuntimeException(sprintf('Composer command error, details:%s', $checkCmd['output'] ?? '--'));
+                throw new \RuntimeException(\sprintf('Composer command error, details:%s', $checkCmd['output'] ?? '--'));
             }
             $execList = [];
-            $execList[] = sprintf('cd %s', BASE_PATH);
+            $execList[] = \sprintf('cd %s', BASE_PATH);
             foreach ($requires as $package => $version) {
                 if (InstalledVersions::isInstalled($package)) {
-                    $execList[] = sprintf('%s remove %s ', $composerBin, $package);
+                    $execList[] = \sprintf('%s remove %s ', $composerBin, $package);
                 }
             }
 
             foreach ($execList as $exec) {
                 $result = System::exec($exec);
                 if ($result['code'] !== 0 && ! empty($result['ouput'])) {
-                    throw new \RuntimeException(sprintf('Failed to execute composer require command, details:%s', $result['output'] ?? '--'));
+                    throw new \RuntimeException(\sprintf('Failed to execute composer require command, details:%s', $result['output'] ?? '--'));
                 }
             }
         }
@@ -346,15 +346,15 @@ class Plugin
             $frontBin = self::getConfig('front-tool');
             $dependencies = $info['package']['dependencies'];
             if (! file_exists($frontDirectory . '/package.json')) {
-                throw new \RuntimeException(sprintf('Specified frontend directory %s package.json not found', $frontDirectory));
+                throw new \RuntimeException(\sprintf('Specified frontend directory %s package.json not found', $frontDirectory));
             }
             $packageJson = self::getPacker()->unpack(file_get_contents($frontDirectory . '/package.json'));
             $frontDependencies = array_keys($packageJson['dependencies'] ?? []);
             $type = $frontBin['type'] ?? 'npm';
             $front = $frontBin['bin'] ?? 'npm';
-            $checkCmd = System::exec(sprintf('%s ', $type));
+            $checkCmd = System::exec(\sprintf('%s ', $type));
             if ($checkCmd['code'] !== 0 && ! empty($result['ouput'])) {
-                throw new \RuntimeException(sprintf('An error occurred executing the command %s, details:%s', $type, $checkCmd['output']));
+                throw new \RuntimeException(\sprintf('An error occurred executing the command %s, details:%s', $type, $checkCmd['output']));
             }
             $installCmd = match ($type) {
                 'npm', 'pnpm' => 'uninstall',
@@ -364,16 +364,16 @@ class Plugin
             if ($installCmd === null) {
                 throw new \RuntimeException('Front-end tool type is not recognizable npm,yarn,pnpm');
             }
-            $cmdBody = sprintf('cd %s && %s %s ', $frontDirectory, $front, $installCmd);
+            $cmdBody = \sprintf('cd %s && %s %s ', $frontDirectory, $front, $installCmd);
             foreach ($dependencies as $package => $version) {
-                if (! in_array($package, $frontDependencies, true)) {
-                    throw new \RuntimeException(sprintf('Plugin %s depends on %s,But the dependency information is not found in this project', $info['name'], $package));
+                if (! \in_array($package, $frontDependencies, true)) {
+                    throw new \RuntimeException(\sprintf('Plugin %s depends on %s,But the dependency information is not found in this project', $info['name'], $package));
                 }
-                $cmdBody .= sprintf('%s@%s ', $package, $version);
+                $cmdBody .= \sprintf('%s@%s ', $package, $version);
             }
             $result = System::exec($cmdBody);
             if ($result['code'] !== 0 && ! empty($result['ouput'])) {
-                throw new \RuntimeException(sprintf('Merge front-end dependency module error, details %s', $result['output'] ?? '--'));
+                throw new \RuntimeException(\sprintf('Merge front-end dependency module error, details %s', $result['output'] ?? '--'));
             }
         }
 

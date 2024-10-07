@@ -27,13 +27,13 @@ class PushCommand extends AbstractCommand
     {
         $path = $this->input->getArgument('path');
         $repository = $this->input->getArgument('repository');
-        $bin = dirname(__DIR__, 3) . '/bin';
-        $repositoryPath = Plugin::PLUGIN_PREFIX . DIRECTORY_SEPARATOR . $path;
-        $splitLinuxBin = $bin . DIRECTORY_SEPARATOR . 'split-linux.sh';
+        $bin = \dirname(__DIR__, 3) . '/bin';
+        $repositoryPath = Plugin::PLUGIN_PREFIX . \DIRECTORY_SEPARATOR . $path;
+        $splitLinuxBin = $bin . \DIRECTORY_SEPARATOR . 'split-linux.sh';
         $basepath = BASE_PATH;
         $shell = <<<SHELL
-cd {$basepath} && {$splitLinuxBin} {$repositoryPath} {$repository} {$bin}
-SHELL;
+            cd {$basepath} && {$splitLinuxBin} {$repositoryPath} {$repository} {$bin}
+            SHELL;
         $result = System::exec($shell);
         if ($result['code'] !== 0) {
             $this->output->error('Fail' . $result['output']);

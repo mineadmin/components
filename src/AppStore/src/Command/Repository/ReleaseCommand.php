@@ -28,13 +28,13 @@ class ReleaseCommand extends AbstractCommand
         $path = $this->argument('path');
         $repository = $this->argument('repository');
         $version = $this->argument('version');
-        $bin = dirname(__DIR__, 3) . '/bin';
-        $repositoryPath = Plugin::PLUGIN_PREFIX . DIRECTORY_SEPARATOR . $path;
-        $splitLinuxBin = $bin . DIRECTORY_SEPARATOR . 'release.sh';
+        $bin = \dirname(__DIR__, 3) . '/bin';
+        $repositoryPath = Plugin::PLUGIN_PREFIX . \DIRECTORY_SEPARATOR . $path;
+        $splitLinuxBin = $bin . \DIRECTORY_SEPARATOR . 'release.sh';
         $basepath = BASE_PATH;
         $shell = <<<SHELL
-cd {$basepath} && {$splitLinuxBin} {$repositoryPath} {$repository} {$version} {$bin}
-SHELL;
+            cd {$basepath} && {$splitLinuxBin} {$repositoryPath} {$repository} {$version} {$bin}
+            SHELL;
         $result = System::exec($shell);
         if ($result['code'] !== 0) {
             $this->output->error('Fail' . $result['output']);

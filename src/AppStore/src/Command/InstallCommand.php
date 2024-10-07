@@ -33,7 +33,7 @@ class InstallCommand extends AbstractCommand
         $headers = ['Extension name', 'author', 'description', 'homepage'];
         $rows[] = [
             $info['name'],
-            is_string($info['author']) ? $info['author'] : ($info['author'][0]['name'] ?? '--'),
+            \is_string($info['author']) ? $info['author'] : ($info['author'][0]['name'] ?? '--'),
             $info['description'],
             $info['homepage'] ?? '--',
         ];
@@ -44,7 +44,7 @@ class InstallCommand extends AbstractCommand
             return AbstractCommand::SUCCESS;
         }
         Plugin::install($path);
-        $this->output->success(sprintf('Plugin %s installed successfully', $path));
+        $this->output->success(\sprintf('Plugin %s installed successfully', $path));
         return AbstractCommand::SUCCESS;
     }
 

@@ -20,7 +20,7 @@ final class PackerFactory
             case 'json':
                 return new JsonPacker();
             default:
-                throw new \RuntimeException(sprintf('%s Packer type not found', $type));
+                throw new \RuntimeException(\sprintf('%s Packer type not found', $type));
         }
     }
 }

@@ -23,6 +23,7 @@ use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 use Swow\Psr7\Message\ServerRequestPlusInterface;
+
 use function Hyperf\Support\value;
 
 abstract class AbstractTokenMiddleware

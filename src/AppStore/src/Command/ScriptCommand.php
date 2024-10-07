@@ -47,7 +47,7 @@ class ScriptCommand extends AbstractCommand
 
         $publish = Arr::get($config, 'publish');
         if (empty($publish)) {
-            $output->writeln(sprintf('<fg=red>No file can be published from plugin [%s].</>', $path));
+            $output->writeln(\sprintf('<fg=red>No file can be published from plugin [%s].</>', $path));
             return AbstractCommand::FAILURE;
         }
 
@@ -55,20 +55,20 @@ class ScriptCommand extends AbstractCommand
             foreach ($publish as $item) {
                 $out = '';
                 foreach ($item as $key => $value) {
-                    $out .= sprintf('%s: %s', $key, $value) . PHP_EOL;
+                    $out .= \sprintf('%s: %s', $key, $value) . \PHP_EOL;
                 }
-                $output->writeln(sprintf('<fg=green>%s</>', $out));
+                $output->writeln(\sprintf('<fg=green>%s</>', $out));
             }
             return AbstractCommand::SUCCESS;
         }
 
         if ($id) {
-            $item = Arr::where($publish, function ($item) use ($id) {
-                return $item['id'] == $id;
+            $item = Arr::where($publish, static function ($item) use ($id) {
+                return $item['id'] === $id;
             });
 
             if (empty($item)) {
-                $output->writeln(sprintf('<fg=red>No file can be published from [%s].</>', $id));
+                $output->writeln(\sprintf('<fg=red>No file can be published from [%s].</>', $id));
                 return AbstractCommand::FAILURE;
             }
         }
@@ -97,12 +97,12 @@ class ScriptCommand extends AbstractCommand
             $destination = $item['destination'];
 
             if (! $this->force && $this->filesystem->exists($destination)) {
-                $this->output->writeln(sprintf('<fg=red>[%s] already exists.</>', $destination));
+                $this->output->writeln(\sprintf('<fg=red>[%s] already exists.</>', $destination));
                 continue;
             }
 
-            if (! $this->filesystem->exists($dirname = dirname($destination))) {
-                $this->filesystem->makeDirectory($dirname, 0755, true);
+            if (! $this->filesystem->exists($dirname = \dirname($destination))) {
+                $this->filesystem->makeDirectory($dirname, 0o755, true);
             }
 
             if ($this->filesystem->isDirectory($source)) {
@@ -111,7 +111,7 @@ class ScriptCommand extends AbstractCommand
                 $this->filesystem->copy($source, $destination);
             }
 
-            $this->output->writeln(sprintf('<fg=green>[%s] publishes [%s] successfully.</>', $path, $id));
+            $this->output->writeln(\sprintf('<fg=green>[%s] publishes [%s] successfully.</>', $path, $id));
         }
         return true;
     }

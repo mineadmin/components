@@ -12,10 +12,9 @@ declare(strict_types=1);
 
 namespace Mine\JwtAuth\Annotation;
 
-use Attribute;
 use Hyperf\Di\Annotation\AbstractAnnotation;
 
-#[Attribute(Attribute::TARGET_METHOD)]
+#[\Attribute(\Attribute::TARGET_METHOD)]
 final class Auth extends AbstractAnnotation
 {
     public function __construct(

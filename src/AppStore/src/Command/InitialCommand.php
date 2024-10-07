@@ -28,7 +28,7 @@ class InitialCommand extends AbstractCommand
     {
         $this->output->info('Start initialization');
         $this->output->info('Publishing multilingual documents');
-        $publishPath = dirname(__DIR__, 2) . DIRECTORY_SEPARATOR . 'publish';
+        $publishPath = \dirname(__DIR__, 2) . \DIRECTORY_SEPARATOR . 'publish';
         $languages = BASE_PATH . '/storage/languages';
         FileSystem::copy($publishPath . '/trans/en.php', $languages . '/en/app-store.php');
         FileSystem::copy($publishPath . '/trans/zh-CN.php', $languages . '/zh_CN/app-store.php');
@@ -38,8 +38,8 @@ class InitialCommand extends AbstractCommand
         $this->output->success('Publishing Configuration File Succeeded');
 
         if (! is_dir(Plugin::PLUGIN_PATH)) {
-            if (! mkdir($concurrentDirectory = Plugin::PLUGIN_PATH, 0755, true) && ! is_dir($concurrentDirectory)) {
-                throw new \RuntimeException(sprintf('Directory "%s" was not created', $concurrentDirectory));
+            if (! mkdir($concurrentDirectory = Plugin::PLUGIN_PATH, 0o755, true) && ! is_dir($concurrentDirectory)) {
+                throw new \RuntimeException(\sprintf('Directory "%s" was not created', $concurrentDirectory));
             }
             $binFile = file_get_contents(BASE_PATH . '/bin/hyperf.php');
             if (str_contains($binFile, 'Mine\AppStore\Plugin::init();')) {

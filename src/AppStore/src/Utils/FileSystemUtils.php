@@ -28,7 +28,7 @@ final class FileSystemUtils
     public static function copy(string $source, string $dist, bool $back = true): void
     {
         if (! file_exists($source)) {
-            throw new \RuntimeException(sprintf('%s file does not exist', $source));
+            throw new \RuntimeException(\sprintf('%s file does not exist', $source));
         }
         if (file_exists($dist) && $back) {
             FileSystem::copy($dist, $dist . self::BACK);

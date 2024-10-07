@@ -50,7 +50,7 @@ beforeEach(function () {
         'data' => [],
         'message' => 'success',
     ];
-    $result = json_encode($remoteResult, JSON_UNESCAPED_UNICODE);
+    $result = json_encode($remoteResult, \JSON_UNESCAPED_UNICODE);
     $content->allows('getContents')
         ->andReturn($result, $result, '');
     $response->allows('getBody')->andReturn($content);

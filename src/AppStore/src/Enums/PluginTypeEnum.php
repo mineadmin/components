@@ -34,7 +34,7 @@ enum PluginTypeEnum: string
 
     public static function fromValue(string $value): ?self
     {
-        return match (strtolower($value)) {
+        return match (mb_strtolower($value)) {
             'mix' => self::Mix,
             'frond' => self::Frond,
             'backend' => self::Backend,

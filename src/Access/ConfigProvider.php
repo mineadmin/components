@@ -12,10 +12,6 @@ declare(strict_types=1);
 
 namespace Mine\Access;
 
-use Mine\AppStore\Plugin;
-use Mine\AppStore\Service\AppStoreService;
-use Mine\AppStore\Service\Impl\AppStoreServiceImpl;
-
 class ConfigProvider
 {
     public function __invoke(): array

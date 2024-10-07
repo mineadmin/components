@@ -19,7 +19,7 @@ class JsonPacker implements PackerInterface
      */
     public function unpack(string $body): array
     {
-        return json_decode($body, true, 512, JSON_THROW_ON_ERROR);
+        return json_decode($body, true, 512, \JSON_THROW_ON_ERROR);
     }
 
     /**
@@ -27,6 +27,6 @@ class JsonPacker implements PackerInterface
      */
     public function pack(array $body): string
     {
-        return json_encode($body, JSON_THROW_ON_ERROR | JSON_UNESCAPED_UNICODE);
+        return json_encode($body, \JSON_THROW_ON_ERROR | \JSON_UNESCAPED_UNICODE);
     }
 }

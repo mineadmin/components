@@ -35,7 +35,7 @@ class UninstallCommand extends AbstractCommand
         $yes = $this->input->getOption('yes');
         $pluginPath = BASE_PATH . '/plugin/' . $path;
         if (! is_dir($pluginPath)) {
-            $this->output->error(sprintf('Plugin directory %s does not exist', $pluginPath));
+            $this->output->error(\sprintf('Plugin directory %s does not exist', $pluginPath));
             return AbstractCommand::FAILURE;
         }
         $info = Plugin::read($path);
@@ -43,7 +43,7 @@ class UninstallCommand extends AbstractCommand
         $headers = ['Extension name', 'author', 'description', 'homepage'];
         $rows[] = [
             $info['name'],
-            is_string($info['author']) ? $info['author'] : ($info['author'][0]['name'] ?? '--'),
+            \is_string($info['author']) ? $info['author'] : ($info['author'][0]['name'] ?? '--'),
             $info['description'],
             $info['homepage'] ?? '--',
         ];
@@ -54,7 +54,7 @@ class UninstallCommand extends AbstractCommand
             return AbstractCommand::SUCCESS;
         }
         Plugin::uninstall($path);
-        $this->output->success(sprintf('Plugin %s uninstalled successfully', $pluginPath));
+        $this->output->success(\sprintf('Plugin %s uninstalled successfully', $pluginPath));
         return AbstractCommand::SUCCESS;
     }
 

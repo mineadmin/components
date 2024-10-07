@@ -13,7 +13,6 @@ declare(strict_types=1);
 namespace Mine\Support\Listener;
 
 use Hyperf\Database\Schema\Blueprint;
-use Hyperf\Event\Annotation\Listener;
 use Hyperf\Event\Contract\ListenerInterface;
 use Hyperf\Framework\Event\BootApplication;
 

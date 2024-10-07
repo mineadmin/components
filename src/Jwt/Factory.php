@@ -14,6 +14,7 @@ namespace Mine\Jwt;
 
 use Hyperf\Collection\Arr;
 use Hyperf\Contract\ConfigInterface;
+
 use function Hyperf\Support\make;
 
 final class Factory

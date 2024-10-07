@@ -13,6 +13,7 @@ declare(strict_types=1);
 namespace Mine\Casbin\Rule;
 
 use Hyperf\DbConnection\Model\Model;
+
 use function Hyperf\Config\config;
 
 class Rule extends Model
