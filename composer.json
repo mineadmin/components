@@ -25,6 +25,8 @@
         "hyperf/view": "~3.1",
         "hyperf/swagger": "~3.1",
         "hyperf/di": "~3.1",
+        "ext-fileinfo": "*",
+        "hyperf/logger": "~3.1",
         "ext-zip": "*",
         "hyperf/translation": "~3.1.0",
         "nette/utils": "dev-master",
@@ -36,10 +38,8 @@
         "lcobucci/jwt": "~5.3.0",
         "hyperf/http-server": "~3.1",
         "hyperf/cache": "~3.1",
-        "ext-fileinfo": "*",
         "hyperf/filesystem": "~3.1",
-        "ramsey/uuid": "^4.7",
-        "hyperf/logger": "~3.1"
+        "ramsey/uuid": "^4.7"
     },
     "require-dev": {
         "doctrine/dbal": "^4.1",
@@ -62,6 +62,7 @@
         "mineadmin/core": "*",
         "mineadmin/generator-crud": "*",
         "mineadmin/jwt": "*",
+        "mineadmin/support": "*",
         "mineadmin/swagger": "*",
         "mineadmin/upload": "*"
     },
@@ -75,6 +76,7 @@
             "Mine\\GeneratorCrud\\": "src/GeneratorCrud/./",
             "Mine\\JwtAuth\\": "src/JwtAuth/./",
             "Mine\\Jwt\\": "src/Jwt/./",
+            "Mine\\Support\\": "src/Support/./",
             "Mine\\Swagger\\": "src/Swagger/./",
             "Mine\\Upload\\": "src/Upload/./"
         },
