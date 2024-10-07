@@ -29,7 +29,9 @@ $requireDev = [
         "mockery/mockery"=>"^1.0",
         "phpstan/phpstan"=>"^1.10",
         "swoole/ide-helper"=>"^5.0",
-        "zircote/swagger-php"=>"4.10.6"
+        "zircote/swagger-php"=>"4.10.6",
+    "pestphp/pest"  =>  "2.x-dev",
+    "ergebnis/composer-normalize"   =>  'dev-main'
 ];
 $autoload = [];
 $autoloadFiles = [];
