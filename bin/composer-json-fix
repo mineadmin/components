@@ -18,6 +18,19 @@ $files = Finder::create()
     ->files();
 
 $require = [];
+$requireDev = [
+    "doctrine/dbal"=>"^4.1",
+        "fakerphp/faker"=>"^1.23",
+        "friendsofphp/php-cs-fixer"=>"^3.0",
+        "hyperf/devtool"=>"3.1.*",
+        "hyperf/ide-helper"=>"3.1.*",
+        "hyperf/testing"=>"3.1.*",
+        "hyperf/watcher"=>"3.1.*",
+        "mockery/mockery"=>"^1.0",
+        "phpstan/phpstan"=>"^1.10",
+        "swoole/ide-helper"=>"^5.0",
+        "zircote/swagger-php"=>"4.10.6"
+];
 $autoload = [];
 $autoloadFiles = [];
 $autoloadDev = [
@@ -65,6 +78,14 @@ foreach ($files as $file) {
     if (isset($composerJson['extra']['hyperf']['config'])) {
         $configProviders = array_merge($configProviders, (array) $composerJson['extra']['hyperf']['config']);
     }
+
+    if(isset($composerJson['require'])) {
+        $require = array_merge($require, $composerJson['require']);
+    }
+
+    if (isset($composerJson['require-dev'])) {
+        $requireDev = array_merge($requireDev, $composerJson['require-dev']);
+    }
 }
 
 ksort($autoload);
@@ -74,13 +95,15 @@ ksort($autoloadDevFiles);
 sort($configProviders);
 ksort($replaces);
 
-$json = json_decode(file_get_contents(__DIR__ . '/../composer.json'));
-$json->autoload->files = $autoloadFiles;
-$json->autoload->{'psr-4'} = $autoload;
-$json->{'autoload-dev'}->{'psr-4'} = $autoloadDev;
-$json->{'autoload-dev'}->files = $autoloadDevFiles;
-$json->extra->hyperf->config = $configProviders;
-$json->replace = $replaces;
+$json = json_decode(file_get_contents(__DIR__ . '/../composer.json'),true);
+$json['require'] = $require;
+$json['require-dev'] = $requireDev;
+$json['autoload']['files'] = $autoloadFiles;
+$json['autoload']['psr-4'] = $autoload;
+$json['autoload-dev']['psr-4'] = $autoloadDev;
+$json['autoload-dev']['files'] = $autoloadDevFiles;
+$json['extra']['hyperf']['config'] = $configProviders;
+$json['replace'] = $replaces;
 
 file_put_contents(
     __DIR__ . '/../composer.json',

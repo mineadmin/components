@@ -1,0 +1,29 @@
+{
+    "name": "mineadmin/auth-jwt",
+    "description": "Mineadmin New Jwt Auth Component",
+    "license": "MIT",
+    "type": "library",
+    "authors": [
+        {
+            "name": "xmo",
+            "email": "root@imoi.cn",
+            "role": "Developer"
+        },
+        {
+            "name": "zds",
+            "role": "Developer"
+        }
+    ],
+    "require": {
+    },
+    "autoload": {
+        "psr-4": {
+            "Mine\\JwtAuth\\": "./"
+        }
+    },
+    "extra": {
+        "hyperf": {
+            "config": "Mine\\JwtAuth\\ConfigProvider"
+        }
+    }
+}

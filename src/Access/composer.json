@@ -1,6 +1,6 @@
 {
-    "name": "mineadmin/app-store",
-    "description": "Mineadmin 2.0 AppStore Extension",
+    "name": "mineadmin/access",
+    "description": "Mineadmin Access Component",
     "license": "MIT",
     "type": "library",
     "authors": [
@@ -15,14 +15,11 @@
         }
     ],
     "require": {
-        "ext-zip": "*",
-        "hyperf/translation": "~3.1.0",
-        "nette/utils": "dev-master",
-        "hyperf/guzzle": "~3.1"
+        "hyperf/di": "~3.1"
     },
     "autoload": {
         "psr-4": {
-            "Mine\\AppStore\\": "src/"
+            "Mine\\Access\\": "./"
         }
     },
     "config": {
@@ -32,7 +29,7 @@
     },
     "extra": {
         "hyperf": {
-            "config": "Mine\\AppStore\\ConfigProvider"
+            "config": "Mine\\Access\\ConfigProvider"
         }
     }
 }

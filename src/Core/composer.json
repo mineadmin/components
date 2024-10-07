@@ -1,0 +1,25 @@
+{
+    "name": "mineadmin/core",
+    "description": "Mineadmin Core Component",
+    "license": "MIT",
+    "type": "library",
+    "authors": [
+        {
+            "name": "xmo",
+            "email": "root@imoi.cn",
+            "role": "Developer"
+        },
+        {
+            "name": "zds",
+            "role": "Developer"
+        }
+    ],
+    "require": {
+        "hyperf/framework": "~3.1"
+    },
+    "autoload": {
+        "psr-4": {
+            "Mine\\Core\\": "./"
+        }
+    }
+}

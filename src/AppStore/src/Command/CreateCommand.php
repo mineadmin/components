@@ -13,9 +13,9 @@ declare(strict_types=1);
 namespace Mine\AppStore\Command;
 
 use Hyperf\Command\Annotation\Command;
+use Hyperf\Stringable\Str;
 use Mine\AppStore\Enums\PluginTypeEnum;
 use Mine\AppStore\Plugin;
-use Mine\Helper\Str;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputOption;
 

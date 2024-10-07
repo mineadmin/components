@@ -1,0 +1,28 @@
+{
+    "name": "mineadmin/upload",
+    "description": "Mineadmin Upload component",
+    "license": "MIT",
+    "type": "library",
+    "authors": [
+        {
+            "name": "xmo",
+            "email": "root@imoi.cn",
+            "role": "Developer"
+        },
+        {
+            "name": "zds",
+            "role": "Developer"
+        }
+    ],
+    "require": {
+        "ext-fileinfo": "*",
+        "hyperf/filesystem": "~3.1",
+        "ramsey/uuid": "^4.7",
+        "hyperf/logger": "~3.1"
+    },
+    "autoload": {
+        "psr-4": {
+            "Mine\\Upload\\": "./"
+        }
+    }
+}

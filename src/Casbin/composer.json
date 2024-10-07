@@ -1,0 +1,27 @@
+{
+    "name": "mineadmin/casbin",
+    "description": "Mineadmin Casbin Component",
+    "license": "MIT",
+    "type": "library",
+    "authors": [
+        {
+            "name": "xmo",
+            "email": "root@imoi.cn",
+            "role": "Developer"
+        },
+        {
+            "name": "zds",
+            "role": "Developer"
+        }
+    ],
+    "require": {
+        "hyperf/db-connection": "~3.1",
+        "casbin/casbin": "^3.23",
+        "hyperf/config": "~3.1"
+    },
+    "autoload": {
+        "psr-4": {
+            "Mine\\Casbin\\": "./"
+        }
+    }
+}

@@ -1,0 +1,31 @@
+{
+    "name": "mineadmin/swagger",
+    "description": "Mineadmin Swagger component",
+    "license": "MIT",
+    "type": "library",
+    "authors": [
+        {
+            "name": "xmo",
+            "email": "root@imoi.cn",
+            "role": "Developer"
+        },
+        {
+            "name": "zds",
+            "role": "Developer"
+        }
+    ],
+    "require": {
+        "hyperf/swagger": "~3.1",
+        "hyperf/di": "~3.1"
+    },
+    "autoload": {
+        "psr-4": {
+            "Mine\\Swagger\\": "./"
+        }
+    },
+    "extra": {
+        "hyperf": {
+            "config": "Mine\\Swagger\\ConfigProvider"
+        }
+    }
+}

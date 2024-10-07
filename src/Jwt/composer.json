@@ -1,0 +1,27 @@
+{
+    "name": "mineadmin/jwt",
+    "description": "Mineadmin jwt component",
+    "license": "MIT",
+    "type": "library",
+    "authors": [
+        {
+            "name": "xmo",
+            "email": "root@imoi.cn",
+            "role": "Developer"
+        },
+        {
+            "name": "zds",
+            "role": "Developer"
+        }
+    ],
+    "require": {
+        "lcobucci/jwt": "~5.3.0",
+        "hyperf/http-server": "~3.1",
+        "hyperf/cache": "~3.1"
+    },
+    "autoload": {
+        "psr-4": {
+            "Mine\\Jwt\\": "./"
+        }
+    }
+}
