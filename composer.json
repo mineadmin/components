@@ -43,6 +43,7 @@
     },
     "require-dev": {
         "doctrine/dbal": "^4.1",
+        "ergebnis/composer-normalize": "dev-main",
         "fakerphp/faker": "^1.23",
         "friendsofphp/php-cs-fixer": "^3.0",
         "hyperf/devtool": "3.1.*",
