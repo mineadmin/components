@@ -15,7 +15,8 @@
         }
     ],
     "require": {
-        "hyperf/framework": "~3.1"
+        "hyperf/framework": "~3.1",
+        "hyperf/async-queue": "~3.1"
     },
     "autoload": {
         "psr-4": {
