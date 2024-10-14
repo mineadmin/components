@@ -411,6 +411,7 @@ class Plugin
      * usege:
      *      t('plugin.mine-admin.app-store.app_not_installed')
      *      pt('mine-admin.app-store', app_not_installed').
+     * @param mixed $lang
      */
     public static function getPluginLanguages($lang): array
     {
