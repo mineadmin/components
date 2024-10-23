@@ -18,5 +18,6 @@ use Mine\Support\Request\ClientOsTrait;
 
 class Request extends \Hyperf\HttpServer\Request implements RequestInterface
 {
-    use ClientIpRequestTrait,ClientOsTrait;
+    use ClientIpRequestTrait;
+    use ClientOsTrait;
 }
