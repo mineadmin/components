@@ -14,8 +14,9 @@ namespace Mine\Support;
 
 use Hyperf\HttpServer\Contract\RequestInterface;
 use Mine\Support\Request\ClientIpRequestTrait;
+use Mine\Support\Request\ClientOsTrait;
 
 class Request extends \Hyperf\HttpServer\Request implements RequestInterface
 {
-    use ClientIpRequestTrait;
+    use ClientIpRequestTrait,ClientOsTrait;
 }
