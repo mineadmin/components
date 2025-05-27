@@ -34,11 +34,11 @@ final class ClientIpRequestConstant
     ];
 
     public const TRUSTED_HEADERS = [
-        self::HEADER_FORWARDED => 'FORWARDED',
-        self::HEADER_X_FORWARDED_FOR => 'X_FORWARDED_FOR',
-        self::HEADER_X_FORWARDED_HOST => 'X_FORWARDED_HOST',
-        self::HEADER_X_FORWARDED_PROTO => 'X_FORWARDED_PROTO',
-        self::HEADER_X_FORWARDED_PORT => 'X_FORWARDED_PORT',
-        self::HEADER_X_FORWARDED_PREFIX => 'X_FORWARDED_PREFIX',
+        self::HEADER_FORWARDED => 'forwarded',
+        self::HEADER_X_FORWARDED_FOR => 'x-forwarded-for',
+        self::HEADER_X_FORWARDED_HOST => 'x-forwarded-host',
+        self::HEADER_X_FORWARDED_PROTO => 'x-forwarded-proto',
+        self::HEADER_X_FORWARDED_PORT => 'x-forwarded-port',
+        self::HEADER_X_FORWARDED_PREFIX => 'x-forwarded-prefix',
     ];
 }

@@ -24,13 +24,38 @@ trait ClientIpRequestTrait
     /**
      * @var string[]
      */
-    protected static array $trustedProxies = [];
+    protected static array $trustedProxies = [
+        '127.0.0.0/8',    // RFC1700 (Loopback)
+        '10.0.0.0/8',     // RFC1918
+        '192.168.0.0/16', // RFC1918
+        '172.16.0.0/12',  // RFC1918
+        '169.254.0.0/16', // RFC3927
+        '0.0.0.0/8',      // RFC5735
+        '240.0.0.0/4',    // RFC1112
+        '::1/128',        // Loopback
+        'fc00::/7',       // Unique Local Address
+        'fe80::/10',      // Link Local Address
+        '::ffff:0:0/96',  // IPv4 translations
+        '::/128',         // Unspecified address
+    ];
 
-    private static int $trustedHeaderSet = -1;
+    private static int $trustedHeaderSet = ClientIpRequestConstant::HEADER_X_FORWARDED_FOR;
 
     private array $trustedValuesCache = [];
 
     private bool $isForwardedValid = true;
+
+    /**
+     * Sets the trusted proxies.
+     * @param array $proxies
+     * @param int $trustedHeaderSet
+     * @return void
+     */
+    public static function setTrustedProxies(array $proxies, int $trustedHeaderSet): void
+    {
+        self::$trustedProxies = $proxies;
+        self::$trustedHeaderSet = $trustedHeaderSet;
+    }
 
     /**
      * Returns the client IP addresses.
@@ -62,7 +87,7 @@ trait ClientIpRequestTrait
      */
     public function isFromTrustedProxy(): bool
     {
-        return self::$trustedProxies && IpUtils::checkIp($this->server('REMOTE_ADDR', ''), self::$trustedProxies);
+        return self::$trustedProxies && IpUtils::checkIp($this->server('remote_addr', ''), self::$trustedProxies);
     }
 
     /**
