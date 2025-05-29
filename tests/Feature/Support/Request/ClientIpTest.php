@@ -130,3 +130,7 @@ test('testGetClientIps',  function ($expected, $remoteAddr, $httpForwardedFor, $
     [['2620:0:1cfe:face:b00c::3', '192.0.2.43'], '::1', 'for=192.0.2.43, for="[2620:0:1cfe:face:b00c::3]"', ['::1']],
     [['2001:db8:cafe::17'], '::1', 'for="[2001:db8:cafe::17]:4711', ['::1']],
 ]);
+
+test('demo',function(){
+    expect(true)->toBeTrue();
+});
