@@ -1,4 +1,4 @@
-name: Split Repos
+name: Split Repos Release
 
 on:
   workflow_dispatch:
@@ -6,6 +6,9 @@ on:
       tag:
         description: 'Input your tag'
         required: true
+      component:
+        description: 'Input your component name'
+        required: false
 
 jobs:
   split:
@@ -29,4 +32,8 @@ jobs:
           git config pull.rebase true
           git config --global user.email "49744633+zds-s@users.noreply.github.com"
           git config --global user.name "Zds"
-          ./bin/release.sh ${{ github.event.inputs.tag }}
+          if [ -z "${{ github.event.inputs.component }}" ]; then
+            ./bin/release.sh ${{ github.event.inputs.tag }}
+          else
+            ./bin/release.sh ${{ github.event.inputs.tag }} ${{ github.event.inputs.component }}
+          fi

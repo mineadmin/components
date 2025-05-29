@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 
 set -e
+set -a
 if (( "$#" == 0 ))
 then
     echo "Tag has to be provided"
@@ -32,6 +33,7 @@ do
     echo "Cloning $REMOTE";
     TMP_DIR="/tmp/mineAdmin-split"
     REMOTE_URL="git@github.com:mineadmin/$REMOTE.git"
+    echo "Remote URL: $REMOTE_URL"
 
     rm -rf $TMP_DIR;
     mkdir $TMP_DIR;
