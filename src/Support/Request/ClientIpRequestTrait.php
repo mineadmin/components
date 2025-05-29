@@ -32,20 +32,62 @@ trait ClientIpRequestTrait
 
     private bool $isForwardedValid = true;
 
+    private static bool $isTrustedRemoteAddr = false;
+
     /**
-     * Returns the client IP addresses.
+     * Indicates whether the remote address is currently considered a trusted proxy.
      *
-     * In the returned array the most trusted IP address is first, and the
-     * least trusted one last. The "real" client IP address is the last one,
-     * but this is also the least trusted one. Trusted proxies are stripped.
+     * @return bool True if 'REMOTE_ADDR' is marked as trusted; otherwise, false.
+     */
+    public static function isTrustedRemoteAddr(): bool
+    {
+        return self::$isTrustedRemoteAddr;
+    }
+
+    /**
+     * Resets the trusted remote address flag to false.
      *
-     * Use this method carefully; you should use getClientIp() instead.
+     * This method marks the remote address as not trusted for subsequent client IP resolution.
+     */
+    public static function resetTrustedRemoteAddr(): void
+    {
+        self::$isTrustedRemoteAddr = false;
+    }
+
+    /**
+     * Configures the list of trusted proxies and the trusted header set.
      *
-     * @see getClientIp()
+     * Recognizes special entries such as 'REMOTE_ADDR' to mark the remote address as trusted,
+     * and 'PRIVATE_SUBNETS' or 'private_ranges' to include all private subnet ranges.
+     *
+     * @param array $proxies List of trusted proxy IP addresses, ranges, or special identifiers.
+     * @param int $trustedHeaderSet Bitmask indicating which proxy headers are trusted.
+     */
+    public static function setTrustedProxies(array $proxies, int $trustedHeaderSet): void
+    {
+        if (false !== $i = array_search('REMOTE_ADDR', $proxies, true)) {
+            self::$isTrustedRemoteAddr = true;
+        }
+
+        if (false !== ($i = array_search('PRIVATE_SUBNETS', $proxies, true)) || false !== ($i = array_search('private_ranges', $proxies, true))) {
+            unset($proxies[$i]);
+            $proxies = array_merge($proxies, IpUtils::PRIVATE_SUBNETS);
+        }
+
+        self::$trustedProxies = $proxies;
+        self::$trustedHeaderSet = $trustedHeaderSet;
+    }
+
+    /**
+     * Retrieves an array of client IP addresses ordered from most to least trusted.
+     *
+     * If the request does not originate from a trusted proxy, returns an array containing only the remote address. Otherwise, extracts and returns client IPs from trusted proxy headers, excluding trusted proxies themselves. The most trusted client IP appears first in the array.
+     *
+     * @return array List of client IP addresses, with the most trusted first.
      */
     public function getClientIps(): array
     {
-        $ip = $this->server('remote_addr');
+        $ip = $this->server('REMOTE_ADDR');
 
         if (! $this->isFromTrustedProxy()) {
             return [$ip];
@@ -55,25 +97,33 @@ trait ClientIpRequestTrait
     }
 
     /**
-     * Indicates whether this request originated from a trusted proxy.
+     * Determines if the request was made through a trusted proxy.
      *
-     * This can be useful to determine whether or not to trust the
-     * contents of a proxy-specific header.
+     * Returns true if the remote address matches any configured trusted proxy or if the remote address is explicitly marked as trusted.
+     *
+     * @return bool True if the request is from a trusted proxy; otherwise, false.
      */
     public function isFromTrustedProxy(): bool
     {
-        return self::$trustedProxies && IpUtils::checkIp($this->server('REMOTE_ADDR', ''), self::$trustedProxies);
+        return (self::$trustedProxies
+        && IpUtils::checkIp($this->server('REMOTE_ADDR', ''), self::$trustedProxies))
+        || self::isTrustedRemoteAddr();
     }
 
     /**
-     * This method is rather heavy because it splits and merges headers, and it's called by many other methods such as
-     * getPort(), isSecure(), getHost(), getClientIps(), getBaseUrl() etc. Thus, we try to cache the results for
-     * best performance.
+     * Retrieves and parses trusted proxy header values for a specified header type.
+     *
+     * Extracts values from trusted proxy headers (such as X-Forwarded-For or Forwarded) based on the configured trusted header set. Normalizes and filters the values if an IP is provided, and caches results for performance. Throws a RuntimeException if conflicting or invalid Forwarded headers are detected.
+     *
+     * @param int $type The header type constant to extract values for.
+     * @param string|null $ip The remote IP address for normalization and filtering, or null to skip filtering.
+     * @return array The list of trusted values extracted from the relevant headers.
+     * @throws \RuntimeException If the Forwarded header is invalid or contains conflicting information.
      */
     private function getTrustedValues(int $type, ?string $ip = null): array
     {
-        $cacheKey = $type . "\0" . ((self::$trustedHeaderSet & $type) ? $this->header(ClientIpRequestConstant::TRUSTED_HEADERS[$type]) : '');
-        $cacheKey .= "\0" . $ip . "\0" . $this->header(ClientIpRequestConstant::TRUSTED_HEADERS[ClientIpRequestConstant::HEADER_FORWARDED]);
+        $cacheKey = $type . "\0" . ((self::$trustedHeaderSet & $type) ? $this->getHeaderLine(ClientIpRequestConstant::TRUSTED_HEADERS[$type]) : '');
+        $cacheKey .= "\0" . $ip . "\0" . $this->getHeaderLine(ClientIpRequestConstant::TRUSTED_HEADERS[ClientIpRequestConstant::HEADER_FORWARDED]);
 
         if (isset($this->trustedValuesCache[$cacheKey])) {
             return $this->trustedValuesCache[$cacheKey];
@@ -83,13 +133,13 @@ trait ClientIpRequestTrait
         $forwardedValues = [];
 
         if ((self::$trustedHeaderSet & $type) && $this->hasHeader(ClientIpRequestConstant::TRUSTED_HEADERS[$type])) {
-            foreach (explode(',', $this->header(ClientIpRequestConstant::TRUSTED_HEADERS[$type])) as $v) {
+            foreach (explode(',', $this->getHeaderLine(ClientIpRequestConstant::TRUSTED_HEADERS[$type])) as $v) {
                 $clientValues[] = ($type === ClientIpRequestConstant::HEADER_X_FORWARDED_PORT ? '0.0.0.0:' : '') . trim($v);
             }
         }
 
         if ((self::$trustedHeaderSet & ClientIpRequestConstant::HEADER_FORWARDED) && (isset(ClientIpRequestConstant::FORWARDED_PARAMS[$type])) && $this->hasHeader(ClientIpRequestConstant::TRUSTED_HEADERS[ClientIpRequestConstant::HEADER_FORWARDED])) {
-            $forwarded = $this->header(ClientIpRequestConstant::TRUSTED_HEADERS[ClientIpRequestConstant::HEADER_FORWARDED]);
+            $forwarded = $this->getHeaderLine(ClientIpRequestConstant::TRUSTED_HEADERS[ClientIpRequestConstant::HEADER_FORWARDED]);
             $parts = HeaderUtils::split($forwarded, ',;=');
             $param = ClientIpRequestConstant::FORWARDED_PARAMS[$type];
             foreach ($parts as $subParts) {
@@ -123,10 +173,18 @@ trait ClientIpRequestTrait
             return $this->trustedValuesCache[$cacheKey] = $ip !== null ? ['0.0.0.0', $ip] : [];
         }
         $this->isForwardedValid = false;
-
-        throw new \RuntimeException(\sprintf('The request has both a trusted "%s" header and a trusted "%s" header, conflicting with each other. You should either configure your proxy to remove one of them, or configure your project to distrust the offending one.', ClientIpRequestConstant::TRUSTED_HEADERS[ClientIpRequestConstant::HEADER_FORWARDED], ClientIpRequestConstant::TRUSTED_HEADERS[$type]));
+        throw new \RuntimeException('The Forwarded header is invalid. Please check your server configuration.');
     }
 
+    /**
+     * Normalizes and filters a list of client IP addresses, removing trusted proxies and invalid entries.
+     *
+     * Appends the actual remote IP to the chain, strips ports and brackets from IPv4/IPv6 addresses, removes invalid or trusted proxy IPs, and returns the remaining untrusted IPs in order from most to least trusted. If all IPs are trusted, returns the first trusted IP as a fallback.
+     *
+     * @param array $clientIps List of IP addresses extracted from proxy headers.
+     * @param string $ip The remote IP address from which the request was received.
+     * @return array Filtered and normalized list of client IPs, ordered from most to least trusted.
+     */
     private function normalizeAndFilterClientIps(array $clientIps, string $ip): array
     {
         if (! $clientIps) {
