@@ -32,6 +32,36 @@ trait ClientIpRequestTrait
 
     private bool $isForwardedValid = true;
 
+    private static bool $isTrustedRemoteAddr = false;
+
+    public static function isTrustedRemoteAddr(): bool
+    {
+        return self::$isTrustedRemoteAddr;
+    }
+
+    public static function resetTrustedRemoteAddr(): void
+    {
+        self::$isTrustedRemoteAddr = false;
+    }
+
+    /**
+     * Sets the trusted proxies.
+     */
+    public static function setTrustedProxies(array $proxies, int $trustedHeaderSet): void
+    {
+        if (false !== $i = array_search('REMOTE_ADDR', $proxies, true)) {
+            self::$isTrustedRemoteAddr = true;
+        }
+
+        if (false !== ($i = array_search('PRIVATE_SUBNETS', $proxies, true)) || false !== ($i = array_search('private_ranges', $proxies, true))) {
+            unset($proxies[$i]);
+            $proxies = array_merge($proxies, IpUtils::PRIVATE_SUBNETS);
+        }
+
+        self::$trustedProxies = $proxies;
+        self::$trustedHeaderSet = $trustedHeaderSet;
+    }
+
     /**
      * Returns the client IP addresses.
      *
@@ -45,7 +75,7 @@ trait ClientIpRequestTrait
      */
     public function getClientIps(): array
     {
-        $ip = $this->server('remote_addr');
+        $ip = $this->server('REMOTE_ADDR');
 
         if (! $this->isFromTrustedProxy()) {
             return [$ip];
@@ -62,7 +92,9 @@ trait ClientIpRequestTrait
      */
     public function isFromTrustedProxy(): bool
     {
-        return self::$trustedProxies && IpUtils::checkIp($this->server('REMOTE_ADDR', ''), self::$trustedProxies);
+        return (self::$trustedProxies
+        && IpUtils::checkIp($this->server('REMOTE_ADDR', ''), self::$trustedProxies))
+        || self::isTrustedRemoteAddr();
     }
 
     /**
@@ -72,8 +104,8 @@ trait ClientIpRequestTrait
      */
     private function getTrustedValues(int $type, ?string $ip = null): array
     {
-        $cacheKey = $type . "\0" . ((self::$trustedHeaderSet & $type) ? $this->header(ClientIpRequestConstant::TRUSTED_HEADERS[$type]) : '');
-        $cacheKey .= "\0" . $ip . "\0" . $this->header(ClientIpRequestConstant::TRUSTED_HEADERS[ClientIpRequestConstant::HEADER_FORWARDED]);
+        $cacheKey = $type . "\0" . ((self::$trustedHeaderSet & $type) ? $this->getHeaderLine(ClientIpRequestConstant::TRUSTED_HEADERS[$type]) : '');
+        $cacheKey .= "\0" . $ip . "\0" . $this->getHeaderLine(ClientIpRequestConstant::TRUSTED_HEADERS[ClientIpRequestConstant::HEADER_FORWARDED]);
 
         if (isset($this->trustedValuesCache[$cacheKey])) {
             return $this->trustedValuesCache[$cacheKey];
@@ -83,13 +115,13 @@ trait ClientIpRequestTrait
         $forwardedValues = [];
 
         if ((self::$trustedHeaderSet & $type) && $this->hasHeader(ClientIpRequestConstant::TRUSTED_HEADERS[$type])) {
-            foreach (explode(',', $this->header(ClientIpRequestConstant::TRUSTED_HEADERS[$type])) as $v) {
+            foreach (explode(',', $this->getHeaderLine(ClientIpRequestConstant::TRUSTED_HEADERS[$type])) as $v) {
                 $clientValues[] = ($type === ClientIpRequestConstant::HEADER_X_FORWARDED_PORT ? '0.0.0.0:' : '') . trim($v);
             }
         }
 
         if ((self::$trustedHeaderSet & ClientIpRequestConstant::HEADER_FORWARDED) && (isset(ClientIpRequestConstant::FORWARDED_PARAMS[$type])) && $this->hasHeader(ClientIpRequestConstant::TRUSTED_HEADERS[ClientIpRequestConstant::HEADER_FORWARDED])) {
-            $forwarded = $this->header(ClientIpRequestConstant::TRUSTED_HEADERS[ClientIpRequestConstant::HEADER_FORWARDED]);
+            $forwarded = $this->getHeaderLine(ClientIpRequestConstant::TRUSTED_HEADERS[ClientIpRequestConstant::HEADER_FORWARDED]);
             $parts = HeaderUtils::split($forwarded, ',;=');
             $param = ClientIpRequestConstant::FORWARDED_PARAMS[$type];
             foreach ($parts as $subParts) {
@@ -123,8 +155,7 @@ trait ClientIpRequestTrait
             return $this->trustedValuesCache[$cacheKey] = $ip !== null ? ['0.0.0.0', $ip] : [];
         }
         $this->isForwardedValid = false;
-
-        throw new \RuntimeException(\sprintf('The request has both a trusted "%s" header and a trusted "%s" header, conflicting with each other. You should either configure your proxy to remove one of them, or configure your project to distrust the offending one.', ClientIpRequestConstant::TRUSTED_HEADERS[ClientIpRequestConstant::HEADER_FORWARDED], ClientIpRequestConstant::TRUSTED_HEADERS[$type]));
+        throw new \RuntimeException('The Forwarded header is invalid. Please check your server configuration.');
     }
 
     private function normalizeAndFilterClientIps(array $clientIps, string $ip): array
