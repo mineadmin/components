@@ -1,9 +1,20 @@
 <?php
+
+declare(strict_types=1);
+/**
+ * This file is part of MineAdmin.
+ *
+ * @link     https://www.mineadmin.com
+ * @document https://doc.mineadmin.com
+ * @contact  root@imoi.cn
+ * @license  https://github.com/mineadmin/MineAdmin/blob/master/LICENSE
+ */
+
 namespace Mine\Support;
 
 /**
- * Symfony IP Utils
- * @link https://github.com/symfony/symfony/blob/7.4/src/Symfony/Component/HttpFoundation/IpUtils.php
+ * Symfony IP Utils.
+ * @see https://github.com/symfony/symfony/blob/7.4/src/Symfony/Component/HttpFoundation/IpUtils.php
  */
 class IpUtils
 {
@@ -27,22 +38,20 @@ class IpUtils
     /**
      * This class should not be instantiated.
      */
-    private function __construct()
-    {
-    }
+    private function __construct() {}
 
     /**
      * Checks if an IPv4 or IPv6 address is contained in the list of given IPs or subnets.
      *
-     * @param string|array $ips List of IPs or subnets (can be a string if only a single one)
+     * @param array|string $ips List of IPs or subnets (can be a string if only a single one)
      */
-    public static function checkIp(string $requestIp, string|array $ips): bool
+    public static function checkIp(string $requestIp, array|string $ips): bool
     {
-        if (!\is_array($ips)) {
+        if (! \is_array($ips)) {
             $ips = [$ips];
         }
 
-        $method = substr_count($requestIp, ':') > 1 ? 'checkIp6' : 'checkIp4';
+        $method = mb_substr_count($requestIp, ':') > 1 ? 'checkIp6' : 'checkIp4';
 
         foreach ($ips as $ip) {
             if (self::$method($requestIp, $ip)) {
@@ -63,20 +72,20 @@ class IpUtils
      */
     public static function checkIp4(string $requestIp, string $ip): bool
     {
-        $cacheKey = $requestIp.'-'.$ip.'-v4';
+        $cacheKey = $requestIp . '-' . $ip . '-v4';
         if (null !== $cacheValue = self::getCacheResult($cacheKey)) {
             return $cacheValue;
         }
 
-        if (!filter_var($requestIp, \FILTER_VALIDATE_IP, \FILTER_FLAG_IPV4)) {
+        if (! filter_var($requestIp, \FILTER_VALIDATE_IP, \FILTER_FLAG_IPV4)) {
             return self::setCacheResult($cacheKey, false);
         }
 
         if (str_contains($ip, '/')) {
             [$address, $netmask] = explode('/', $ip, 2);
 
-            if ('0' === $netmask) {
-                return self::setCacheResult($cacheKey, false !== filter_var($address, \FILTER_VALIDATE_IP, \FILTER_FLAG_IPV4));
+            if ($netmask === '0') {
+                return self::setCacheResult($cacheKey, filter_var($address, \FILTER_VALIDATE_IP, \FILTER_FLAG_IPV4) !== false);
             }
 
             if ($netmask < 0 || $netmask > 32) {
@@ -87,18 +96,16 @@ class IpUtils
             $netmask = 32;
         }
 
-        if (false === ip2long($address)) {
+        if (ip2long($address) === false) {
             return self::setCacheResult($cacheKey, false);
         }
 
-        return self::setCacheResult($cacheKey, 0 === substr_compare(\sprintf('%032b', ip2long($requestIp)), \sprintf('%032b', ip2long($address)), 0, $netmask));
+        return self::setCacheResult($cacheKey, substr_compare(\sprintf('%032b', ip2long($requestIp)), \sprintf('%032b', ip2long($address)), 0, $netmask) === 0);
     }
 
     /**
      * Compares two IPv6 addresses.
      * In case a subnet is given, it checks if it contains the request IP.
-     *
-     * @author David Soria Parra <dsp at php dot net>
      *
      * @see https://github.com/dsp/v6tools
      *
@@ -108,28 +115,28 @@ class IpUtils
      */
     public static function checkIp6(string $requestIp, string $ip): bool
     {
-        $cacheKey = $requestIp.'-'.$ip.'-v6';
+        $cacheKey = $requestIp . '-' . $ip . '-v6';
         if (null !== $cacheValue = self::getCacheResult($cacheKey)) {
             return $cacheValue;
         }
 
-        if (!((\extension_loaded('sockets') && \defined('AF_INET6')) || @inet_pton('::1'))) {
+        if (! ((\extension_loaded('sockets') && \defined('AF_INET6')) || @inet_pton('::1'))) {
             throw new \RuntimeException('Unable to check Ipv6. Check that PHP was not compiled with option "disable-ipv6".');
         }
 
         // Check to see if we were given a IP4 $requestIp or $ip by mistake
-        if (!filter_var($requestIp, \FILTER_VALIDATE_IP, \FILTER_FLAG_IPV6)) {
+        if (! filter_var($requestIp, \FILTER_VALIDATE_IP, \FILTER_FLAG_IPV6)) {
             return self::setCacheResult($cacheKey, false);
         }
 
         if (str_contains($ip, '/')) {
             [$address, $netmask] = explode('/', $ip, 2);
 
-            if (!filter_var($address, \FILTER_VALIDATE_IP, \FILTER_FLAG_IPV6)) {
+            if (! filter_var($address, \FILTER_VALIDATE_IP, \FILTER_FLAG_IPV6)) {
                 return self::setCacheResult($cacheKey, false);
             }
 
-            if ('0' === $netmask) {
+            if ($netmask === '0') {
                 return (bool) unpack('n*', @inet_pton($address));
             }
 
@@ -137,7 +144,7 @@ class IpUtils
                 return self::setCacheResult($cacheKey, false);
             }
         } else {
-            if (!filter_var($ip, \FILTER_VALIDATE_IP, \FILTER_FLAG_IPV6)) {
+            if (! filter_var($ip, \FILTER_VALIDATE_IP, \FILTER_FLAG_IPV6)) {
                 return self::setCacheResult($cacheKey, false);
             }
 
@@ -148,7 +155,7 @@ class IpUtils
         $bytesAddr = unpack('n*', @inet_pton($address));
         $bytesTest = unpack('n*', @inet_pton($requestIp));
 
-        if (!$bytesAddr || !$bytesTest) {
+        if (! $bytesAddr || ! $bytesTest) {
             return self::setCacheResult($cacheKey, false);
         }
 
@@ -156,7 +163,7 @@ class IpUtils
             $left = $netmask - 16 * ($i - 1);
             $left = ($left <= 16) ? $left : 16;
             $mask = ~(0xFFFF >> $left) & 0xFFFF;
-            if (($bytesAddr[$i] & $mask) != ($bytesTest[$i] & $mask)) {
+            if (($bytesAddr[$i] & $mask) !== ($bytesTest[$i] & $mask)) {
                 return self::setCacheResult($cacheKey, false);
             }
         }
@@ -168,9 +175,6 @@ class IpUtils
      * Anonymizes an IP/IPv6.
      *
      * Removes the last bytes of IPv4 and IPv6 addresses (1 byte for IPv4 and 8 bytes for IPv6 by default).
-     *
-     * @param int<0, 4>  $v4Bytes
-     * @param int<0, 16> $v6Bytes
      */
     public static function anonymize(string $ip/* , int $v4Bytes = 1, int $v6Bytes = 8 */): string
     {
@@ -185,44 +189,44 @@ class IpUtils
             throw new \InvalidArgumentException('Cannot anonymize more than 4 bytes for IPv4 and 16 bytes for IPv6.');
         }
 
-        /**
+        /*
          * If the IP contains a % symbol, then it is a local-link address with scoping according to RFC 4007
          * In that case, we only care about the part before the % symbol, as the following functions, can only work with
          * the IP address itself. As the scope can leak information (containing interface name), we do not want to
          * include it in our anonymized IP data.
          */
         if (str_contains($ip, '%')) {
-            $ip = substr($ip, 0, strpos($ip, '%'));
+            $ip = mb_substr($ip, 0, mb_strpos($ip, '%'));
         }
 
         $wrappedIPv6 = false;
         if (str_starts_with($ip, '[') && str_ends_with($ip, ']')) {
             $wrappedIPv6 = true;
-            $ip = substr($ip, 1, -1);
+            $ip = mb_substr($ip, 1, -1);
         }
 
-        $mappedIpV4MaskGenerator = function (string $mask, int $bytesToAnonymize) {
+        $mappedIpV4MaskGenerator = static function (string $mask, int $bytesToAnonymize) {
             $mask .= str_repeat('ff', 4 - $bytesToAnonymize);
             $mask .= str_repeat('00', $bytesToAnonymize);
 
-            return '::'.implode(':', str_split($mask, 4));
+            return '::' . implode(':', mb_str_split($mask, 4));
         };
 
         $packedAddress = inet_pton($ip);
-        if (4 === \strlen($packedAddress)) {
-            $mask = rtrim(str_repeat('255.', 4 - $v4Bytes).str_repeat('0.', $v4Bytes), '.');
+        if (mb_strlen($packedAddress) === 4) {
+            $mask = rtrim(str_repeat('255.', 4 - $v4Bytes) . str_repeat('0.', $v4Bytes), '.');
         } elseif ($ip === inet_ntop($packedAddress & inet_pton('::ffff:ffff:ffff'))) {
             $mask = $mappedIpV4MaskGenerator('ffff', $v4Bytes);
         } elseif ($ip === inet_ntop($packedAddress & inet_pton('::ffff:ffff'))) {
             $mask = $mappedIpV4MaskGenerator('', $v4Bytes);
         } else {
-            $mask = str_repeat('ff', 16 - $v6Bytes).str_repeat('00', $v6Bytes);
-            $mask = implode(':', str_split($mask, 4));
+            $mask = str_repeat('ff', 16 - $v6Bytes) . str_repeat('00', $v6Bytes);
+            $mask = implode(':', mb_str_split($mask, 4));
         }
         $ip = inet_ntop($packedAddress & inet_pton($mask));
 
         if ($wrappedIPv6) {
-            $ip = '['.$ip.']';
+            $ip = '[' . $ip . ']';
         }
 
         return $ip;
