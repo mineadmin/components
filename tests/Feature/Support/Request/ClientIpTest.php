@@ -75,10 +75,10 @@ function getRequestInstanceForClientIpTests(string $remoteAddr, ?string $httpFor
 {
     $swooleRequest = Mockery::mock(Swoole\Http\Request::class);
     $serverParams = [
-        'REMOTE_ADDR' => $remoteAddr,
+        'remote_addr' => $remoteAddr,
     ];
     if ($httpForwardedFor !== null) {
-        $serverParams['HTTP_X_FORWARDED_FOR'] = $httpForwardedFor;
+        $serverParams['x-forwarded-for'] = $httpForwardedFor;
     }
     $swooleRequest->server = $serverParams;
     $swooleRequest->header = $serverParams;
@@ -102,10 +102,10 @@ function getRequestInstanceForClientIpsForwardedTests(string $remoteAddr, ?strin
 {
     $swooleRequest = Mockery::mock(Swoole\Http\Request::class);
     $serverParams = [
-        'REMOTE_ADDR' => $remoteAddr,
+        'remote_addr' => $remoteAddr,
     ];
     if ($httpForwarded !== null) {
-        $serverParams['HTTP_FORWARDED'] = $httpForwarded;
+        $serverParams['forwarded'] = $httpForwarded;
     }
     $swooleRequest->server = $serverParams;
     $swooleRequest->header = $serverParams;

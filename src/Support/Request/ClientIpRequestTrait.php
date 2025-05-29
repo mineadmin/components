@@ -49,7 +49,7 @@ trait ClientIpRequestTrait
      */
     public static function setTrustedProxies(array $proxies, int $trustedHeaderSet): void
     {
-        if (false !== $i = array_search('REMOTE_ADDR', $proxies, true)) {
+        if (false !== $i = array_search('remote_addr', $proxies, true)) {
             self::$isTrustedRemoteAddr = true;
         }
 
@@ -75,7 +75,7 @@ trait ClientIpRequestTrait
      */
     public function getClientIps(): array
     {
-        $ip = $this->server('REMOTE_ADDR');
+        $ip = $this->server('remote_addr');
 
         if (! $this->isFromTrustedProxy()) {
             return [$ip];
@@ -93,7 +93,7 @@ trait ClientIpRequestTrait
     public function isFromTrustedProxy(): bool
     {
         return (self::$trustedProxies
-        && IpUtils::checkIp($this->server('REMOTE_ADDR', ''), self::$trustedProxies))
+        && IpUtils::checkIp($this->server('remote_addr', ''), self::$trustedProxies))
         || self::isTrustedRemoteAddr();
     }
 
