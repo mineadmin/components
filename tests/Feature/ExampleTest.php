@@ -9,6 +9,6 @@ declare(strict_types=1);
  * @contact  root@imoi.cn
  * @license  https://github.com/mineadmin/MineAdmin/blob/master/LICENSE
  */
-test('example', function () {
+test('example', static function () {
     expect(true)->toBeTrue();
 });
