@@ -42,6 +42,19 @@ class Crontab extends Base
         private readonly int $cronId,
     ) {}
 
+    public function __serialize(): array
+    {
+        $parent = parent::__serialize();
+        $parent['\x00*\x00id'] = $this->getCronId();
+        return $parent;
+    }
+
+    public function __unserialize(array $data): void
+    {
+        $this->cronId = $data['\x00*\x00id'];
+        parent::__unserialize($data);
+    }
+
     public function getName(): ?string
     {
         return $this->getBuilder()->value(self::NAME_COLUMN);
