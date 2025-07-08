@@ -35,15 +35,16 @@ final class UuidRequestIdProcessor implements ProcessorInterface
             if ($requestId === null) {
                 $requestId = Context::get(self::REQUEST_ID, null, Coroutine::parentId());
                 if ($requestId !== null) {
-                    Context::set(self::REQUEST_ID, $requestId);
+                    self::setUuid($requestId);
+                    return $requestId;
                 }
             }
-            if ($requestId === null) {
-                $requestId = Uuid::uuid4()->toString();
-            }
-        } else {
-            $requestId = Context::set(self::REQUEST_ID, Uuid::uuid4()->toString());
         }
-        return $requestId;
+        return self::setUuid(Uuid::uuid4()->toString());
+    }
+
+    public static function setUuid(string $requestId): string
+    {
+        return Context::set(self::REQUEST_ID, $requestId);
     }
 }
