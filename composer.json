@@ -21,22 +21,25 @@
     ],
     "homepage": "http://www.mineadmin.com",
     "require": {
+        "php": ">=8.1",
         "ext-fileinfo": "*",
         "ext-zip": "*",
         "casbin/casbin": "^3.23",
         "hyperf/async-queue": "~3.1",
         "hyperf/cache": "~3.1",
         "hyperf/config": "~3.1",
+        "hyperf/crontab": "^3.1@dev",
+        "hyperf/database": "^3.1",
         "hyperf/db-connection": "~3.1",
         "hyperf/di": "~3.1",
         "hyperf/filesystem": "~3.1",
-        "hyperf/framework": "~3.1",
+        "hyperf/framework": "^3.1",
         "hyperf/guzzle": "~3.1",
-        "hyperf/http-server": "^3.1@dev",
+        "hyperf/http-server": "~3.1",
         "hyperf/logger": "~3.1",
+        "hyperf/process": "^3.1@dev",
         "hyperf/swagger": "~3.1",
         "hyperf/translation": "~3.1.0",
-        "hyperf/validation": "^3.1@dev",
         "hyperf/view": "~3.1",
         "lcobucci/jwt": "~5.3.0",
         "nette/utils": "dev-master",
@@ -54,7 +57,8 @@
         "phpstan/phpstan": "^1.10",
         "swoole/ide-helper": "^5.0",
         "zircote/swagger-php": "4.10.6",
-        "pestphp/pest": "2.x-dev"
+        "pestphp/pest": "2.x-dev",
+        "ergebnis/composer-normalize": "dev-main"
     },
     "replace": {
         "mineadmin/access": "*",
@@ -62,6 +66,7 @@
         "mineadmin/auth-jwt": "*",
         "mineadmin/casbin": "*",
         "mineadmin/core": "*",
+        "mineadmin/crontab": "*",
         "mineadmin/generator-crud": "*",
         "mineadmin/jwt": "*",
         "mineadmin/support": "*",
@@ -75,6 +80,7 @@
             "Mine\\AppStore\\": "src/AppStore/src/",
             "Mine\\Casbin\\": "src/Casbin/./",
             "Mine\\Core\\": "src/Core/./",
+            "Mine\\Crontab\\": "src/Crontab/src/",
             "Mine\\GeneratorCrud\\": "src/GeneratorCrud/./",
             "Mine\\JwtAuth\\": "src/JwtAuth/./",
             "Mine\\Jwt\\": "src/Jwt/./",
@@ -86,6 +92,7 @@
     },
     "autoload-dev": {
         "psr-4": {
+            "Mine\\Crontab\\Tests\\": "src/Crontab/tests/",
             "Mine\\Tests\\": "tests/"
         },
         "files": []
@@ -109,6 +116,7 @@
             "config": [
                 "Mine\\Access\\ConfigProvider",
                 "Mine\\AppStore\\ConfigProvider",
+                "Mine\\Crontab\\ConfigProvider",
                 "Mine\\JwtAuth\\ConfigProvider",
                 "Mine\\Swagger\\ConfigProvider"
             ]
