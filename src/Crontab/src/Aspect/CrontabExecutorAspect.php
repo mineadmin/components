@@ -12,6 +12,7 @@ declare(strict_types=1);
 
 namespace Mine\Crontab\Aspect;
 
+use Carbon\Carbon;
 use Hyperf\Crontab\Crontab;
 use Hyperf\Crontab\Strategy\Executor;
 use Hyperf\DbConnection\Db;
@@ -46,6 +47,7 @@ class CrontabExecutorAspect extends AbstractAspect
                     'target' => $callback,
                     'status' => $isSuccess ? 1 : 0,
                     'exception_info' => $throwable === null ? '' : $throwable->getMessage(),
+                    'created_at' => Carbon::now(),
                 ]);
         }
         return $proceedingJoinPoint->process();
