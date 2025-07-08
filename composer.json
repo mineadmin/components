@@ -37,6 +37,7 @@
         "hyperf/guzzle": "~3.1",
         "hyperf/http-server": "~3.1",
         "hyperf/logger": "~3.1",
+        "hyperf/process": "^3.1@dev",
         "hyperf/swagger": "~3.1",
         "hyperf/translation": "~3.1.0",
         "hyperf/view": "~3.1",

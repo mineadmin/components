@@ -10,7 +10,7 @@ declare(strict_types=1);
  * @license  https://github.com/mineadmin/MineAdmin/blob/master/LICENSE
  */
 
-namespace Mine\Crontab\Tests\Cases\Aspect;
+namespace Mine\Crontab\Cases\Aspect;
 
 use Hyperf\Config\Config;
 use Hyperf\Context\ApplicationContext;
@@ -32,7 +32,8 @@ final class CrontabExecutorAspectTest extends TestCase
 {
     protected function setUp(): void
     {
-        ApplicationContext::getContainer()->set(ConfigInterface::class, new Config([]));
+        ApplicationContext::getContainer()
+        ->set(ConfigInterface::class, new Config([]));
         $connectionResolverInterface = \Mockery::mock(ConnectionResolverInterface::class);
         $connectionInterface = \Mockery::mock(ConnectionInterface::class);
         $connectionResolverInterface
