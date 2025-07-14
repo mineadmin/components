@@ -12,6 +12,9 @@ declare(strict_types=1);
 
 namespace Mine\JwtAuth\Interfaces;
 
+/**
+ * @deprecated v3.1
+ */
 interface CurrentUserInterface
 {
     public function user(): ?UserInterface;

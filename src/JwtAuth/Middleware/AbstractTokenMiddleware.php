@@ -35,16 +35,15 @@ abstract class AbstractTokenMiddleware
 
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {
-        $this->checkToken->checkJwt($this->parserToken($request));
+        $token = $this->parserToken($request);
+        $this->checkToken->checkJwt($token);
         return $handler->handle(
             value(
                 static function (ServerRequestPlusInterface $request, UnencryptedToken $token) {
                     return $request->setAttribute('token', $token);
                 },
                 $request,
-                $this->getJwt()->parserAccessToken(
-                    $this->getToken($request)
-                )
+                $token
             )
         );
     }

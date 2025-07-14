@@ -13,7 +13,7 @@ declare(strict_types=1);
 namespace Mine\JwtAuth\Event;
 
 /**
- * 登出事件.
+ * @deprecated v3.1 Moved to the business module
  */
 final class LogoutEvent
 {
