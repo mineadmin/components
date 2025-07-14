@@ -14,6 +14,9 @@ namespace Mine\JwtAuth\Interfaces;
 
 use Hyperf\Database\Model\Relations\BelongsToMany;
 
+/**
+ * @deprecated v3.1
+ */
 interface UserInterface
 {
     public function roles(): BelongsToMany;

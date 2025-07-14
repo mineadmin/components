@@ -14,6 +14,9 @@ namespace Mine\JwtAuth\Interfaces;
 
 use Lcobucci\JWT\UnencryptedToken;
 
+/**
+ * @deprecated v3.1 Changed to trigger via token parsing event
+ */
 interface CheckTokenInterface
 {
     public function checkJwt(UnencryptedToken $token): void;

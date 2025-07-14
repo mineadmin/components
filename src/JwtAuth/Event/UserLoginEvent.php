@@ -14,6 +14,7 @@ namespace Mine\JwtAuth\Event;
 
 /**
  * @template T
+ * @deprecated v3.1 Moved to the business module
  */
 final class UserLoginEvent
 {
