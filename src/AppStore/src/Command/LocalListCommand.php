@@ -41,10 +41,10 @@ class LocalListCommand extends AbstractCommand
             } else {
                 $current[] = $info['author'][0]['name'] ?? '--';
             }
-            $current += [
+            $current = array_merge($current, [
                 $info['homePage'] ?? '--',
                 $info['status'] ? 'installed' : 'uninstalled',
-            ];
+            ]);
             $rows[] = $current;
         }
         $this->table($headers, $rows);
