@@ -381,7 +381,7 @@ class Plugin
         $migrator = ApplicationContext::getContainer()->get(Migrator::class);
 
         // Perform migration rollback
-        $migrator->rollback($pluginPath . '/Database/Migrations');
+        $migrator->reset([$pluginPath . '/Database/Migrations']);
         // If the plugin exists in the web directory, perform the migration of the front-end files
         if (file_exists($pluginPath . '/web')) {
             $finder = Finder::create()
