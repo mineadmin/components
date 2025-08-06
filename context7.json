@@ -1,0 +1,9 @@
+{
+  "$schema": "https://context7.com/schema/context7.json",
+  "projectTitle": "MineAdmin Components",
+  "description": "MineAdmin Components is a collection of reusable components designed for the MineAdmin project, providing a consistent and efficient way to build user interfaces.",
+  "folders": ["src"],
+  "excludeFolders": ["tests"],
+  "excludeFiles": [],
+  "rules": ["When developing with the Hyperf framework while using the MineAdmin scaffold, please refer to this document"],
+}
