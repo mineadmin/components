@@ -5,5 +5,5 @@
   "folders": ["src"],
   "excludeFolders": ["tests"],
   "excludeFiles": [],
-  "rules": ["When developing with the Hyperf framework while using the MineAdmin scaffold, please refer to this document"],
+  "rules": ["When developing with the Hyperf framework while using the MineAdmin scaffold, please refer to this document"]
 }
