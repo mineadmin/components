@@ -18,7 +18,6 @@ use Lcobucci\JWT\Token;
 use Lcobucci\JWT\UnencryptedToken;
 use Mine\Jwt\Factory;
 use Mine\Jwt\JwtInterface;
-use Mine\JwtAuth\Interfaces\CheckTokenInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
@@ -29,21 +28,18 @@ use function Hyperf\Support\value;
 abstract class AbstractTokenMiddleware
 {
     public function __construct(
-        protected readonly Factory $jwtFactory,
-        protected readonly CheckTokenInterface $checkToken
+        protected readonly Factory $jwtFactory
     ) {}
 
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {
-        $token = $this->parserToken($request);
-        $this->checkToken->checkJwt($token);
         return $handler->handle(
             value(
                 static function (ServerRequestPlusInterface $request, UnencryptedToken $token) {
                     return $request->setAttribute('token', $token);
                 },
                 $request,
-                $token
+                $this->parserToken($request)
             )
         );
     }
