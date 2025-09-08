@@ -80,7 +80,7 @@ abstract class AbstractJwt implements JwtInterface
                     $this->clock->now()->diff($this->getRefreshExpireAt($this->clock->now()))
                 ),
                 $this->getBlackListConstraint(),
-                $this->accessTokenConstraint
+                $this->refreshTokenConstraint
             );
     }
 
@@ -98,7 +98,7 @@ abstract class AbstractJwt implements JwtInterface
                     $this->clock->now()->diff($this->getExpireAt($this->clock->now()))
                 ),
                 $this->getBlackListConstraint(),
-                $this->refreshTokenConstraint
+                $this->accessTokenConstraint
             );
     }
 

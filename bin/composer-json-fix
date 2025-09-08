@@ -56,7 +56,12 @@ foreach ($files as $file) {
     }
 
     foreach ($composerJson['autoload']['psr-4'] ?? [] as $ns => $dir) {
-        $value = "src/{$component}/" . trim($dir, '/') . '/';
+        if ($dir !== './') {
+            $value = "src/{$component}/" . trim($dir, '/') . '/';
+        }else{
+            $value = "src/{$component}/";
+        }
+        $splFileInfo = new SplFileInfo($file);
         if (isset($autoload[$ns])) {
             $autoload[$ns] = [$value, ...(array) $autoload[$ns]];
         } else {
@@ -65,7 +70,11 @@ foreach ($files as $file) {
     }
 
     foreach ($composerJson['autoload-dev']['psr-4'] ?? [] as $ns => $dir) {
-        $value = "src/{$component}/" . trim($dir, '/') . '/';
+        if ($dir !== './') {
+            $value = "src/{$component}/" . trim($dir, '/') . '/';
+        }else{
+            $value = "src/{$component}/";
+        }
         if (isset($autoloadDev[$ns])) {
             $autoloadDev[$ns] = [$value, ...(array) $autoloadDev[$ns]];
         } else {
