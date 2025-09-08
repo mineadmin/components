@@ -12,38 +12,48 @@ declare(strict_types=1);
 
 namespace Mine\Jwt;
 
-use Hyperf\Collection\Arr;
+use Hyperf\Cache\CacheManager;
 use Hyperf\Contract\ConfigInterface;
 
 use function Hyperf\Support\make;
 
-final class Factory
+final readonly class Factory
 {
     public function __construct(
-        private readonly ConfigInterface $config,
+        private ConfigInterface $config,
     ) {}
 
     public function get(string $name = 'default'): JwtInterface
     {
-        return make(Jwt::class, [
-            'config' => $this->getConfig($name),
-        ]);
-    }
+        // Unified configuration parsing: eliminates special cases
+        $config = JwtConfig::fromArray($this->resolveConfig($name));
 
-    // 获取场景配置
-    public function getConfig(string $scene): array
-    {
-        if ($scene === 'default') {
-            return $this->config->get($this->getConfigKey());
-        }
-        return Arr::merge(
-            $this->config->get($this->getConfigKey()),
-            $this->config->get($this->getConfigKey($scene), [])
+        // Component-based construction: each component has clear responsibility
+        $clock = make(Clock::class);
+        $cacheManager = make(CacheManager::class);
+
+        $blacklistManager = new BlacklistManager($config->blacklist, $cacheManager);
+
+        $tokenIssuer = new TokenIssuer($config, $clock);
+
+        $tokenParser = new TokenParser(
+            $config,
+            $clock,
+            $blacklistManager,
+            make(AccessTokenConstraint::class),
+            make(RefreshTokenConstraint::class)
         );
+
+        return new Jwt($tokenIssuer, $tokenParser, $blacklistManager);
     }
 
-    private function getConfigKey(string $name = 'default'): string
+    private function resolveConfig(string $scene): array
     {
-        return 'jwt.' . $name;
+        $baseConfig = $this->config->get('jwt.default', []);
+        $sceneConfig = $scene === 'default'
+            ? []  // default scenario has no additional configuration
+            : $this->config->get("jwt.{$scene}", []);
+
+        return array_merge($baseConfig, $sceneConfig);
     }
 }

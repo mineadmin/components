@@ -17,11 +17,11 @@ use Lcobucci\JWT\Token;
 use Lcobucci\JWT\Validation\Constraint;
 use Lcobucci\JWT\Validation\ConstraintViolation;
 
-class BlackListConstraint implements Constraint
+readonly class BlackListConstraint implements Constraint
 {
     public function __construct(
-        private readonly bool $enable,
-        private readonly DriverInterface $cache
+        private bool $enable,
+        private DriverInterface $cache
     ) {}
 
     public function assert(Token $token): void

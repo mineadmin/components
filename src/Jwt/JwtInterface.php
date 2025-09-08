@@ -29,6 +29,4 @@ interface JwtInterface
     public function hasBlackList(UnencryptedToken $token): bool;
 
     public function removeBlackList(UnencryptedToken $token): bool;
-
-    public function getConfig(string $key, mixed $default = null): mixed;
 }
