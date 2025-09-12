@@ -30,13 +30,8 @@ class CreateCommand extends AbstractCommand
     public function __invoke(): int
     {
         $path = $this->input->getArgument('path');
-        $name = $this->input->getOption('name');
         $type = $this->input->getOption('type') ?? 'mix';
         $type = PluginTypeEnum::fromValue($type);
-        if (empty($name)) {
-            $this->output->error('Plugin name is empty');
-            return AbstractCommand::FAILURE;
-        }
         if ($type === null) {
             $this->output->error('Plugin type is empty');
             return AbstractCommand::FAILURE;
@@ -47,6 +42,12 @@ class CreateCommand extends AbstractCommand
             $this->output->error(\sprintf('Plugin directory %s already exists', $path));
             return AbstractCommand::FAILURE;
         }
+
+        if (mb_substr_count($path, '/') !== 1) {
+            $this->output->error('The plug-in path format is incorrect, and the correct format is: organization/plugin-name');
+            return AbstractCommand::FAILURE;
+        }
+
         $createDirectors = [
             $pluginPath, $pluginPath . '/src', $pluginPath . '/Database', $pluginPath . '/Database/Migrations', $pluginPath . '/Database/Seeders', $pluginPath . '/web',
         ];
@@ -56,23 +57,23 @@ class CreateCommand extends AbstractCommand
             }
         }
 
-        $this->createMineJson($pluginPath, $name, $type);
+        $this->createMineJson($pluginPath, $type);
         return AbstractCommand::SUCCESS;
     }
 
-    public function createNamespace(string $path, string $name): string
+    public function createNamespace(string $path): string
     {
         $pluginPath = Str::replace(Plugin::PLUGIN_PATH . '/', '', $path);
-        [$orgName] = explode('/', $pluginPath);
-        return 'Plugin\\' . Str::studly($orgName) . '\\' . Str::studly($name);
+        [$orgName, $extName] = explode('/', $pluginPath);
+        return 'Plugin\\' . Str::studly($orgName) . '\\' . Str::studly($extName);
     }
 
-    public function createMineJson(string $path, string $name, PluginTypeEnum $pluginType): void
+    public function createMineJson(string $path, PluginTypeEnum $pluginType): void
     {
         $pluginPath = Str::replace(Plugin::PLUGIN_PATH . '/', '', $path);
 
         $output = new \stdClass();
-        $output->name = $pluginPath ?? $name;
+        $output->name = $pluginPath;
         $output->version = '1.0.0';
         $output->type = $pluginType->value;
         $output->description = $this->input->getOption('description') ?: 'This is a sample plugin';
@@ -83,7 +84,7 @@ class CreateCommand extends AbstractCommand
             ],
         ];
         if ($pluginType === PluginTypeEnum::Backend || $pluginType === PluginTypeEnum::Mix) {
-            $namespace = $this->createNamespace($path, $name) ?? 'Plugin\\' . ucwords(str_replace('/', '\\', Str::studly($name)));
+            $namespace = $this->createNamespace($path) ?? 'Plugin\\' . ucwords(str_replace('/', '\\', Str::studly($name)));
 
             $this->createInstallScript($namespace, $path);
             $this->createUninstallScript($namespace, $path);
