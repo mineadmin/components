@@ -43,8 +43,9 @@ class CreateCommand extends AbstractCommand
             return AbstractCommand::FAILURE;
         }
 
-        if (mb_substr_count($path, '/') !== 1) {
-            $this->output->error('The plug-in path format is incorrect, and the correct format is: organization/plugin-name');
+        $path = str_replace('\\', '/', trim((string) $path));
+        if (! preg_match('/^[A-Za-z0-9](?:[A-Za-z0-9_-]*[A-Za-z0-9])?\/[A-Za-z0-9](?:[A-Za-z0-9_-]*[A-Za-z0-9])?$/', $path) || str_contains($path, '..')) {
+            $this->output->error('Invalid plugin path. Use: organization/plugin-name (letters or digits, dash/underscore allowed, no dot).');
             return AbstractCommand::FAILURE;
         }
 
