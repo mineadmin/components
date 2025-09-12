@@ -84,7 +84,7 @@ class CreateCommand extends AbstractCommand
             ],
         ];
         if ($pluginType === PluginTypeEnum::Backend || $pluginType === PluginTypeEnum::Mix) {
-            $namespace = $this->createNamespace($path) ?? 'Plugin\\' . ucwords(str_replace('/', '\\', Str::studly($name)));
+            $namespace = $this->createNamespace($path);
 
             $this->createInstallScript($namespace, $path);
             $this->createUninstallScript($namespace, $path);
