@@ -92,7 +92,7 @@ class CreateCommand extends AbstractCommand
             $output->composer = [
                 'require' => [],
                 'psr-4' => [
-                    '\\' . $namespace . '\\' => 'src',
+                    $namespace . '\\' => 'src',
                 ],
                 'installScript' => $namespace . '\InstallScript',
                 'uninstallScript' => $namespace . '\UninstallScript',
@@ -106,7 +106,7 @@ class CreateCommand extends AbstractCommand
                 ],
             ];
         }
-        $output = Json::encode($output);
+        $output = Json::encode($output, \JSON_UNESCAPED_UNICODE | \JSON_UNESCAPED_SLASHES | \JSON_PRETTY_PRINT);
         file_put_contents($path . '/mine.json', $output);
         $this->output->success(\sprintf('%s 创建成功', $path . '/mine.json'));
     }
