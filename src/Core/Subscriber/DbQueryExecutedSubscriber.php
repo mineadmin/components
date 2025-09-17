@@ -20,7 +20,7 @@ use Hyperf\Logger\LoggerFactory;
 use Mine\Support\Traits\Debugging;
 use Psr\Log\LoggerInterface;
 
-final class DbQueryExecutedSubscriber implements ListenerInterface
+class DbQueryExecutedSubscriber implements ListenerInterface
 {
     use Debugging;
 

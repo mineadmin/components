@@ -15,6 +15,7 @@
         }
     ],
     "require": {
+        "mineadmin/jwt": "~3.1"
     },
     "autoload": {
         "psr-4": {

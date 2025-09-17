@@ -29,14 +29,18 @@
         "hyperf/translation": "~3.1.0",
         "nette/utils": "dev-master",
         "hyperf/guzzle": "~3.1",
-        "hyperf/db-connection": "^3.1",
-        "casbin/casbin": "^3.23",
-        "hyperf/config": "~3.1",
         "hyperf/framework": "~3.1",
         "hyperf/async-queue": "~3.1",
+        "mineadmin/jwt": "~3.1",
+        "mineadmin/auth-jwt": "~3.1",
+        "mineadmin/support": "~3.1",
+        "mineadmin/swagger": "~3.1",
+        "mineadmin/upload": "~3.1",
         "php": ">=8.1",
         "hyperf/crontab": "^3.1",
         "hyperf/database": "^3.1",
+        "hyperf/db-connection": "^3.1",
+        "hyperf/process": "^3.1",
         "lcobucci/jwt": "~5.5.0",
         "hyperf/http-server": "~3.1",
         "hyperf/cache": "~3.1",
@@ -59,10 +63,8 @@
         "ergebnis/composer-normalize": "dev-main"
     },
     "replace": {
-        "mineadmin/access": "*",
         "mineadmin/app-store": "*",
         "mineadmin/auth-jwt": "*",
-        "mineadmin/casbin": "*",
         "mineadmin/core": "*",
         "mineadmin/crontab": "*",
         "mineadmin/jwt": "*",
@@ -73,9 +75,7 @@
     "minimum-stability": "dev",
     "autoload": {
         "psr-4": {
-            "Mine\\Access\\": "src/Access/",
             "Mine\\AppStore\\": "src/AppStore/src/",
-            "Mine\\Casbin\\": "src/Casbin/",
             "Mine\\Core\\": "src/Core/",
             "Mine\\Crontab\\": "src/Crontab/src/",
             "Mine\\JwtAuth\\": "src/JwtAuth/",
@@ -110,7 +110,6 @@
     "extra": {
         "hyperf": {
             "config": [
-                "Mine\\Access\\ConfigProvider",
                 "Mine\\AppStore\\ConfigProvider",
                 "Mine\\Crontab\\ConfigProvider",
                 "Mine\\JwtAuth\\ConfigProvider",

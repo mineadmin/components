@@ -21,11 +21,11 @@ use Hyperf\Event\Contract\ListenerInterface;
 use Hyperf\Framework\Event\BootApplication;
 use Mine\Support\Filesystem;
 
-final class BootApplicationSubscriber implements ListenerInterface
+readonly class BootApplicationSubscriber implements ListenerInterface
 {
     public function __construct(
-        private readonly Migrator $migrator,
-        private readonly Seed $seed
+        private Migrator $migrator,
+        private Seed     $seed
     ) {}
 
     public function listen(): array
@@ -36,7 +36,8 @@ final class BootApplicationSubscriber implements ListenerInterface
         ];
     }
 
-    public function process(object $event): void
+
+    private function handleMigrate(object $event): void
     {
         if ($event instanceof BootApplication) {
             $this->migrator->path(BASE_PATH . '/databases/migrations');
@@ -51,5 +52,10 @@ final class BootApplicationSubscriber implements ListenerInterface
                 Filesystem::copy(BASE_PATH . '/seeders', BASE_PATH . '/databases/seeders');
             }
         }
+    }
+
+    public function process(object $event): void
+    {
+        $this->handleMigrate($event);
     }
 }
