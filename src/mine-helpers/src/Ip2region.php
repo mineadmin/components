@@ -50,7 +50,7 @@ class Ip2region
             return t('jwt.unknown');
         }
 
-        [$country, $number, $province, $city, $network] = explode('|', $region);
+        [$country, $province, $city, $network] = explode('|', $region);
         if ($country == '中国') {
             return $province . '-' . $city . ':' . $network;
         }
