@@ -5,6 +5,34 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [Unreleased]
+
+### Major Changes
+- **BREAKING**: Consolidated Access and Casbin components into Core
+- **BREAKING**: Complete application architecture restructure
+- **NEW**: Introduced centralized `Mine\Core\App` class for application management
+
+### Added
+- **Core**: New `App` class with version management (v3.1.0)
+- **Core**: Application lifecycle management with debug mode support
+- **Core**: Centralized container and dependency injection handling
+- **Core**: Plugin system integration through App class
+- **Core**: Enhanced ConfigProvider for core component scanning
+
+### Changed
+- **Architecture**: Moved Access and Casbin functionality into Core component
+- **Dependencies**: Updated component dependencies in composer.json files
+- **Structure**: Simplified project structure by removing standalone Access/Casbin components
+- **Configuration**: Consolidated configuration management into Core
+
+### Removed
+- **Access**: Entire standalone Access component (functionality moved to Core)
+- **Casbin**: Entire standalone Casbin component (functionality moved to Core)
+- **Files**: Removed individual LICENSE, README.md, and composer.json files from removed components
+- **Workflows**: Removed individual GitHub workflows from removed components
+
+---
+
 ## [3.1.0] - 2025-09-08
 
 ### Major Changes
@@ -65,7 +93,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
-## Migration Guide (2.0 → 3.1)
+## Migration Guide (3.0 → 3.1)
 
 ### JWT Authentication Changes
 1. **Interfaces Removed**: `CheckTokenInterface`, `CurrentUserInterface`, `UserInterface` have been deprecated
