@@ -77,5 +77,4 @@ final readonly class Jwt implements JwtInterface
     {
         return $this->blacklistManager->remove($token);
     }
-
 }

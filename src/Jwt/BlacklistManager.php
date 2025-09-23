@@ -30,7 +30,7 @@ final readonly class BlacklistManager
     }
 
     /**
-     * Add token to blacklist
+     * Add token to blacklist.
      */
     public function add(UnencryptedToken $token): bool
     {
@@ -66,7 +66,7 @@ final readonly class BlacklistManager
     }
 
     /**
-     * Get blacklist constraint object
+     * Get blacklist constraint object.
      */
     public function getConstraint(): Constraint
     {

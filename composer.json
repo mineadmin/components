@@ -25,6 +25,9 @@
         "hyperf/di": "~3.1",
         "ext-fileinfo": "*",
         "hyperf/logger": "~3.1",
+        "doctrine/orm": "~3.5",
+        "symfony/cache": "~7.3.2",
+        "hyperf/pool": "~3.1",
         "ext-zip": "*",
         "hyperf/translation": "~3.1.0",
         "nette/utils": "dev-master",
@@ -67,6 +70,7 @@
         "mineadmin/auth-jwt": "*",
         "mineadmin/core": "*",
         "mineadmin/crontab": "*",
+        "mineadmin/doctrine": "*",
         "mineadmin/jwt": "*",
         "mineadmin/support": "*",
         "mineadmin/swagger": "*",
@@ -78,6 +82,7 @@
             "Mine\\AppStore\\": "src/AppStore/src/",
             "Mine\\Core\\": "src/Core/",
             "Mine\\Crontab\\": "src/Crontab/src/",
+            "Mine\\Doctrine\\": "src/Doctrine/",
             "Mine\\JwtAuth\\": "src/JwtAuth/",
             "Mine\\Jwt\\": "src/Jwt/",
             "Mine\\Support\\": "src/Support/",
@@ -113,7 +118,9 @@
                 "Mine\\AppStore\\ConfigProvider",
                 "Mine\\Crontab\\ConfigProvider",
                 "Mine\\JwtAuth\\ConfigProvider",
-                "Mine\\Swagger\\ConfigProvider"
+                "Mine\\Swagger\\ConfigProvider",
+                "\\Mine\\Doctrine\\ConfigProvider",
+                "core"
             ]
         }
     }

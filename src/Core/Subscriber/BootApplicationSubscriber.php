@@ -25,7 +25,7 @@ readonly class BootApplicationSubscriber implements ListenerInterface
 {
     public function __construct(
         private Migrator $migrator,
-        private Seed     $seed
+        private Seed $seed
     ) {}
 
     public function listen(): array
@@ -36,6 +36,10 @@ readonly class BootApplicationSubscriber implements ListenerInterface
         ];
     }
 
+    public function process(object $event): void
+    {
+        $this->handleMigrate($event);
+    }
 
     private function handleMigrate(object $event): void
     {
@@ -52,10 +56,5 @@ readonly class BootApplicationSubscriber implements ListenerInterface
                 Filesystem::copy(BASE_PATH . '/seeders', BASE_PATH . '/databases/seeders');
             }
         }
-    }
-
-    public function process(object $event): void
-    {
-        $this->handleMigrate($event);
     }
 }

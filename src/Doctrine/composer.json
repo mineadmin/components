@@ -1,0 +1,27 @@
+{
+    "name": "mineadmin/doctrine",
+    "description": "Mineadmin jwt component",
+    "license": "MIT",
+    "type": "library",
+    "authors": [
+        {
+            "name": "zds",
+            "role": "Developer"
+        }
+    ],
+    "require": {
+        "doctrine/orm": "~3.5",
+        "symfony/cache": "~7.3.2",
+        "hyperf/pool": "~3.1"
+    },
+    "autoload": {
+        "psr-4": {
+            "Mine\\Doctrine\\": "./"
+        }
+    },
+    "extra": {
+        "hyperf": {
+            "config": "\\Mine\\Doctrine\\ConfigProvider"
+        }
+    }
+}
