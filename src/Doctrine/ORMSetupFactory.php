@@ -1,5 +1,15 @@
 <?php
 
+declare(strict_types=1);
+/**
+ * This file is part of MineAdmin.
+ *
+ * @link     https://www.mineadmin.com
+ * @document https://doc.mineadmin.com
+ * @contact  root@imoi.cn
+ * @license  https://github.com/mineadmin/MineAdmin/blob/master/LICENSE
+ */
+
 namespace Mine\Doctrine;
 
 use Doctrine\ORM\Configuration;
@@ -7,6 +17,7 @@ use Doctrine\ORM\ORMSetup;
 use Hyperf\Cache\CacheManager;
 use Hyperf\Pool\Event\ReleaseConnection;
 use Symfony\Component\Cache\Adapter\Psr16Adapter;
+
 use function Hyperf\Support\env;
 
 final class ORMSetupFactory
@@ -14,8 +25,7 @@ final class ORMSetupFactory
     public function __construct(
         private readonly Config $config,
         private readonly CacheManager $cacheManager
-    ){}
-
+    ) {}
 
     public function make(): Configuration
     {
@@ -30,7 +40,7 @@ final class ORMSetupFactory
 
     private function getConfig(): array
     {
-        $basePath = defined('BASE_PATH') ? BASE_PATH : getcwd();
+        $basePath = \defined('BASE_PATH') ? BASE_PATH : getcwd();
         return array_merge([
             'paths' => [
                 $basePath . '/app/Entity',

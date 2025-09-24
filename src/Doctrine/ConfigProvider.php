@@ -26,7 +26,7 @@ final class ConfigProvider
             ],
             'dependencies' => [
                 \Doctrine\Persistence\ManagerRegistry::class => ManagerRegistry::class,
-            ]
+            ],
         ];
     }
 }

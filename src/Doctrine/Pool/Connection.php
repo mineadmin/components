@@ -1,5 +1,15 @@
 <?php
 
+declare(strict_types=1);
+/**
+ * This file is part of MineAdmin.
+ *
+ * @link     https://www.mineadmin.com
+ * @document https://doc.mineadmin.com
+ * @contact  root@imoi.cn
+ * @license  https://github.com/mineadmin/MineAdmin/blob/master/LICENSE
+ */
+
 namespace Mine\Doctrine\Pool;
 
 use Hyperf\Contract\ConnectionInterface;
@@ -15,14 +25,13 @@ final class Connection extends AbstractConnection implements ConnectionInterface
 
     protected LoggerInterface $logger;
 
-    protected null|\Doctrine\DBAL\Connection $connection = null;
+    protected ?\Doctrine\DBAL\Connection $connection = null;
 
     public function __construct(
         ContainerInterface $container,
         PoolInterface $pool,
         private readonly array $config
-    )
-    {
+    ) {
         parent::__construct($container, $pool);
         $this->factory = $container->get(ConnectionFactory::class);
         $this->logger = $container->get(LoggerInterface::class);
@@ -50,7 +59,7 @@ final class Connection extends AbstractConnection implements ConnectionInterface
 
     public function close(): bool
     {
-        if ($this->connection){
+        if ($this->connection) {
             $this->connection->close();
             $this->connection = null;
         }

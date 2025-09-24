@@ -16,7 +16,11 @@ use Mine\Support\Request as SupportRequest;
 use Mine\Support\Request\ClientIpRequestConstant;
 use Mine\Support\Request\ClientIpRequestTrait;
 
-class ClientIpTest extends SupportRequest
+/**
+ * @internal
+ * @coversNothing
+ */
+final class ClientIpTest extends SupportRequest
 {
     use ClientIpRequestTrait;
 }
@@ -83,13 +87,13 @@ function getRequestInstanceForClientIpTests(string $remoteAddr, ?string $httpFor
     $swooleRequest->server = $serverParams;
     $swooleRequest->header = $serverParams;
     if ($trustedProxies !== null) {
-        ClientIpTestRequest::setTrustedProxies($trustedProxies, ClientIpRequestConstant::HEADER_X_FORWARDED_FOR);
+        ClientIpTest::setTrustedProxies($trustedProxies, ClientIpRequestConstant::HEADER_X_FORWARDED_FOR);
     }
     $swooleRequest->allows('rawContent')->andReturn('');
     $request = Request::loadFromSwooleRequest($swooleRequest);
     RequestContext::set($request);
     SupportRequest::resetTrustedRemoteAddr();
-    return new ClientIpTestRequest(Mockery::mock(Container::class));
+    return new ClientIpTest(Mockery::mock(Container::class));
 }
 
 test('testGetClientIpsForwarded', static function ($expected, $remoteAddr, $httpForwardedFor, $trustedProxies) {
@@ -112,13 +116,13 @@ function getRequestInstanceForClientIpsForwardedTests(string $remoteAddr, ?strin
     $swooleRequest->server = $serverParams;
     $swooleRequest->header = $serverParams;
     if ($trustedProxies !== null) {
-        ClientIpTestRequest::setTrustedProxies($trustedProxies, ClientIpRequestConstant::HEADER_FORWARDED);
+        ClientIpTest::setTrustedProxies($trustedProxies, ClientIpRequestConstant::HEADER_FORWARDED);
     }
     $swooleRequest->allows('rawContent')->andReturn('');
     $request = Request::loadFromSwooleRequest($swooleRequest);
     RequestContext::set($request);
     SupportRequest::resetTrustedRemoteAddr();
-    return new ClientIpTestRequest(Mockery::mock(Container::class));
+    return new ClientIpTest(Mockery::mock(Container::class));
 }
 
 test('testGetClientIps', static function ($expected, $remoteAddr, $httpForwardedFor, $trustedProxies) {
