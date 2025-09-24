@@ -1,5 +1,14 @@
 <?php
 
+declare(strict_types=1);
+/**
+ * This file is part of MineAdmin.
+ *
+ * @link     https://www.mineadmin.com
+ * @document https://doc.mineadmin.com
+ * @contact  root@imoi.cn
+ * @license  https://github.com/mineadmin/MineAdmin/blob/master/LICENSE
+ */
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\ORM\Mapping\Entity;
 use Doctrine\ORM\Mapping\Table;
@@ -11,7 +20,7 @@ class User
     #[ORM\Id()]
     #[ORM\Column(type: 'integer')]
     #[ORM\GeneratedValue]
-    private null|int $id;
+    private ?int $id;
 
     #[ORM\Column(type: 'string')]
     private string $name;
@@ -25,6 +34,4 @@ class User
     {
         $this->name = $name;
     }
-
-
 }
