@@ -11,12 +11,14 @@ declare(strict_types=1);
  */
 use Hyperf\Context\ApplicationContext;
 use Hyperf\Contract\ConfigInterface;
+use Hyperf\Contract\ContainerInterface;
 use Hyperf\Contract\StdoutLoggerInterface;
+use Hyperf\Testing\Concerns\RunTestsInCoroutine;
 use Mine\Tests\TestCase;
 use Psr\Log\LogLevel;
 
-uses(TestCase::class)
-    ->beforeEach(function () {
+uses(TestCase::class, RunTestsInCoroutine::class)
+    ->beforeEach(static function () {
         $mockConfig = Mockery::mock(ConfigInterface::class);
         $mockConfig->allows('has')->andReturn(true);
         $mockConfig->allows('get')->andReturn([
@@ -25,7 +27,20 @@ uses(TestCase::class)
             ],
         ]);
         $mockConfig->allows('set')->andReturn(true);
-        ApplicationContext::getContainer()
-            ->set(ConfigInterface::class, $mockConfig);
+
+        // Mock the container itself
+        $mockContainer = Mockery::mock(ContainerInterface::class);
+        $mockContainer->allows('set')->andReturn(true);
+        $mockContainer->allows('get')->andReturn($mockConfig);
+        $mockContainer->allows('has')->andReturn(false); // Default to false for unknown services
+        $mockContainer->allows('make')->andReturnUsing(static function ($class, $parameters = []) {
+            return new $class(...array_values($parameters));
+        });
+
+        // Replace the container
+        ApplicationContext::setContainer($mockContainer);
+    })
+    ->afterEach(static function () {
+        Mockery::close();
     })
     ->in('Feature');

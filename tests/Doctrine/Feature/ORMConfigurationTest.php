@@ -259,7 +259,6 @@ describe('ORM Configuration Integration', function () {
         $this->cacheManager->shouldReceive('getDriver')
             ->with('default')
             ->andReturn($this->cacheDriver);
-
         $factory = new ORMSetupFactory($this->config, $this->cacheManager);
         $configuration = $factory->make();
 

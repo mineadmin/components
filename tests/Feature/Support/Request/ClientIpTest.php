@@ -16,7 +16,7 @@ use Mine\Support\Request as SupportRequest;
 use Mine\Support\Request\ClientIpRequestConstant;
 use Mine\Support\Request\ClientIpRequestTrait;
 
-class ClientIpTestRequest extends SupportRequest
+class ClientIpTest extends SupportRequest
 {
     use ClientIpRequestTrait;
 }
@@ -92,9 +92,11 @@ function getRequestInstanceForClientIpTests(string $remoteAddr, ?string $httpFor
     return new ClientIpTestRequest(Mockery::mock(Container::class));
 }
 
-test('testGetClientIpsForwarded',  function ($expected, $remoteAddr, $httpForwardedFor, $trustedProxies) {
+test('testGetClientIpsForwarded', static function ($expected, $remoteAddr, $httpForwardedFor, $trustedProxies) {
     $testRequest = getRequestInstanceForClientIpTests($remoteAddr, $httpForwardedFor, $trustedProxies);
-    expect($testRequest->getClientIps())->toEqual($expected);
+    $result = $testRequest->getClientIps();
+    expect($result)->toEqual($expected);
+    Mockery::close();
 })
     ->with($getClientIpsProvider);
 
@@ -119,9 +121,11 @@ function getRequestInstanceForClientIpsForwardedTests(string $remoteAddr, ?strin
     return new ClientIpTestRequest(Mockery::mock(Container::class));
 }
 
-test('testGetClientIps',  function ($expected, $remoteAddr, $httpForwardedFor, $trustedProxies) {
+test('testGetClientIps', static function ($expected, $remoteAddr, $httpForwardedFor, $trustedProxies) {
     $request = getRequestInstanceForClientIpsForwardedTests($remoteAddr, $httpForwardedFor, $trustedProxies);
-    expect($request->getClientIps())->toEqual($expected);
+    $result = $request->getClientIps();
+    expect($result)->toEqual($expected);
+    Mockery::close();
 })->with([
     [['127.0.0.1'], '127.0.0.1', 'for="_gazonk"', null],
     [['127.0.0.1'], '127.0.0.1', 'for="_gazonk"', ['127.0.0.1']],
@@ -131,6 +135,7 @@ test('testGetClientIps',  function ($expected, $remoteAddr, $httpForwardedFor, $
     [['2001:db8:cafe::17'], '::1', 'for="[2001:db8:cafe::17]:4711', ['::1']],
 ]);
 
-test('demo',function(){
+test('demo', static function () {
+    // Simple demonstration test
     expect(true)->toBeTrue();
 });

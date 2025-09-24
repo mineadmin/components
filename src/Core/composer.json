@@ -29,8 +29,5 @@
         }
     },
     "extra": {
-        "hyperf": {
-            "config": "core"
-        }
     }
 }

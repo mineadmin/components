@@ -9,9 +9,6 @@ declare(strict_types=1);
  * @contact  root@imoi.cn
  * @license  https://github.com/mineadmin/MineAdmin/blob/master/LICENSE
  */
-
-namespace Mine\Crontab\Cases;
-
 use Hyperf\Config\Config;
 use Hyperf\Context\ApplicationContext;
 use Hyperf\Contract\ConfigInterface;
@@ -20,137 +17,118 @@ use Hyperf\Database\ConnectionResolverInterface;
 use Hyperf\Database\Query\Builder;
 use Mine\Crontab\Crontab;
 use Mine\Crontab\CrontabUrl;
-use PHPUnit\Framework\TestCase;
 
-/**
- * @internal
- * @coversNothing
- */
-final class CrontabTest extends TestCase
-{
-    protected function setUp(): void
-    {
-        ApplicationContext::getContainer()->set(ConfigInterface::class, new Config([]));
-        $connectionResolverInterface = \Mockery::mock(ConnectionResolverInterface::class);
-        $connectionInterface = \Mockery::mock(ConnectionInterface::class);
-        $connectionResolverInterface
-            ->allows('connection')
-            ->andReturn($connectionInterface);
-        $builder = \Mockery::mock(Builder::class);
-        $builder->allows('where')->with(Crontab::TABLE_KEY, 1)->andReturn($builder);
-        $builder->allows('value')->with(Crontab::ENABLE_COLUMN)->andReturn(1, 0);
-        $builder->allows('value')->with(Crontab::IS_SINGLETON)->andReturn(1, 0);
-        $builder->allows('value')->with(Crontab::IS_ON_ONE_SERVER_COLUMN)->andReturn(1, 0);
-        $builder->allows('value')->with(Crontab::NAME_COLUMN)->andReturn('xxx');
-        $builder->allows('value')->with(Crontab::MEMO_COLUMN)->andReturn('xxx');
-        $builder->allows('value')
-            ->with(Crontab::RULE_COLUMN)
-            ->andReturn('* * * * *', '0 0 * * *');
-        $builder->allows('value')
-            ->with(Crontab::TYPE_COLUMN)
-            ->andReturn(
-                'xxx',
-                'callback',
-                'url',
-                'class',
-                'eval',
-                'command',
-                'xxx',
-                'callback',
-                'url',
-                'class',
-                'eval',
-                'command'
-            );
-        $builder->allows('value')
-            ->with(Crontab::VALUE_COLUMN)
-            ->andReturn(
-                'xxx',
-                '["xxx","xxx"]',
-                'http://baidu.com',
-                'AppTest',
-                'echo 1;',
-                '["xxx","xxx"]'
-            );
-        $connectionInterface->allows('table')->andReturnUsing(function ($table) use ($builder) {
-            $this->assertSame(Crontab::TABLE, $table);
-            return $builder;
-        });
-        ApplicationContext::getContainer()->set(ConnectionResolverInterface::class, $connectionResolverInterface);
-    }
+beforeEach(static function () {
+    ApplicationContext::getContainer()->set(ConfigInterface::class, new Config([]));
+    $connectionResolverInterface = Mockery::mock(ConnectionResolverInterface::class);
+    $connectionInterface = Mockery::mock(ConnectionInterface::class);
+    $connectionResolverInterface
+        ->allows('connection')
+        ->andReturn($connectionInterface);
+    $builder = Mockery::mock(Builder::class);
+    $builder->allows('where')->with(Crontab::TABLE_KEY, 1)->andReturn($builder);
+    $builder->allows('value')->with(Crontab::ENABLE_COLUMN)->andReturn(1, 0);
+    $builder->allows('value')->with(Crontab::IS_SINGLETON)->andReturn(1, 0);
+    $builder->allows('value')->with(Crontab::IS_ON_ONE_SERVER_COLUMN)->andReturn(1, 0);
+    $builder->allows('value')->with(Crontab::NAME_COLUMN)->andReturn('xxx');
+    $builder->allows('value')->with(Crontab::MEMO_COLUMN)->andReturn('xxx');
+    $builder->allows('value')
+        ->with(Crontab::RULE_COLUMN)
+        ->andReturn('* * * * *', '0 0 * * *');
+    $builder->allows('value')
+        ->with(Crontab::TYPE_COLUMN)
+        ->andReturn(
+            'xxx',
+            'callback',
+            'url',
+            'class',
+            'eval',
+            'command',
+            'xxx',
+            'callback',
+            'url',
+            'class',
+            'eval',
+            'command'
+        );
+    $builder->allows('value')
+        ->with(Crontab::VALUE_COLUMN)
+        ->andReturn(
+            'xxx',
+            '["xxx","xxx"]',
+            'http://baidu.com',
+            'AppTest',
+            'echo 1;',
+            '["xxx","xxx"]'
+        );
+    $connectionInterface->allows('table')->andReturnUsing(static function ($table) use ($builder) {
+        expect($table)->toBe(Crontab::TABLE);
+        return $builder;
+    });
+    ApplicationContext::getContainer()->set(ConnectionResolverInterface::class, $connectionResolverInterface);
+});
 
-    public function testConstruct(): void
-    {
-        $crontab = new Crontab(1);
-        self::assertSame($crontab->getCronId(), 1);
-    }
+test('construct', static function () {
+    $crontab = new Crontab(1);
+    expect($crontab->getCronId())->toBe(1);
+});
 
-    public function testGetBuilder(): void
-    {
-        $crontab = new Crontab(1);
-        $crontab->getBuilder();
-        self::assertTrue(true);
-    }
+test('get builder', static function () {
+    $crontab = new Crontab(1);
+    $crontab->getBuilder();
+    expect(true)->toBeTrue();
+});
 
-    public function testGetName(): void
-    {
-        $crontab = new Crontab(1);
-        self::assertSame($crontab->getName(), 'xxx');
-    }
+test('get name', static function () {
+    $crontab = new Crontab(1);
+    expect($crontab->getName())->toBe('xxx');
+});
 
-    public function testGetMemo(): void
-    {
-        $crontab = new Crontab(1);
-        self::assertSame($crontab->getMemo(), 'xxx');
-    }
+test('get memo', static function () {
+    $crontab = new Crontab(1);
+    expect($crontab->getMemo())->toBe('xxx');
+});
 
-    public function testIsEnable(): void
-    {
-        $crontab = new Crontab(1);
-        self::assertTrue($crontab->isEnable());
-        self::assertFalse($crontab->isEnable());
-    }
+test('is enable', static function () {
+    $crontab = new Crontab(1);
+    expect($crontab->isEnable())->toBeTrue();
+    expect($crontab->isEnable())->toBeFalse();
+});
 
-    public function testGetType(): void
-    {
-        $crontab = new Crontab(1);
-        self::assertSame('xxx', $crontab->getType());
-        self::assertSame('callback', $crontab->getType());
-        self::assertSame('callback', $crontab->getType());
-        self::assertSame('callback', $crontab->getType());
-        self::assertSame('eval', $crontab->getType());
-        self::assertSame('command', $crontab->getType());
-    }
+test('get type', static function () {
+    $crontab = new Crontab(1);
+    expect($crontab->getType())->toBe('xxx');
+    expect($crontab->getType())->toBe('callback');
+    expect($crontab->getType())->toBe('callback');
+    expect($crontab->getType())->toBe('callback');
+    expect($crontab->getType())->toBe('eval');
+    expect($crontab->getType())->toBe('command');
+});
 
-    public function testGetCallback(): void
-    {
-        $crontab = new Crontab(1);
-        self::assertSame($crontab->getCallback(), 'xxx');
-        self::assertSame($crontab->getCallback(), ['xxx', 'xxx']);
-        self::assertSame($crontab->getCallback(), [CrontabUrl::class, 'execute', ['http://baidu.com']]);
-        self::assertSame($crontab->getCallback(), ['AppTest', 'execute']);
-        self::assertSame($crontab->getCallback(), 'echo 1;');
-        self::assertSame($crontab->getCallback(), ['xxx', 'xxx']);
-    }
+test('get callback', static function () {
+    $crontab = new Crontab(1);
+    expect($crontab->getCallback())->toBe('xxx');
+    expect($crontab->getCallback())->toBe(['xxx', 'xxx']);
+    expect($crontab->getCallback())->toBe([CrontabUrl::class, 'execute', ['http://baidu.com']]);
+    expect($crontab->getCallback())->toBe(['AppTest', 'execute']);
+    expect($crontab->getCallback())->toBe('echo 1;');
+    expect($crontab->getCallback())->toBe(['xxx', 'xxx']);
+});
 
-    public function testGetRule(): void
-    {
-        $crontab = new Crontab(1);
-        self::assertSame($crontab->getRule(), '* * * * *');
-        self::assertSame($crontab->getRule(), '0 0 * * *');
-    }
+test('get rule', static function () {
+    $crontab = new Crontab(1);
+    expect($crontab->getRule())->toBe('* * * * *');
+    expect($crontab->getRule())->toBe('0 0 * * *');
+});
 
-    public function testIsSingleton(): void
-    {
-        $crontab = new Crontab(1);
-        self::assertTrue($crontab->isSingleton());
-        self::assertFalse($crontab->isSingleton());
-    }
+test('is singleton', static function () {
+    $crontab = new Crontab(1);
+    expect($crontab->isSingleton())->toBeTrue();
+    expect($crontab->isSingleton())->toBeFalse();
+});
 
-    public function testIsOnOneServer(): void
-    {
-        $crontab = new Crontab(1);
-        self::assertTrue($crontab->isOnOneServer());
-        self::assertFalse($crontab->isOnOneServer());
-    }
-}
+test('is on one server', static function () {
+    $crontab = new Crontab(1);
+    expect($crontab->isOnOneServer())->toBeTrue();
+    expect($crontab->isOnOneServer())->toBeFalse();
+});

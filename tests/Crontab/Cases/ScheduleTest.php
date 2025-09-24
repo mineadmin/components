@@ -9,9 +9,6 @@ declare(strict_types=1);
  * @contact  root@imoi.cn
  * @license  https://github.com/mineadmin/MineAdmin/blob/master/LICENSE
  */
-
-namespace Mine\Crontab\Cases;
-
 use Hyperf\Collection\Collection;
 use Hyperf\Config\Config;
 use Hyperf\Context\ApplicationContext;
@@ -19,68 +16,53 @@ use Hyperf\Contract\ConfigInterface;
 use Hyperf\Database\ConnectionInterface;
 use Hyperf\Database\ConnectionResolverInterface;
 use Hyperf\Database\Query\Builder;
-use Hyperf\Testing\Concerns\RunTestsInCoroutine;
 use Mine\Crontab\Schedule;
-use PHPUnit\Framework\Attributes\RequiresPhpExtension;
-use PHPUnit\Framework\TestCase;
 
-/**
- * @internal
- * @coversNothing
- */
-#[RequiresPhpExtension('swoole', '< 6.0')]
-final class ScheduleTest extends TestCase
-{
-    use RunTestsInCoroutine;
+beforeEach(static function () {
+    $config = new Config([]);
+    ApplicationContext::getContainer()->set(ConfigInterface::class, $config);
+});
 
-    protected function setUp(): void
-    {
-        $config = new Config([]);
-        ApplicationContext::getContainer()->set(ConfigInterface::class, $config);
-    }
-
-    public function testGetCrontab(): void
-    {
-        $connectionResolverInterface = \Mockery::mock(ConnectionResolverInterface::class);
-        $connectionInterface = \Mockery::mock(ConnectionInterface::class);
-        $connectionResolverInterface
-            ->allows('connection')
-            ->andReturn($connectionInterface);
-        $connectionInterface->allows('table')->andReturnUsing(function ($table) {
-            $this->assertSame($table, Schedule::CRONTAB_TABLE);
-            $builder = \Mockery::mock(Builder::class);
-            $stdclass = new \stdClass();
-            $stdclass->id = 1;
-            $builder->allows('get')
-                ->andReturn(new Collection([$stdclass]));
-            $builder->allows('where')->andReturnUsing(function ($column, $val) use ($builder) {
-                $this->assertSame($column, 'status');
-                $this->assertSame($val, 1);
-                return $builder;
-            });
-            return $builder;
-        }, function ($table) {
-            $this->assertSame($table, Schedule::CRONTAB_TABLE);
-            $builder = \Mockery::mock(Builder::class);
-            $builder->allows('get')
-                ->andReturn(new Collection([]));
-            $builder->allows('where')->andReturnUsing(function ($column, $val) use ($builder) {
-                $this->assertSame($column, 'status');
-                $this->assertSame($val, 1);
-                return $builder;
-            });
+test('get crontab', static function () {
+    $connectionResolverInterface = Mockery::mock(ConnectionResolverInterface::class);
+    $connectionInterface = Mockery::mock(ConnectionInterface::class);
+    $connectionResolverInterface
+        ->allows('connection')
+        ->andReturn($connectionInterface);
+    $connectionInterface->allows('table')->andReturnUsing(static function ($table) {
+        expect($table)->toBe(Schedule::CRONTAB_TABLE);
+        $builder = Mockery::mock(Builder::class);
+        $stdclass = new stdClass();
+        $stdclass->id = 1;
+        $builder->allows('get')
+            ->andReturn(new Collection([$stdclass]));
+        $builder->allows('where')->andReturnUsing(static function ($column, $val) use ($builder) {
+            expect($column)->toBe('status');
+            expect($val)->toBe(1);
             return $builder;
         });
-        ApplicationContext::getContainer()->set(ConnectionResolverInterface::class, $connectionResolverInterface);
+        return $builder;
+    }, static function ($table) {
+        expect($table)->toBe(Schedule::CRONTAB_TABLE);
+        $builder = Mockery::mock(Builder::class);
+        $builder->allows('get')
+            ->andReturn(new Collection([]));
+        $builder->allows('where')->andReturnUsing(static function ($column, $val) use ($builder) {
+            expect($column)->toBe('status');
+            expect($val)->toBe(1);
+            return $builder;
+        });
+        return $builder;
+    });
+    ApplicationContext::getContainer()->set(ConnectionResolverInterface::class, $connectionResolverInterface);
 
-        $schedule = new \ReflectionClass(Schedule::class);
-        $method = $schedule->getMethod('getCrontab');
-        $instance = \Mockery::mock(Schedule::class);
-        $result = $method->invoke($instance);
-        self::assertIsArray($result);
-        self::assertCount(1, $result);
-        $result = $method->invoke($instance);
-        self::assertIsArray($result);
-        self::assertCount(0, $result);
-    }
-}
+    $schedule = new ReflectionClass(Schedule::class);
+    $method = $schedule->getMethod('getCrontab');
+    $instance = Mockery::mock(Schedule::class);
+    $result = $method->invoke($instance);
+    expect($result)->toBeArray();
+    expect($result)->toHaveCount(1);
+    $result = $method->invoke($instance);
+    expect($result)->toBeArray();
+    expect($result)->toHaveCount(0);
+});
