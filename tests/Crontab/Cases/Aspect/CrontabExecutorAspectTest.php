@@ -20,7 +20,7 @@ use Hyperf\Di\Aop\ProceedingJoinPoint;
 use Mine\Crontab\Aspect\CrontabExecutorAspect;
 use Mine\Crontab\Crontab;
 
-beforeEach(static function () {
+beforeEach(function () {
     ApplicationContext::getContainer()
         ->set(ConfigInterface::class, new Config([]));
     $connectionResolverInterface = Mockery::mock(ConnectionResolverInterface::class);
@@ -65,13 +65,13 @@ beforeEach(static function () {
             'echo 1;',
             '["xxx","xxx"]'
         );
-    $builder->allows('insert')->andReturnUsing(static function ($data) {
+    $builder->allows('insert')->andReturnUsing(function ($data) {
         return true;
     });
     ApplicationContext::getContainer()->set(ConnectionResolverInterface::class, $connectionResolverInterface);
 });
 
-test('process', static function () {
+test('process', function () {
     $aspect = new CrontabExecutorAspect();
     expect($aspect->classes)->toBe([
         Executor::class . '::logResult',

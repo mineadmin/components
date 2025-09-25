@@ -130,7 +130,7 @@ describe('Doctrine EntityManager Integration', function () {
         expect($configuration)->toBeInstanceOf(Configuration::class);
     });
 
-    it('validates factory classes exist', static function () {
+    it('validates factory classes exist', function () {
         expect(class_exists(EntityManagerFactory::class))->toBe(true);
         expect(class_exists(PoolFactory::class))->toBe(true);
         expect(class_exists(ORMSetupFactory::class))->toBe(true);

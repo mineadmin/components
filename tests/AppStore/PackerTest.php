@@ -18,14 +18,14 @@ beforeEach(function () {
 });
 
 test('factory', function () {
-    $this->assertInstanceOf(PackerFactory::class, $this->mock);
+    expect($this->mock)->toBeInstanceOf(PackerFactory::class);
     try {
         $this->mock->get('demo');
     } catch (RuntimeException $e) {
-        $this->assertEquals(sprintf('%s Packer type not found', 'demo'), $e->getMessage());
+        expect($e->getMessage())->toEqual(sprintf('%s Packer type not found', 'demo'));
     }
     $jsonPacker = $this->mock->get();
-    $this->assertInstanceOf(JsonPacker::class, $jsonPacker);
-    $this->assertEquals(['a' => 1], $jsonPacker->unpack('{"a":1}'));
-    $this->assertEquals('{"a":1}', $jsonPacker->pack(['a' => 1]));
+    expect($jsonPacker)->toBeInstanceOf(JsonPacker::class);
+    expect($jsonPacker->unpack('{"a":1}'))->toEqual(['a' => 1]);
+    expect($jsonPacker->pack(['a' => 1]))->toEqual('{"a":1}');
 });

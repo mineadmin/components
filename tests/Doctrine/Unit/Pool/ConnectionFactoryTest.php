@@ -53,7 +53,7 @@ describe('ConnectionFactory', function () {
         $config = [
             'driver' => 'pdo_mysql',
             'host' => 'localhost',
-            'wrapper' => static function (&$config) {
+            'wrapper' => function (&$config) {
                 $config['modified'] = true;
                 return $config;
             },
@@ -90,7 +90,7 @@ describe('ConnectionFactory', function () {
         $originalConfig = [
             'driver' => 'pdo_mysql',
             'host' => 'localhost',
-            'wrapper' => static function (&$config) {
+            'wrapper' => function (&$config) {
                 $config['processed'] = true;
             },
         ];
@@ -160,7 +160,7 @@ describe('ConnectionFactory', function () {
         $config = [
             'driver' => 'pdo_mysql',
             'host' => 'localhost',
-            'wrapper' => static function (&$cfg) {
+            'wrapper' => function (&$cfg) {
                 $cfg['host'] = 'modified_host';
                 $cfg['port'] = 3307;
                 return $cfg;
@@ -171,7 +171,7 @@ describe('ConnectionFactory', function () {
             ->shouldReceive('call')
             ->with(Mockery::type(Closure::class))
             ->once()
-            ->andReturnUsing(static function ($closure) {
+            ->andReturnUsing(function ($closure) {
                 return $closure();
             });
 
@@ -184,7 +184,7 @@ describe('ConnectionFactory', function () {
         $config = [
             'driver' => 'pdo_mysql',
             'host' => 'localhost',
-            'wrapper' => static function () {
+            'wrapper' => function () {
                 throw new RuntimeException('Wrapper failed');
             },
         ];

@@ -15,25 +15,146 @@ require_once __DIR__ . '/../Entity/Comment.php';
 require_once __DIR__ . '/../Entity/Profile.php';
 require_once __DIR__ . '/../Entity/Tag.php';
 
-use Doctrine\DBAL\DriverManager;
 use Doctrine\ORM\EntityManager;
-use Doctrine\ORM\ORMSetup;
 use Doctrine\ORM\Tools\SchemaTool;
+use Hyperf\Cache\CacheManager;
+use Hyperf\Cache\Driver\MemoryDriver;
+use Hyperf\Context\ApplicationContext;
+use Hyperf\Contract\ConfigInterface;
+use Hyperf\Support\SafeCaller;
+use Mine\Doctrine\Config;
+use Mine\Doctrine\EntityManagerFactory;
+use Mine\Doctrine\ORMSetupFactory;
+use Mine\Doctrine\Pool\ConnectionFactory;
+use Mine\Doctrine\Pool\PoolFactory;
+use Psr\Log\LoggerInterface;
+use Psr\SimpleCache\CacheInterface;
 
 describe('Entity Association Integration', function () {
     beforeEach(function () {
-        // Create in-memory SQLite database
-        $paths = [__DIR__ . '/../Entity'];
-        $isDevMode = true;
-        $config = ORMSetup::createAttributeMetadataConfiguration($paths, $isDevMode);
+        // Create Mine Doctrine components for testing
+        $container = ApplicationContext::getContainer();
 
-        $connectionParams = [
+        // Mock ConfigInterface for testing
+        $configInterface = Mockery::mock(ConfigInterface::class);
+        $configInterface->allows('get')->with('doctrine')->andReturn([
+            'paths' => [__DIR__ . '/../Entity'],
+            'isDevMode' => true,
+            'cache' => 'memory',
+            'proxy_dir' => sys_get_temp_dir() . '/doctrine_proxies',
+            'database' => [
+                'default' => [
+                    'driver' => 'pdo_sqlite',
+                    'path' => ':memory:',
+                    'name' => 'default',
+                    'option' => [
+                        'min_connections' => 1,
+                        'max_connections' => 1,
+                        'connect_timeout' => 10.0,
+                        'wait_timeout' => 3.0,
+                        'heartbeat' => -1,
+                        'maxIdleTime' => 60,
+                    ],
+                ],
+            ],
+        ]);
+
+        // Set up individual config queries
+        $configInterface->allows('get')->with('doctrine.paths')->andReturn([__DIR__ . '/../Entity']);
+        $configInterface->allows('get')->with('doctrine.isDevMode')->andReturn(true);
+        $configInterface->allows('get')->with('doctrine.cache')->andReturn('memory');
+        $configInterface->allows('get')->with('doctrine.proxy_dir')->andReturn(sys_get_temp_dir() . '/doctrine_proxies');
+        $configInterface->allows('get')->with('doctrine.database')->andReturn([
+            'default' => [
+                'driver' => 'pdo_sqlite',
+                'path' => ':memory:',
+                'name' => 'default',
+                'option' => [
+                    'min_connections' => 1,
+                    'max_connections' => 1,
+                    'connect_timeout' => 10.0,
+                    'wait_timeout' => 3.0,
+                    'heartbeat' => -1,
+                    'maxIdleTime' => 60,
+                ],
+            ],
+        ]);
+        $configInterface->allows('get')->with('doctrine.database.default')->andReturn([
             'driver' => 'pdo_sqlite',
             'path' => ':memory:',
-        ];
+            'name' => 'default',
+            'option' => [
+                'min_connections' => 1,
+                'max_connections' => 1,
+                'connect_timeout' => 10.0,
+                'wait_timeout' => 3.0,
+                'heartbeat' => -1,
+                'maxIdleTime' => 60,
+            ],
+        ]);
+        $configInterface->allows('get')->with('doctrine.database.default.option')->andReturn([
+            'min_connections' => 1,
+            'max_connections' => 1,
+            'connect_timeout' => 10.0,
+            'wait_timeout' => 3.0,
+            'heartbeat' => -1,
+            'maxIdleTime' => 60,
+        ]);
+        $configInterface->allows('has')->andReturn(true);
+        $configInterface->allows('set')->andReturnTrue();
 
-        $connection = DriverManager::getConnection($connectionParams);
-        $this->entityManager = new EntityManager($connection, $config);
+        // Create Config with mock
+        $doctrineConfig = new Config($configInterface);
+        $container->set(Config::class, $doctrineConfig);
+
+        // Mock CacheManager
+        $cacheDriver = new MemoryDriver($container, []);
+        $cacheInterface = Mockery::mock(CacheInterface::class);
+        $cacheInterface->allows('get')->andReturn(null);
+        $cacheInterface->allows('set')->andReturn(true);
+        $cacheInterface->allows('delete')->andReturn(true);
+        $cacheInterface->allows('clear')->andReturn(true);
+        $cacheInterface->allows('getMultiple')->andReturn([]);
+        $cacheInterface->allows('setMultiple')->andReturn(true);
+        $cacheInterface->allows('deleteMultiple')->andReturn(true);
+        $cacheInterface->allows('has')->andReturn(false);
+
+        $cacheManager = Mockery::mock(CacheManager::class);
+        $cacheManager->allows('getDriver')->with('memory')->andReturn($cacheDriver);
+        $container->set(CacheManager::class, $cacheManager);
+
+        // Mock SafeCaller
+        $safeCaller = Mockery::mock(SafeCaller::class);
+        $safeCaller->allows('call')->andReturnUsing(function ($callback) {
+            return $callback();
+        });
+        $container->set(SafeCaller::class, $safeCaller);
+
+        // Mock Logger
+        $logger = Mockery::mock(LoggerInterface::class);
+        $logger->allows('info')->andReturnTrue();
+        $logger->allows('warning')->andReturnTrue();
+        $logger->allows('error')->andReturnTrue();
+        $container->set(LoggerInterface::class, $logger);
+
+        // Create ConnectionFactory
+        $connectionFactory = new ConnectionFactory($safeCaller);
+        $container->set(ConnectionFactory::class, $connectionFactory);
+
+        // Create ORMSetupFactory
+        $ormSetupFactory = new ORMSetupFactory($doctrineConfig, $cacheManager);
+        $container->set(ORMSetupFactory::class, $ormSetupFactory);
+
+        // Create PoolFactory
+        $poolFactory = new PoolFactory($doctrineConfig, $container);
+        $container->set(PoolFactory::class, $poolFactory);
+
+        // Create EntityManagerFactory
+        $entityManagerFactory = new EntityManagerFactory($poolFactory, $ormSetupFactory);
+        $container->set(EntityManagerFactory::class, $entityManagerFactory);
+
+        // Create EntityManager through our Factory
+        $this->entityManager = $entityManagerFactory->create('default');
 
         // Create database schema
         $classes = [
@@ -50,6 +171,7 @@ describe('Entity Association Integration', function () {
 
     afterEach(function () {
         $this->entityManager->close();
+        Mockery::close();
     });
 
     it('creates user with profile (one-to-one)', function () {

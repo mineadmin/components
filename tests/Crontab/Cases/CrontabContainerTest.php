@@ -11,7 +11,7 @@ declare(strict_types=1);
  */
 use Mine\Crontab\CrontabContainer;
 
-test('container', static function () {
+test('container', function () {
     CrontabContainer::set('id', 'xxx');
     expect(CrontabContainer::get('id'))->toBe('xxx');
     expect(CrontabContainer::has('id'))->toBeTrue();

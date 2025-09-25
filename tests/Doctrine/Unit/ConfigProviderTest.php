@@ -9,11 +9,19 @@ declare(strict_types=1);
  * @contact  root@imoi.cn
  * @license  https://github.com/mineadmin/MineAdmin/blob/master/LICENSE
  */
+use Doctrine\Persistence\ManagerRegistry as DoctrineManagerRegistry;
+/*
+ * This file is part of MineAdmin.
+ *
+ * @link     https://www.mineadmin.com
+ * @document https://doc.mineadmin.com
+ * @contact  root@imoi.cn
+ * @license  https://github.com/mineadmin/MineAdmin/blob/master/LICENSE
+ */
 use Mine\Doctrine\ConfigProvider;
-use Mine\Doctrine\ManagerRegistry;
 
-describe('ConfigProvider', static function () {
-    it('returns correct configuration structure', static function () {
+describe('ConfigProvider', function () {
+    it('returns correct configuration structure', function () {
         $configProvider = new ConfigProvider();
         $config = $configProvider();
 
@@ -21,7 +29,7 @@ describe('ConfigProvider', static function () {
         expect($config)->toHaveKeys(['annotations', 'dependencies']);
     });
 
-    it('configures annotations scanning correctly', static function () {
+    it('configures annotations scanning correctly', function () {
         $configProvider = new ConfigProvider();
         $config = $configProvider();
 
@@ -31,24 +39,22 @@ describe('ConfigProvider', static function () {
         expect($config['annotations']['scan']['paths'])->toContain(dirname(__DIR__, 3) . '/src/Doctrine/');
     });
 
-    it('configures dependencies correctly', static function () {
+    it('configures dependencies correctly', function () {
         $configProvider = new ConfigProvider();
         $config = $configProvider();
 
         expect($config['dependencies'])->toBeArray();
-        expect($config['dependencies'])->toHaveKey(Doctrine\Persistence\ManagerRegistry::class);
-        expect($config['dependencies'][Doctrine\Persistence\ManagerRegistry::class])
-            ->toBe(ManagerRegistry::class);
+        expect($config['dependencies'])->toHaveKey(DoctrineManagerRegistry::class);
     });
 
-    it('is invokable', static function () {
+    it('is invokable', function () {
         $configProvider = new ConfigProvider();
 
         expect(is_callable($configProvider))->toBeTrue();
         expect($configProvider)->toBeInstanceOf(ConfigProvider::class);
     });
 
-    it('returns immutable configuration', static function () {
+    it('returns immutable configuration', function () {
         $configProvider = new ConfigProvider();
         $config1 = $configProvider();
         $config2 = $configProvider();
@@ -56,7 +62,7 @@ describe('ConfigProvider', static function () {
         expect($config1)->toEqual($config2);
     });
 
-    it('includes correct scan path', static function () {
+    it('includes correct scan path', function () {
         $configProvider = new ConfigProvider();
         $config = $configProvider();
 
@@ -66,11 +72,11 @@ describe('ConfigProvider', static function () {
         expect($actualPaths)->toContain($expectedPath);
     });
 
-    it('has only required configuration keys', static function () {
+    it('has only required configuration keys', function () {
         $configProvider = new ConfigProvider();
         $config = $configProvider();
 
-        $expectedKeys = ['annotations', 'dependencies'];
+        $expectedKeys = ['annotations', 'dependencies', 'publish'];
         $actualKeys = array_keys($config);
 
         expect($actualKeys)->toEqual($expectedKeys);

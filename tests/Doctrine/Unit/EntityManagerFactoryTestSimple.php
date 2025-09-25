@@ -16,8 +16,8 @@ use Mine\Doctrine\Pool\Connection;
 use Mine\Doctrine\Pool\Pool;
 use Mine\Doctrine\Pool\PoolFactory;
 
-describe('EntityManagerFactory (Simplified Final Class Testing)', static function () {
-    it('can be instantiated with dependencies', static function () {
+describe('EntityManagerFactory (Simplified Final Class Testing)', function () {
+    it('can be instantiated with dependencies', function () {
         $poolFactory = Mockery::mock(PoolFactory::class);
         $ormSetupFactory = Mockery::mock(ORMSetupFactory::class);
 
@@ -26,7 +26,7 @@ describe('EntityManagerFactory (Simplified Final Class Testing)', static functio
         expect($factory)->toBeInstanceOf(EntityManagerFactory::class);
     });
 
-    it('propagates pool factory exceptions', static function () {
+    it('propagates pool factory exceptions', function () {
         $poolFactory = Mockery::mock(PoolFactory::class);
         $ormSetupFactory = Mockery::mock(ORMSetupFactory::class);
 
@@ -40,7 +40,7 @@ describe('EntityManagerFactory (Simplified Final Class Testing)', static functio
             ->toThrow(InvalidArgumentException::class, 'Pool not found');
     });
 
-    it('passes correct pool name to pool factory', static function () {
+    it('passes correct pool name to pool factory', function () {
         $poolFactory = Mockery::mock(PoolFactory::class);
         $ormSetupFactory = Mockery::mock(ORMSetupFactory::class);
 
@@ -55,7 +55,7 @@ describe('EntityManagerFactory (Simplified Final Class Testing)', static functio
             ->toThrow(RuntimeException::class, 'Expected call made');
     });
 
-    it('uses default pool name when none specified', static function () {
+    it('uses default pool name when none specified', function () {
         $poolFactory = Mockery::mock(PoolFactory::class);
         $ormSetupFactory = Mockery::mock(ORMSetupFactory::class);
 
@@ -70,7 +70,7 @@ describe('EntityManagerFactory (Simplified Final Class Testing)', static functio
             ->toThrow(RuntimeException::class, 'Default called');
     });
 
-    it('calls ORM setup factory for configuration', static function () {
+    it('calls ORM setup factory for configuration', function () {
         $poolFactory = Mockery::mock(PoolFactory::class);
         $ormSetupFactory = Mockery::mock(ORMSetupFactory::class);
 

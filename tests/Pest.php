@@ -18,7 +18,7 @@ use Mine\Tests\TestCase;
 use Psr\Log\LogLevel;
 
 uses(TestCase::class, RunTestsInCoroutine::class)
-    ->beforeEach(static function () {
+    ->beforeEach(function () {
         $mockConfig = Mockery::mock(ConfigInterface::class);
         $mockConfig->allows('has')->andReturn(true);
         $mockConfig->allows('get')->andReturn([
@@ -33,14 +33,14 @@ uses(TestCase::class, RunTestsInCoroutine::class)
         $mockContainer->allows('set')->andReturn(true);
         $mockContainer->allows('get')->andReturn($mockConfig);
         $mockContainer->allows('has')->andReturn(false); // Default to false for unknown services
-        $mockContainer->allows('make')->andReturnUsing(static function ($class, $parameters = []) {
+        $mockContainer->allows('make')->andReturnUsing(function ($class, $parameters = []) {
             return new $class(...array_values($parameters));
         });
 
         // Replace the container
         ApplicationContext::setContainer($mockContainer);
     })
-    ->afterEach(static function () {
+    ->afterEach(function () {
         Mockery::close();
     })
     ->in('Feature');

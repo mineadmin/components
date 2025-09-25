@@ -14,20 +14,20 @@ use Mine\Support\Logger\UuidRequestIdProcessor;
 
 test('testSetUuid', function () {
     $uuid = UuidRequestIdProcessor::setUuid('1234567890');
-    $this->assertEquals('1234567890', $uuid);
+    expect($uuid)->toEqual('1234567890');
 });
 
 test('testGetUuidInCoroutine', function () {
     if (Coroutine::inCoroutine()) {
         $uuid = UuidRequestIdProcessor::getUuid();
         Coroutine::create(function () use ($uuid) {
-            $this->assertEquals($uuid, UuidRequestIdProcessor::getUuid());
+            expect(UuidRequestIdProcessor::getUuid())->toEqual($uuid);
         });
     } else {
         Coroutine::create(function () {
             $uuid = UuidRequestIdProcessor::getUuid();
             Coroutine::create(function () use ($uuid) {
-                $this->assertEquals($uuid, UuidRequestIdProcessor::getUuid());
+                expect(UuidRequestIdProcessor::getUuid())->toEqual($uuid);
             });
         });
     }
@@ -35,22 +35,22 @@ test('testGetUuidInCoroutine', function () {
 
 test('testAutoSetUuid', function () {
     UuidRequestIdProcessor::setUuid('11233123');
-    $this->assertEquals('11233123', UuidRequestIdProcessor::getUuid());
+    expect(UuidRequestIdProcessor::getUuid())->toEqual('11233123');
 });
 
 test('testAutoSetUuidInCoroutine', function () {
     Coroutine::create(function () {
         UuidRequestIdProcessor::setUuid('11233123');
-        $this->assertEquals('11233123', UuidRequestIdProcessor::getUuid());
+        expect(UuidRequestIdProcessor::getUuid())->toEqual('11233123');
     });
 });
 
 test('testAutoSetUuidInParent', function () {
     Coroutine::create(function () {
         UuidRequestIdProcessor::setUuid('11233123');
-        $this->assertEquals('11233123', UuidRequestIdProcessor::getUuid());
+        expect(UuidRequestIdProcessor::getUuid())->toEqual('11233123');
         Coroutine::create(function () {
-            $this->assertEquals('11233123', UuidRequestIdProcessor::getUuid());
+            expect(UuidRequestIdProcessor::getUuid())->toEqual('11233123');
         });
     });
 });

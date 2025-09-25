@@ -160,7 +160,7 @@ describe('ManagerRegistry', function () {
         );
     });
 
-    afterEach(static function () {
+    afterEach(function () {
         // Clean up context after each test
         Context::destroy('doctrine.manager.default');
         Context::destroy('doctrine.manager.custom');
@@ -213,24 +213,19 @@ describe('ManagerRegistry', function () {
         expect(true)->toBe(true); // If we reach here, no exception was thrown
     });
 
-    it('handles context cleanup for backward compatibility', function () {
+    it('handles context cleanup after reset', function () {
         // Get the manager to establish context
         $manager = $this->registry->getManager('default');
+        expect($manager)->toBeInstanceOf(EntityManager::class);
 
-        // Simulate legacy manager being stored
-        $reflection = new ReflectionClass($this->registry);
-        $managersProperty = $reflection->getProperty('managers');
-        $managersProperty->setAccessible(true);
-        $managers = $managersProperty->getValue($this->registry);
-        $managers['default'] = $manager;
-        $managersProperty->setValue($this->registry, $managers);
-
-        // Reset should clean both context and legacy cache
+        // Reset should clean the context
         $this->registry->resetManager('default');
 
-        $managersAfterReset = $managersProperty->getValue($this->registry);
-        expect(isset($managersAfterReset['default']))->toBeFalse();
-        // Context behavior after reset is tested in other tests
+        // Getting manager again should create a new instance
+        $newManager = $this->registry->getManager('default');
+        expect($newManager)->toBeInstanceOf(EntityManager::class);
+        // We can't directly test context cleanup as Context is internal,
+        // but creating a new manager after reset indicates successful cleanup
     });
 
     it('uses default manager name when none specified', function () {

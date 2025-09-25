@@ -18,36 +18,36 @@ use Hyperf\Database\ConnectionResolverInterface;
 use Hyperf\Database\Query\Builder;
 use Mine\Crontab\Schedule;
 
-beforeEach(static function () {
+beforeEach(function () {
     $config = new Config([]);
     ApplicationContext::getContainer()->set(ConfigInterface::class, $config);
 });
 
-test('get crontab', static function () {
+test('get crontab', function () {
     $connectionResolverInterface = Mockery::mock(ConnectionResolverInterface::class);
     $connectionInterface = Mockery::mock(ConnectionInterface::class);
     $connectionResolverInterface
         ->allows('connection')
         ->andReturn($connectionInterface);
-    $connectionInterface->allows('table')->andReturnUsing(static function ($table) {
+    $connectionInterface->allows('table')->andReturnUsing(function ($table) {
         expect($table)->toBe(Schedule::CRONTAB_TABLE);
         $builder = Mockery::mock(Builder::class);
         $stdclass = new stdClass();
         $stdclass->id = 1;
         $builder->allows('get')
             ->andReturn(new Collection([$stdclass]));
-        $builder->allows('where')->andReturnUsing(static function ($column, $val) use ($builder) {
+        $builder->allows('where')->andReturnUsing(function ($column, $val) use ($builder) {
             expect($column)->toBe('status');
             expect($val)->toBe(1);
             return $builder;
         });
         return $builder;
-    }, static function ($table) {
+    }, function ($table) {
         expect($table)->toBe(Schedule::CRONTAB_TABLE);
         $builder = Mockery::mock(Builder::class);
         $builder->allows('get')
             ->andReturn(new Collection([]));
-        $builder->allows('where')->andReturnUsing(static function ($column, $val) use ($builder) {
+        $builder->allows('where')->andReturnUsing(function ($column, $val) use ($builder) {
             expect($column)->toBe('status');
             expect($val)->toBe(1);
             return $builder;

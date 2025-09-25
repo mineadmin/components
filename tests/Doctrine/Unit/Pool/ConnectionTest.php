@@ -56,7 +56,7 @@ describe('Connection', function () {
         $this->connection = new Connection($this->container, $this->pool, $this->config);
     });
 
-    afterEach(static function () {
+    afterEach(function () {
         Mockery::close();
     });
 

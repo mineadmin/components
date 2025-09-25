@@ -196,7 +196,7 @@ describe('ORM Configuration Integration', function () {
         expect($metadataDriver)->toBeInstanceOf(AttributeDriver::class);
     });
 
-    it('handles cache driver errors gracefully', static function () {
+    it('handles cache driver errors gracefully', function () {
         // Create fresh mocks to avoid conflicts with beforeEach setup
         $configInterface = Mockery::mock(ConfigInterface::class);
         $config = new Config($configInterface);

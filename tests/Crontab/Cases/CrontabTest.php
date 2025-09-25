@@ -18,7 +18,7 @@ use Hyperf\Database\Query\Builder;
 use Mine\Crontab\Crontab;
 use Mine\Crontab\CrontabUrl;
 
-beforeEach(static function () {
+beforeEach(function () {
     ApplicationContext::getContainer()->set(ConfigInterface::class, new Config([]));
     $connectionResolverInterface = Mockery::mock(ConnectionResolverInterface::class);
     $connectionInterface = Mockery::mock(ConnectionInterface::class);
@@ -61,41 +61,41 @@ beforeEach(static function () {
             'echo 1;',
             '["xxx","xxx"]'
         );
-    $connectionInterface->allows('table')->andReturnUsing(static function ($table) use ($builder) {
+    $connectionInterface->allows('table')->andReturnUsing(function ($table) use ($builder) {
         expect($table)->toBe(Crontab::TABLE);
         return $builder;
     });
     ApplicationContext::getContainer()->set(ConnectionResolverInterface::class, $connectionResolverInterface);
 });
 
-test('construct', static function () {
+test('construct', function () {
     $crontab = new Crontab(1);
     expect($crontab->getCronId())->toBe(1);
 });
 
-test('get builder', static function () {
+test('get builder', function () {
     $crontab = new Crontab(1);
     $crontab->getBuilder();
     expect(true)->toBeTrue();
 });
 
-test('get name', static function () {
+test('get name', function () {
     $crontab = new Crontab(1);
     expect($crontab->getName())->toBe('xxx');
 });
 
-test('get memo', static function () {
+test('get memo', function () {
     $crontab = new Crontab(1);
     expect($crontab->getMemo())->toBe('xxx');
 });
 
-test('is enable', static function () {
+test('is enable', function () {
     $crontab = new Crontab(1);
     expect($crontab->isEnable())->toBeTrue();
     expect($crontab->isEnable())->toBeFalse();
 });
 
-test('get type', static function () {
+test('get type', function () {
     $crontab = new Crontab(1);
     expect($crontab->getType())->toBe('xxx');
     expect($crontab->getType())->toBe('callback');
@@ -105,7 +105,7 @@ test('get type', static function () {
     expect($crontab->getType())->toBe('command');
 });
 
-test('get callback', static function () {
+test('get callback', function () {
     $crontab = new Crontab(1);
     expect($crontab->getCallback())->toBe('xxx');
     expect($crontab->getCallback())->toBe(['xxx', 'xxx']);
@@ -115,19 +115,19 @@ test('get callback', static function () {
     expect($crontab->getCallback())->toBe(['xxx', 'xxx']);
 });
 
-test('get rule', static function () {
+test('get rule', function () {
     $crontab = new Crontab(1);
     expect($crontab->getRule())->toBe('* * * * *');
     expect($crontab->getRule())->toBe('0 0 * * *');
 });
 
-test('is singleton', static function () {
+test('is singleton', function () {
     $crontab = new Crontab(1);
     expect($crontab->isSingleton())->toBeTrue();
     expect($crontab->isSingleton())->toBeFalse();
 });
 
-test('is on one server', static function () {
+test('is on one server', function () {
     $crontab = new Crontab(1);
     expect($crontab->isOnOneServer())->toBeTrue();
     expect($crontab->isOnOneServer())->toBeFalse();

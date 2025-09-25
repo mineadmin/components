@@ -14,7 +14,7 @@ use Hyperf\Engine\Coroutine;
 use Hyperf\Process\ProcessManager;
 use Mine\Crontab\Listener\CrontabProcessStarredListener;
 
-test('listen', static function () {
+test('listen', function () {
     $reflectionClass = new ReflectionClass(CrontabProcessStarredListener::class);
     $instance = Mockery::mock(CrontabProcessStarredListener::class);
     $method = $reflectionClass->getMethod('listen');
@@ -24,7 +24,7 @@ test('listen', static function () {
     ]);
 });
 
-test('process', static function () {
+test('process', function () {
     $reflectionClass = new ReflectionClass(CrontabProcessStarredListener::class);
     $instance = Mockery::mock(CrontabProcessStarredListener::class);
     CrontabProcessStarredListener::$sleep = 1;
@@ -33,7 +33,7 @@ test('process', static function () {
     ProcessManager::setRunning(false);
     $method->invoke($instance, Mockery::mock(CrontabDispatcherStarted::class));
     ProcessManager::setRunning(true);
-    Coroutine::create(static function () {
+    Coroutine::create(function () {
         sleep(2);
         ProcessManager::setRunning(false);
     });

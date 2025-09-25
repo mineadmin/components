@@ -21,7 +21,7 @@ describe('AccessTokenConstraint', function () {
 
     it('should pass validation for access tokens (non-refresh tokens)', function () {
         // 创建一个普通的 access token（不设置 relatedTo 'refresh'）
-        $token = $this->helper->createToken(static function ($builder) {
+        $token = $this->helper->createToken(function ($builder) {
             return $builder->relatedTo('user123');  // 不是 'refresh'
         });
 
@@ -39,7 +39,7 @@ describe('AccessTokenConstraint', function () {
 
     it('should fail validation for refresh tokens', function () {
         // 创建一个 refresh token
-        $token = $this->helper->createToken(static function ($builder) {
+        $token = $this->helper->createToken(function ($builder) {
             return $builder->relatedTo('refresh');
         });
 
@@ -50,7 +50,7 @@ describe('AccessTokenConstraint', function () {
 
     it('should fail validation for any token related to refresh', function () {
         // 测试其他可能包含 'refresh' 的情况
-        $token = $this->helper->createToken(static function ($builder) {
+        $token = $this->helper->createToken(function ($builder) {
             return $builder->relatedTo('refresh');
         });
 

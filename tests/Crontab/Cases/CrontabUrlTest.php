@@ -15,10 +15,10 @@ use Hyperf\Guzzle\ClientFactory;
 use Mine\Crontab\CrontabUrl;
 use Psr\Http\Message\ResponseInterface;
 
-test('execute', static function () {
+test('execute', function () {
     $clientFactory = Mockery::mock(ClientFactory::class);
     $client = Mockery::mock(Client::class);
-    $client->allows('get')->andReturnUsing(static function ($url) {
+    $client->allows('get')->andReturnUsing(function ($url) {
         expect($url)->toBe('http://mineadmin.com');
         return Mockery::mock(ResponseInterface::class);
     });

@@ -21,7 +21,7 @@ describe('RefreshTokenConstraint', function () {
 
     it('should pass validation for refresh tokens', function () {
         // 创建一个 refresh token
-        $token = $this->helper->createToken(static function ($builder) {
+        $token = $this->helper->createToken(function ($builder) {
             return $builder->relatedTo('refresh');
         });
 
@@ -31,7 +31,7 @@ describe('RefreshTokenConstraint', function () {
 
     it('should fail validation for access tokens (non-refresh tokens)', function () {
         // 创建一个普通的 access token（不设置 relatedTo 'refresh'）
-        $token = $this->helper->createToken(static function ($builder) {
+        $token = $this->helper->createToken(function ($builder) {
             return $builder->relatedTo('user123');  // 不是 'refresh'
         });
 
@@ -54,7 +54,7 @@ describe('RefreshTokenConstraint', function () {
         $testValues = ['access', 'admin', 'user', '', 'refresh-token'];
 
         foreach ($testValues as $value) {
-            $token = $this->helper->createToken(static function ($builder) use ($value) {
+            $token = $this->helper->createToken(function ($builder) use ($value) {
                 return $builder->relatedTo($value);
             });
 
@@ -65,14 +65,14 @@ describe('RefreshTokenConstraint', function () {
 
     it('should only accept tokens with exact refresh relatedTo value', function () {
         // 测试只有精确的 'refresh' 值才会通过
-        $token = $this->helper->createToken(static function ($builder) {
+        $token = $this->helper->createToken(function ($builder) {
             return $builder->relatedTo('refresh');
         });
 
         expect(fn () => $this->constraint->assert($token))->not->toThrow(ConstraintViolation::class);
 
         // 但 'REFRESH' 或 'refresh ' 不应该通过
-        $upperCaseToken = $this->helper->createToken(static function ($builder) {
+        $upperCaseToken = $this->helper->createToken(function ($builder) {
             return $builder->relatedTo('REFRESH');
         });
 

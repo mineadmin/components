@@ -11,6 +11,6 @@ declare(strict_types=1);
  */
 use Mine\Crontab\ConfigProvider;
 
-test('invoke', static function () {
+test('invoke', function () {
     expect((new ConfigProvider())())->toBeArray();
 });

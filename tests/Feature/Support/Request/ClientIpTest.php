@@ -16,6 +16,8 @@ use Mine\Support\Request as SupportRequest;
 use Mine\Support\Request\ClientIpRequestConstant;
 use Mine\Support\Request\ClientIpRequestTrait;
 
+// Removed conflicting uses() since we have a dedicated helper class
+
 /**
  * @internal
  * @coversNothing
@@ -96,7 +98,7 @@ function getRequestInstanceForClientIpTests(string $remoteAddr, ?string $httpFor
     return new ClientIpTest(Mockery::mock(Container::class));
 }
 
-test('testGetClientIpsForwarded', static function ($expected, $remoteAddr, $httpForwardedFor, $trustedProxies) {
+test('testGetClientIpsForwarded', function ($expected, $remoteAddr, $httpForwardedFor, $trustedProxies) {
     $testRequest = getRequestInstanceForClientIpTests($remoteAddr, $httpForwardedFor, $trustedProxies);
     $result = $testRequest->getClientIps();
     expect($result)->toEqual($expected);
@@ -125,7 +127,7 @@ function getRequestInstanceForClientIpsForwardedTests(string $remoteAddr, ?strin
     return new ClientIpTest(Mockery::mock(Container::class));
 }
 
-test('testGetClientIps', static function ($expected, $remoteAddr, $httpForwardedFor, $trustedProxies) {
+test('testGetClientIps', function ($expected, $remoteAddr, $httpForwardedFor, $trustedProxies) {
     $request = getRequestInstanceForClientIpsForwardedTests($remoteAddr, $httpForwardedFor, $trustedProxies);
     $result = $request->getClientIps();
     expect($result)->toEqual($expected);
@@ -139,7 +141,7 @@ test('testGetClientIps', static function ($expected, $remoteAddr, $httpForwarded
     [['2001:db8:cafe::17'], '::1', 'for="[2001:db8:cafe::17]:4711', ['::1']],
 ]);
 
-test('demo', static function () {
+test('demo', function () {
     // Simple demonstration test
     expect(true)->toBeTrue();
 });

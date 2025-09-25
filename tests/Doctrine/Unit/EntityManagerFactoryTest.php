@@ -134,7 +134,7 @@ describe('EntityManagerFactory', function () {
         ]);
     });
 
-    it('validates factory class exists', static function () {
+    it('validates factory class exists', function () {
         expect(class_exists(EntityManagerFactory::class))->toBe(true);
         expect(method_exists(EntityManagerFactory::class, 'create'))->toBe(true);
     });

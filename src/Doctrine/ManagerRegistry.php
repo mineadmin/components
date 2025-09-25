@@ -18,12 +18,9 @@ use Hyperf\Context\Context;
 
 class ManagerRegistry extends AbstractManagerRegistry implements \Doctrine\Persistence\ManagerRegistry
 {
-    private array $managers = [];
-
     protected function getService(string $name): object
     {
         $contextKey = \sprintf('doctrine.manager.%s', $name);
-
         return Context::getOrSet($contextKey, static function () use ($name) {
             $factory = ApplicationContext::getContainer()->get(EntityManagerFactory::class);
             return $factory->create($name);
@@ -40,11 +37,6 @@ class ManagerRegistry extends AbstractManagerRegistry implements \Doctrine\Persi
                 $manager->close();
             }
             Context::destroy($contextKey);
-        }
-
-        // 同时清理传统缓存（向后兼容）
-        if (isset($this->managers[$name])) {
-            unset($this->managers[$name]);
         }
     }
 }
