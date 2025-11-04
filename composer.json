@@ -42,7 +42,7 @@
         "hyperf/translation": "~3.1.0",
         "hyperf/view": "~3.1",
         "lcobucci/jwt": "~5.3.0",
-        "nette/utils": "dev-master",
+        "nette/utils": "4.0.*",
         "ramsey/uuid": "^4.7"
     },
     "require-dev": {
