@@ -44,7 +44,7 @@
         "lcobucci/jwt": "~5.3.0",
         "nette/utils": "4.0.*",
         "ramsey/uuid": "^4.7",
-        "symfony/http-foundation": "^6.4"
+        "symfony/http-foundation": "^6.4 || ^7.0"
     },
     "require-dev": {
         "doctrine/dbal": "^4.1",

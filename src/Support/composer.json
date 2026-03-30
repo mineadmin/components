@@ -23,6 +23,6 @@
   "require": {
     "ext-fileinfo": "*",
     "hyperf/logger": "~3.1",
-    "symfony/http-foundation": "^6.4"
+    "symfony/http-foundation": "^6.4 || ^7.0"
   }
 }
