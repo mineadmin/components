@@ -14,10 +14,12 @@ namespace Mine\AppStore\Service\Impl;
 
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\GuzzleException;
+use GuzzleHttp\HandlerStack;
 use Hyperf\Collection\Arr;
 use Hyperf\Collection\Collection;
 use Hyperf\Contract\ConfigInterface;
 use Hyperf\Guzzle\ClientFactory;
+use Hyperf\Guzzle\CoroutineHandler;
 use Mine\AppStore\Plugin;
 use Mine\AppStore\Service\AppStoreService;
 
@@ -34,9 +36,11 @@ final class AppStoreServiceImpl implements AppStoreService
         ClientFactory $clientFactory,
         ConfigInterface $config
     ) {
+        $stack = HandlerStack::create(new CoroutineHandler());
         $this->client = $clientFactory->create([
             'base_uri' => 'https://www.mineadmin.com/server/server/',
             'timeout' => 10.0,
+            'handler' => $stack,
         ]);
         $this->config = $config->get('mine-extension');
     }
