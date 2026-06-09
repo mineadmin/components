@@ -14,10 +14,10 @@
     }
   ],
   "require": {
-    "php": ">=8.1",
-    "hyperf/crontab": "^3.1",
-    "hyperf/database": "^3.1",
-    "hyperf/db-connection": "^3.1"
+    "php": ">=8.2",
+    "hyperf/crontab": "^3.2",
+    "hyperf/database": "^3.2",
+    "hyperf/db-connection": "^3.2"
   },
   "autoload": {
     "psr-4": {

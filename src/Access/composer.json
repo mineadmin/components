@@ -15,7 +15,7 @@
         }
     ],
     "require": {
-        "hyperf/di": "~3.1"
+        "hyperf/di": "~3.2"
     },
     "autoload": {
         "psr-4": {

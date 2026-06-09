@@ -15,9 +15,9 @@
         }
     ],
     "require": {
-        "lcobucci/jwt": "~5.3.0",
-        "hyperf/http-server": "~3.1",
-        "hyperf/cache": "~3.1"
+        "lcobucci/jwt": "~5.6.0",
+        "hyperf/http-server": "~3.2",
+        "hyperf/cache": "~3.2"
     },
     "autoload": {
         "psr-4": {

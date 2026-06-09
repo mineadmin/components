@@ -15,8 +15,8 @@
         }
     ],
     "require": {
-        "hyperf/framework": "^3.1",
-        "hyperf/view": "~3.1"
+        "hyperf/framework": "^3.2",
+        "hyperf/view": "~3.2"
     },
     "autoload": {
         "psr-4": {
