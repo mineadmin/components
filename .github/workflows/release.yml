@@ -1,26 +1,31 @@
+name: Release
+
 on:
   push:
-    # Sequence of patterns matched against refs/tags
     tags:
-      - 'v*' # Push events to matching v*, i.e. v1.0, v20.15.10
+      - 'v*' # 匹配 v1.0, v20.15.10 等标签
 
-name: Release
-permissions: write-all
+# 遵循最小权限原则
+permissions:
+  contents: write
 
 jobs:
   release:
-    name: Release
+    name: Create GitHub Release
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
+
       - name: Create Release
         id: create_release
-        uses: actions/create-release@v1
+        # 替换为社区主流且活跃维护的 Action
+        uses: softprops/action-gh-release@v2
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          tag_name: ${{ github.ref }}
-          release_name: Release ${{ github.ref }}
+          # 使用 ref_name 获取纯净版本号
+          tag_name: ${{ github.ref_name }}
+          name: Release ${{ github.ref_name }}
           draft: false
           prerelease: false
