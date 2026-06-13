@@ -1,19 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<phpunit xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" backupGlobals="false" bootstrap="./tests/bootstrap.php" colors="true" processIsolation="false" stopOnFailure="false" xsi:noNamespaceSchemaLocation="https://schema.phpunit.de/10.5/phpunit.xsd" cacheDirectory=".phpunit.cache" backupStaticProperties="false">
-  <coverage/>
+<phpunit xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" backupGlobals="false" bootstrap="./tests/bootstrap.php" colors="true" processIsolation="false" stopOnFailure="false" xsi:noNamespaceSchemaLocation="https://schema.phpunit.de/12.0/phpunit.xsd" cacheDirectory=".phpunit.cache" backupStaticProperties="false">
   <php>
-    <!-- other PHP.ini or environment variables -->
     <ini name="memory_limit" value="-1"/>
   </php>
   <source>
     <include>
-      <directory suffix=".php">./src/*/src</directory>
+      <directory suffix=".php">./src/AppStore/src</directory>
     </include>
   </source>
   <testsuites>
-    <testsuite name="Tests">
-      <directory suffix="Test.php">./src/*/tests</directory>
-      <directory suffix="Test.php">./tests</directory>
+    <testsuite name="AppStore">
+      <directory suffix="Test.php">./tests/AppStore</directory>
     </testsuite>
   </testsuites>
 </phpunit>

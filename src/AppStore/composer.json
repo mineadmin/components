@@ -1,6 +1,7 @@
 {
     "name": "mineadmin/app-store",
-    "description": "Mineadmin 2.0 AppStore Extension",
+    "version": "1.0.x-dev",
+    "description": "MineAdmin Laravel plugin lifecycle manager",
     "license": "MIT",
     "type": "library",
     "authors": [
@@ -15,24 +16,23 @@
         }
     ],
     "require": {
-        "ext-zip": "*",
-        "hyperf/translation": "~3.1.0",
-        "nette/utils": "4.0.*",
-        "hyperf/guzzle": "~3.1"
+        "php": "^8.4",
+        "composer/semver": "^3.4",
+        "illuminate/console": "^13.0",
+        "illuminate/contracts": "^13.0",
+        "illuminate/filesystem": "^13.0",
+        "illuminate/support": "^13.0"
     },
     "autoload": {
         "psr-4": {
             "Mine\\AppStore\\": "src/"
         }
     },
-    "config": {
-        "allow-plugins": {
-            "pestphp/pest-plugin": true
-        }
-    },
     "extra": {
-        "hyperf": {
-            "config": "Mine\\AppStore\\ConfigProvider"
+        "laravel": {
+            "providers": [
+                "Mine\\AppStore\\AppStoreServiceProvider"
+            ]
         }
     }
 }
