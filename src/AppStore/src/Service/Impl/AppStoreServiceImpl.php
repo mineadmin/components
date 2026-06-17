@@ -38,7 +38,7 @@ final class AppStoreServiceImpl implements AppStoreService
     ) {
         $stack = HandlerStack::create(new CoroutineHandler());
         $this->client = $clientFactory->create([
-            'base_uri' => 'https://www.mineadmin.com/server/server/',
+            'base_uri' => 'https://www.mineadmin.com/server/appServer/',
             'timeout' => 10.0,
             'handler' => $stack,
         ]);
